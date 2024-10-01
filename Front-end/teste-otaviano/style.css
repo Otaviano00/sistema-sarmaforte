@@ -1,0 +1,27 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+ 
+body {
+    background-image: url(images/background_login.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    display: flex;
+    align-items: center;
+}
+
+#form_login {
+    background-color: blue;
+    width: 30vw;
+    min-width: 300px;
+    height: 50vh;
+    margin: auto;
+}
