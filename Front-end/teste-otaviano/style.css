@@ -21,13 +21,14 @@ body {
 
 form {
     background-color: #142E50;
-    width: 25%;
+    width: 20%;
     height: 50%;
-    border-radius: 30px;
-    min-width: 400px;
+    border-radius: 10px;
+    min-width: 350px;
     min-height: 400px;
     display: flex;
     flex-direction: column;
+    font-family: 'Kanit', 'Arial';
 }
 
 .titulo {
@@ -35,7 +36,7 @@ form {
     flex-direction: column;
     color: white;
     width: 100%;
-    height: 33%;
+    height: fit-content;
     padding-top: 20px;
 }
 
@@ -46,13 +47,14 @@ form {
 
 .titulo h2 {
     text-align: center;
-    margin-top: -10px;
+    margin-top: -7%;
+    font-size: 1.5em;
 }
 
 .campos {
     display: flex;
     flex-direction: column;
-    margin-top: -10%;
+    margin-top: 5%;
 }
 
 .campos div {
@@ -75,14 +77,49 @@ form {
 .campos input {
     border: none;
     width: 100%;
+    height: 100%;
     background: none;
     outline: 0;
 }
 
+:placeholder-shown {
+    font-size: 1.3em;
+}
 
-#senha p {
+.campos a {
+    margin-top: -2%;
     padding-right: 10%;
     text-align: end;
+    color: white;
+    text-decoration: none;
+}
+
+.botao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.botao input {
+    margin-top: auto;
+    margin-bottom: auto;
+    border: none;
+    background-color: #C38A19;
+    color: white;
+    border-radius: 20px;
+    width: 40%;
+    min-width: 100px;
+    height: 40%;
+    min-height: 60px;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+
+.botao input:hover {
+    background-color: #eaa61d;
+    color: #ffffff;
 }
 
 
