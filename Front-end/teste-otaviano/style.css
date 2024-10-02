@@ -9,19 +9,82 @@ body {
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
+    height: 100vh;
+}
+
+.flex{
+    display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
 }
 
-main {
+form {
+    background-color: #142E50;
+    width: 25%;
+    height: 50%;
+    border-radius: 30px;
+    min-width: 400px;
+    min-height: 400px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }
 
-#form_login {
-    background-color: blue;
-    width: 30vw;
-    min-width: 300px;
-    height: 50vh;
-    margin: auto;
+.titulo {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    width: 100%;
+    height: 33%;
+    padding-top: 20px;
 }
+
+.titulo h1 {
+    text-align: center;
+    font-size: 3em;
+}
+
+.titulo h2 {
+    text-align: center;
+    margin-top: -10px;
+}
+
+.campos {
+    display: flex;
+    flex-direction: column;
+    margin-top: -10%;
+}
+
+.campos div {
+    display: flex;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.campos img {
+    width: 1.5em;
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.campos input {
+    border: none;
+    width: 100%;
+    background: none;
+    outline: 0;
+}
+
+
+#senha p {
+    padding-right: 10%;
+    text-align: end;
+}
+
+
+
+
