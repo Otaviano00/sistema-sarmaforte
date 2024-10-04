@@ -8,7 +8,7 @@ public class Usuario {
     private String login;
     private String senha;
     private String cpf;
-    private String emil;
+    private String email;
     private Perfil perfil;
     private boolean status;
 
@@ -18,6 +18,22 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getLogin() {
@@ -44,13 +60,12 @@ public class Usuario {
         this.cpf = cpf;
     }
 
-    public String getEmil() {
-        return emil;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmil(String emil) {
-        this.emil = emil;
-    }
+    public void setEmail(String email) {
+        this.email = email;
 
     public Perfil getPerfil() {
         return perfil;
@@ -67,13 +82,13 @@ public class Usuario {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    public Usuario(int id, String login, String senha, String cpf, String emil, Perfil perfil, boolean status) {
+    
+    public Usuario(int id, String login, String senha, String cpf, String email, Perfil perfil, boolean status) {
         this.id = id;
         this.login = login;
         this.senha = senha;
         this.cpf = cpf;
-        this.emil = emil;
+        this.email = email;
         this.perfil = perfil;
         this.status = status;
     }
