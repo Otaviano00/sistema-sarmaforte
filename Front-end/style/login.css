@@ -4,7 +4,7 @@
 }
  
 body {
-    background-image: url(images/background_login.png);
+    background-image: url(../images/background_login.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
