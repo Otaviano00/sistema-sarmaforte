@@ -33,7 +33,7 @@ public class UsuarioDAO {
             pstm.setString(4, usuario.getSenha());
             pstm.setString(5, usuario.getCpf());
             pstm.setString(6, usuario.getEmail());
-            pstm.setBoolean(7, usuario.getStatus());
+            pstm.setBoolean(7, usuario.isStatus());
             pstm.setInt(8, usuario.getPerfil().getId());
 
             pstm.execute();
@@ -285,7 +285,7 @@ public class UsuarioDAO {
             pstm.setString(4, usuario.getSenha());
             pstm.setString(5, usuario.getCpf());
             pstm.setString(6, usuario.getEmail());
-            pstm.setBoolean(7, usuario.getStatus());
+            pstm.setBoolean(7, usuario.isStatus());
             pstm.setInt(8, usuario.getPerfil().getId());
             pstm.setInt(9, usuario.getId());
 
@@ -358,7 +358,7 @@ public class UsuarioDAO {
         }
     }
 
-    public boolean destivar(Usuario usuario) {
+    public boolean desativar(Usuario usuario) {
 
         String sql = ""
                 + " UPDATE usuario"
@@ -410,9 +410,9 @@ public class UsuarioDAO {
                 + " u.login,"
                 + " u.senha"
                 + " FROM"
-                + " perfil p INNER JOIN usuario u"
+                + " usuario u INNER JOIN perfil p"
                 + " ON"
-                + " p.id = u.id_perfil"
+                + " u.id_perfil = p.id"
                 + " WHERE"
                 + " u.login = ?"
                 + " AND"
@@ -440,9 +440,7 @@ public class UsuarioDAO {
             rset = pstm.executeQuery();
 
             if (rset.next()) {
-
                 return true;
-
             }
 
         } catch (Exception e) {

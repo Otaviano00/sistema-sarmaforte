@@ -1,6 +1,6 @@
 package dao;
 
-import com.mysql.jdbc.Connection;
+import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexao {
