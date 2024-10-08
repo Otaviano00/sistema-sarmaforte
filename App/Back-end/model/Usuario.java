@@ -66,6 +66,7 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
 
     public Perfil getPerfil() {
         return perfil;
@@ -82,7 +83,9 @@ public class Usuario {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
     
+
     public Usuario(int id, String login, String senha, String cpf, String email, Perfil perfil, boolean status) {
         this.id = id;
         this.login = login;

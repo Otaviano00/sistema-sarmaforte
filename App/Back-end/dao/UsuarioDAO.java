@@ -403,12 +403,23 @@ public class UsuarioDAO {
 
     }
 
-    public boolean efetuarLogin(String login, String senha) {
-
-        String sql = ""
+    public Usuario efetuarLogin(String login, String senha) {
+        
+         String sql = ""
                 + " SELECT"
+                + " u.id,"
+                + " u.nome,"
+                + " u.telefone,"
                 + " u.login,"
-                + " u.senha"
+                + " u.senha,"
+                + " u.cpf,"
+                + " u.email,"
+                + " u.id_perfil,"
+                + " u.status,"
+                + " p.nome,"
+                + " p.descricao,"
+                + " p.hierarquia,"
+                + " p.status"
                 + " FROM"
                 + " usuario u INNER JOIN perfil p"
                 + " ON"
@@ -425,6 +436,9 @@ public class UsuarioDAO {
         Connection conn = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
+        
+        Perfil perfil = new Perfil();
+        Usuario usuario = new Usuario();
 
         try {
 
@@ -438,9 +452,26 @@ public class UsuarioDAO {
             pstm.execute();
 
             rset = pstm.executeQuery();
-
+            
             if (rset.next()) {
-                return true;
+                
+                perfil.setId(rset.getInt("u.id_perfil"));
+                perfil.setNome(rset.getString("p.nome"));
+                perfil.setDescricao(rset.getString("p.descricao"));
+                perfil.setHierarquia(rset.getInt("p.hierarquia"));
+                perfil.setStatus(rset.getBoolean("p.status"));
+
+                usuario.setId(rset.getInt("u.id"));
+                usuario.setNome(rset.getString("u.nome"));
+                usuario.setTelefone(rset.getString("u.telefone"));
+                usuario.setLogin(rset.getString("u.login"));
+                usuario.setSenha(rset.getString("u.senha"));
+                usuario.setCpf(rset.getString("u.cpf"));
+                usuario.setEmail(rset.getString("u.email"));
+                usuario.setPerfil(perfil);
+                usuario.setStatus(rset.getBoolean("u.status"));
+            } else {
+                usuario = null;
             }
 
         } catch (Exception e) {
@@ -466,7 +497,7 @@ public class UsuarioDAO {
 
         }
 
-        return false;
+        return usuario;
 
     }
 
