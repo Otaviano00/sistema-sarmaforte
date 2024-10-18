@@ -9,7 +9,7 @@ public class ItemOrcamento {
     private int quantidade;
     private double preco;
     private LocalDateTime dataHora;
-    private String statusVenda;
+    private boolean statusVenda;
 
     public int getId() {
         return id;
@@ -51,15 +51,15 @@ public class ItemOrcamento {
         this.dataHora = dataHora;
     }
 
-    public String getStatusVenda() {
+    public boolean getStatusVenda() {
         return statusVenda;
     }
 
-    public void setStatusVenda(String statusVenda) {
+    public void setStatusVenda(boolean statusVenda) {
         this.statusVenda = statusVenda;
     }
 
-    public ItemOrcamento(int id, Produto produto, int quantidade, double preco, LocalDateTime dataHora, String statusVenda) {
+    public ItemOrcamento(int id, Produto produto, int quantidade, double preco, LocalDateTime dataHora, boolean statusVenda) {
         this.id = id;
         this.produto = produto;
         this.quantidade = quantidade;
