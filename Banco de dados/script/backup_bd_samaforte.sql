@@ -57,15 +57,15 @@ CREATE TABLE `item_orcamento` (
   `quantidade` int(11) NOT NULL,
   `preco` decimal(10,0) unsigned NOT NULL,
   `dataHora` datetime NOT NULL,
-  `statusVenda` varchar(20) NOT NULL,
+  `statusVenda` tinyint(1) NOT NULL DEFAULT 0,
   `id_orcamento` int(11) NOT NULL,
   `id_produto` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `dataHora_UNIQUE` (`dataHora`),
   KEY `fk_item_orcamento_orcamento1_idx` (`id_orcamento`),
   KEY `fk_item_orcamento_produto1_idx` (`id_produto`),
-  CONSTRAINT `fk_item_orcamento_orcamento1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamento` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_item_orcamento_produto1` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_item_orcamento_orcamento1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_item_orcamento_produto1` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`codigo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -90,7 +90,7 @@ CREATE TABLE `menu` (
   `nome` varchar(10) NOT NULL,
   `link` varchar(255) NOT NULL,
   `imagem` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `link_UNIQUE` (`link`),
   UNIQUE KEY `imagem_UNIQUE` (`imagem`)
@@ -117,8 +117,8 @@ CREATE TABLE `orcamento` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dataCriacao` datetime NOT NULL,
   `dataValidade` datetime NOT NULL,
-  `status` varchar(20) NOT NULL,
-  `informacoes` text NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'pendente',
+  `informacoes` text DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orcamento_cliente1_idx` (`id_cliente`),
@@ -147,7 +147,7 @@ CREATE TABLE `perfil` (
   `nome` varchar(10) NOT NULL,
   `descricao` varchar(255) DEFAULT NULL,
   `hierarquia` tinyint(4) NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome_UNIQUE` (`nome`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -208,7 +208,7 @@ CREATE TABLE `produto` (
   `fornecedor` varchar(50) NOT NULL,
   `preco` decimal(10,0) unsigned NOT NULL,
   `custo` decimal(10,0) unsigned DEFAULT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`codigo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -268,7 +268,7 @@ CREATE TABLE `usuario` (
   `senha` varchar(255) NOT NULL,
   `cpf` varchar(11) NOT NULL,
   `email` varchar(50) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   `id_perfil` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `telefone_UNIQUE` (`telefone`),
@@ -277,7 +277,7 @@ CREATE TABLE `usuario` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `fk_usuario_perfil1_idx` (`id_perfil`),
   CONSTRAINT `fk_usuario_perfil1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,7 +286,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (2,'Administrador','--','admin','1','-','-',1,1);
+INSERT INTO `usuario` VALUES (1,'Administrador','--','admin','1','-','-',1,1);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -300,6 +300,8 @@ DROP TABLE IF EXISTS `venda`;
 CREATE TABLE `venda` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` datetime NOT NULL,
+  `desconto` decimal(10,0) DEFAULT 0,
+  `forma_pagamento` varchar(45) NOT NULL,
   `valor` decimal(10,0) unsigned NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_orcamento` int(11) NOT NULL,
@@ -320,6 +322,10 @@ LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'db_samaforte'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -330,4 +336,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-04 13:34:17
+-- Dump completed on 2024-10-17 23:44:33

@@ -7,6 +7,8 @@ public class Venda {
     private int id;
     private LocalDate data;
     private double valor;
+    private double desconto;
+    private String formaPagamento;
     private Usuario usuario;
     private Orcamento orcamento;
 
@@ -50,10 +52,28 @@ public class Venda {
         this.orcamento = orcamento;
     }
 
-    public Venda(int id, LocalDate data, double valor, Usuario usuario, Orcamento orcamento) {
+    public double getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(double desconto) {
+        this.desconto = desconto;
+    }
+
+    public String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(String formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public Venda(int id, LocalDate data, double valor, double desconto, String formaPagamento, Usuario usuario, Orcamento orcamento) {
         this.id = id;
         this.data = data;
         this.valor = valor;
+        this.desconto = desconto;
+        this.formaPagamento = formaPagamento;
         this.usuario = usuario;
         this.orcamento = orcamento;
     }
