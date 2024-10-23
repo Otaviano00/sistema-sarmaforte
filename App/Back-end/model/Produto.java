@@ -6,6 +6,7 @@ public class Produto {
     private String descricao;
     private String nome;
     private int quantidade;
+    private int quantidadeCritica;
     private String imagem;
     private String fornecedor;
     private double preco;
@@ -44,6 +45,14 @@ public class Produto {
         this.quantidade = quantidade;
     }
 
+    public int getQuantidadeCritica() {
+        return quantidadeCritica;
+    }
+
+    public void setQuantidadeCritica(int quantidadeCritica) {
+        this.quantidadeCritica = quantidadeCritica;
+    }
+    
     public String getImagem() {
         return imagem;
     }
@@ -84,18 +93,19 @@ public class Produto {
         this.status = status;
     }
 
-    public Produto(int codigo, String descricao, String nome, int quantidade, String imagem, String fornecedor, double preco, double custo, boolean status) {
+    public Produto(int codigo, String descricao, String nome, int quantidade, int quantidadeCritica, String imagem, String fornecedor, double preco, double custo, boolean status) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.nome = nome;
         this.quantidade = quantidade;
+        this.quantidadeCritica = quantidadeCritica;
         this.imagem = imagem;
         this.fornecedor = fornecedor;
         this.preco = preco;
         this.custo = custo;
         this.status = status;
     }
-
+    
     public Produto() {
     }
 
