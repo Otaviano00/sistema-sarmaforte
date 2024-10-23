@@ -10,7 +10,7 @@ import model.Usuario;
 
 public class UsuarioDAO {
 
-    public boolean cadastrar(Usuario usuario) {
+    public static boolean cadastrar(Usuario usuario) {
 
         String sql = ""
                 + " INSERT INTO"
@@ -58,7 +58,7 @@ public class UsuarioDAO {
 
     }
 
-    public List<Usuario> listar() {
+    public static List<Usuario> listar() {
 
         String sql = ""
                 + " SELECT"
@@ -139,7 +139,7 @@ public class UsuarioDAO {
         return usuarios;
     }
 
-    public Usuario listarPorId(int id) {
+    public static Usuario listarPorId(int id) {
 
         /*
         
@@ -207,22 +207,7 @@ public class UsuarioDAO {
 
             } else {
 
-                perfil.setId(0);
-                perfil.setNome(null);
-                perfil.setDescricao(null);
-                perfil.setHierarquia(0);
-                perfil.setStatus(false);
-
-                usuario.setId(0);
-                usuario.setNome(null);
-                usuario.setTelefone(null);
-                usuario.setLogin(null);
-                usuario.setSenha(null);
-                usuario.setCpf(null);
-                usuario.setEmail(null);
-                usuario.setPerfil(perfil);
-                usuario.setStatus(false);
-
+                return null;
             }
 
         } catch (Exception e) {
@@ -250,7 +235,7 @@ public class UsuarioDAO {
 
     }
 
-    public boolean alterar(Usuario usuario) {
+    public static boolean alterar(Usuario usuario) {
 
         /*
         
@@ -314,7 +299,7 @@ public class UsuarioDAO {
 
     }
 
-    public boolean ativar(Usuario usuario) {
+    public static boolean ativar(Usuario usuario) {
 
         String sql = ""
                 + " UPDATE usuario"
@@ -358,7 +343,7 @@ public class UsuarioDAO {
         }
     }
 
-    public boolean desativar(Usuario usuario) {
+    public static boolean destivar(Usuario usuario) {
 
         String sql = ""
                 + " UPDATE usuario"
@@ -403,9 +388,9 @@ public class UsuarioDAO {
 
     }
 
-    public Usuario efetuarLogin(String login, String senha) {
-        
-         String sql = ""
+    public static Usuario efetuarLogin(String login, String senha) {
+
+        String sql = ""
                 + " SELECT"
                 + " u.id,"
                 + " u.nome,"
@@ -421,9 +406,9 @@ public class UsuarioDAO {
                 + " p.hierarquia,"
                 + " p.status"
                 + " FROM"
-                + " usuario u INNER JOIN perfil p"
+                + " perfil p INNER JOIN usuario u"
                 + " ON"
-                + " u.id_perfil = p.id"
+                + " p.id = u.id_perfil"
                 + " WHERE"
                 + " u.login = ?"
                 + " AND"
@@ -436,9 +421,6 @@ public class UsuarioDAO {
         Connection conn = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
-        
-        Perfil perfil = new Perfil();
-        Usuario usuario = new Usuario();
 
         try {
 
@@ -452,9 +434,13 @@ public class UsuarioDAO {
             pstm.execute();
 
             rset = pstm.executeQuery();
-            
+
             if (rset.next()) {
-                
+
+                Perfil perfil = new Perfil();
+
+                Usuario usuario = new Usuario();
+
                 perfil.setId(rset.getInt("u.id_perfil"));
                 perfil.setNome(rset.getString("p.nome"));
                 perfil.setDescricao(rset.getString("p.descricao"));
@@ -470,8 +456,9 @@ public class UsuarioDAO {
                 usuario.setEmail(rset.getString("u.email"));
                 usuario.setPerfil(perfil);
                 usuario.setStatus(rset.getBoolean("u.status"));
-            } else {
-                usuario = null;
+
+                return usuario;
+
             }
 
         } catch (Exception e) {
@@ -497,12 +484,8 @@ public class UsuarioDAO {
 
         }
 
-        return usuario;
+        return null;
 
-    }
-
-    public void efetuarLogOff() {
-        // Não faço ideia do que esse metodo faz.
     }
 
 }
