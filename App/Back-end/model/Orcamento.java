@@ -1,13 +1,14 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Orcamento {
 
     private int id;
-    private LocalDate dataCriacao;
-    private LocalDate dataValidade;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataValidade;
     private String status;
     private Cliente cliente;
     private String informacao;
@@ -21,19 +22,19 @@ public class Orcamento {
         this.id = id;
     }
 
-    public LocalDate getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDate dataCriacao) {
+    public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public LocalDate getDataValidade() {
+    public LocalDateTime getDataValidade() {
         return dataValidade;
     }
 
-    public void setDataValidade(LocalDate dataValidade) {
+    public void setDataValidade(LocalDateTime dataValidade) {
         this.dataValidade = dataValidade;
     }
 
@@ -69,7 +70,7 @@ public class Orcamento {
         this.itens = itens;
     }
 
-    public Orcamento(int id, LocalDate dataCriacao, LocalDate dataValidade, String status, Cliente cliente, String informacao, List<ItemOrcamento> itens) {
+    public Orcamento(int id, LocalDateTime dataCriacao, LocalDateTime dataValidade, String status, Cliente cliente, String informacao, List<ItemOrcamento> itens) {
         this.id = id;
         this.dataCriacao = dataCriacao;
         this.dataValidade = dataValidade;

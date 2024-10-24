@@ -10,7 +10,7 @@ import model.Relatorio;
 
 public class RelatorioDAO {
 
-    public boolean criar(Relatorio relatorio) {
+    public static boolean criar(Relatorio relatorio) {
         String sql = "INSER INTO relatorio (id, nome, descricao, dataCriacao, arquivo) VALUES (?,?,?,?,?)";
 
         Connection conn = null;
@@ -47,7 +47,7 @@ public class RelatorioDAO {
         }
     }
 
-    public List<Relatorio> listar() {
+    public static List<Relatorio> listar() {
 
         String sql = "SELECT * FROM relatorio";
         List<Relatorio> relatorios = new ArrayList<>();
@@ -94,7 +94,7 @@ public class RelatorioDAO {
         return relatorios;
     }
 
-    public Relatorio listarPorId(int id) {
+    public static Relatorio listarPorId(int id) {
         String sql = "SELECT * FROM relatorio WHERE id = ?";
         Relatorio relatorio = new Relatorio();
 
@@ -136,7 +136,7 @@ public class RelatorioDAO {
         return relatorio;
     }
 
-    public boolean excluir(int id) {
+    public static boolean excluir(int id) {
         String sql = "DELETE FROM relatorio WHERE id = ?";
 
         Connection conn = null;

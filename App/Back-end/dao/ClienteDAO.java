@@ -9,7 +9,7 @@ import model.Cliente;
 
 public class ClienteDAO {
 
-    public boolean cadastrar(Cliente cliente) {
+    public static boolean cadastrar(Cliente cliente) {
         String sql = "INSERT INTO cliente (nome, telefone, cpf, endereco) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
@@ -45,7 +45,7 @@ public class ClienteDAO {
         }
     }
 
-    public List<Cliente> listar() {
+    public static List<Cliente> listar() {
         String sql = "SELECT * FROM cliente";
         List<Cliente> clientes = new ArrayList<>();
 
@@ -90,7 +90,7 @@ public class ClienteDAO {
         return clientes;
     }
 
-    public Cliente listarPorId(int id) {
+    public static Cliente listarPorId(int id) {
         String sql = "SELECT * FROM cliente WHERE id = ?";
         Cliente cliente = new Cliente();
 
@@ -133,7 +133,7 @@ public class ClienteDAO {
         return cliente;
     }
 
-    public boolean alterar(Cliente cliente) {
+    public static boolean alterar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, telefone = ?, cpf = ?, endereco = ? WHERE id = ?";
 
         Connection conn = null;
@@ -170,7 +170,7 @@ public class ClienteDAO {
         }
     }
 
-    public boolean excluir(int id) {
+    public static boolean excluir(int id) {
         String sql = "DELETE FROM cliente WHERE id = ?";
 
         Connection conn = null;

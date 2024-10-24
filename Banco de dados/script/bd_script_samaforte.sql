@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`perfil` (
   `hierarquia` TINYINT NOT NULL,
   `status` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) VISIBLE)
+  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) )
 ENGINE = InnoDB;
 
 
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`menu` (
   `imagem` VARCHAR(255) NOT NULL,
   `status` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `link_UNIQUE` (`link` ASC) VISIBLE,
-  UNIQUE INDEX `imagem_UNIQUE` (`imagem` ASC) VISIBLE)
+  UNIQUE INDEX `link_UNIQUE` (`link` ASC) ,
+  UNIQUE INDEX `imagem_UNIQUE` (`imagem` ASC) )
 ENGINE = InnoDB;
 
 
@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`perfil_menu` (
   `id_perfil` INT NOT NULL,
   `id_menu` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_perfil_menu_perfil1_idx` (`id_perfil` ASC) VISIBLE,
-  INDEX `fk_perfil_menu_menu1_idx` (`id_menu` ASC) VISIBLE,
+  INDEX `fk_perfil_menu_perfil1_idx` (`id_perfil` ASC) ,
+  INDEX `fk_perfil_menu_menu1_idx` (`id_menu` ASC) ,
   CONSTRAINT `fk_perfil_menu_perfil1`
     FOREIGN KEY (`id_perfil`)
     REFERENCES `db_samaforte`.`perfil` (`id`)
@@ -83,11 +83,11 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`usuario` (
   `status` TINYINT(1) NOT NULL DEFAULT 1,
   `id_perfil` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) VISIBLE,
-  UNIQUE INDEX `login_UNIQUE` (`login` ASC) VISIBLE,
-  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) VISIBLE,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  INDEX `fk_usuario_perfil1_idx` (`id_perfil` ASC) VISIBLE,
+  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) ,
+  UNIQUE INDEX `login_UNIQUE` (`login` ASC) ,
+  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) ,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+  INDEX `fk_usuario_perfil1_idx` (`id_perfil` ASC) ,
   CONSTRAINT `fk_usuario_perfil1`
     FOREIGN KEY (`id_perfil`)
     REFERENCES `db_samaforte`.`perfil` (`id`)
@@ -107,9 +107,9 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`relatorio` (
   `arquivo` VARCHAR(255) NOT NULL,
   `id_usuario` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `dataCriacao_UNIQUE` (`dataCriacao` ASC) VISIBLE,
-  UNIQUE INDEX `arquivo_UNIQUE` (`arquivo` ASC) VISIBLE,
-  INDEX `fk_relatorio_usuario1_idx` (`id_usuario` ASC) VISIBLE,
+  UNIQUE INDEX `dataCriacao_UNIQUE` (`dataCriacao` ASC) ,
+  UNIQUE INDEX `arquivo_UNIQUE` (`arquivo` ASC) ,
+  INDEX `fk_relatorio_usuario1_idx` (`id_usuario` ASC) ,
   CONSTRAINT `fk_relatorio_usuario1`
     FOREIGN KEY (`id_usuario`)
     REFERENCES `db_samaforte`.`usuario` (`id`)
@@ -128,8 +128,8 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`cliente` (
   `cpf` VARCHAR(11) NULL,
   `endereco` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) VISIBLE,
-  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) VISIBLE)
+  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) ,
+  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) )
 ENGINE = InnoDB;
 
 
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`orcamento` (
   `informacoes` TEXT NULL,
   `id_cliente` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_orcamento_cliente1_idx` (`id_cliente` ASC) VISIBLE,
+  INDEX `fk_orcamento_cliente1_idx` (`id_cliente` ASC) ,
   CONSTRAINT `fk_orcamento_cliente1`
     FOREIGN KEY (`id_cliente`)
     REFERENCES `db_samaforte`.`cliente` (`id`)
@@ -159,15 +159,15 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `db_samaforte`.`venda` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `data` DATETIME NOT NULL,
-  `desconto` DECIMAL NULL DEFAULT 0,
+  `desconto` DECIMAL(10,2) NULL DEFAULT 0,
   `forma_pagamento` VARCHAR(45) NOT NULL,
-  `valor` DECIMAL UNSIGNED NOT NULL,
+  `valor` DECIMAL(10,2) UNSIGNED NOT NULL,
   `id_usuario` INT NOT NULL,
   `id_orcamento` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `data_UNIQUE` (`data` ASC) VISIBLE,
-  INDEX `fk_venda_usuario_idx` (`id_usuario` ASC) VISIBLE,
-  INDEX `fk_venda_orcamento1_idx` (`id_orcamento` ASC) VISIBLE,
+  UNIQUE INDEX `data_UNIQUE` (`data` ASC) ,
+  INDEX `fk_venda_usuario_idx` (`id_usuario` ASC) ,
+  INDEX `fk_venda_orcamento1_idx` (`id_orcamento` ASC) ,
   CONSTRAINT `fk_venda_usuario`
     FOREIGN KEY (`id_usuario`)
     REFERENCES `db_samaforte`.`usuario` (`id`)
@@ -192,8 +192,8 @@ CREATE TABLE IF NOT EXISTS `db_samaforte`.`produto` (
   `quantidadeCritica` INT UNSIGNED NOT NULL,
   `imagem` VARCHAR(255) NULL,
   `fornecedor` VARCHAR(50) NOT NULL,
-  `preco` DECIMAL UNSIGNED NOT NULL,
-  `custo` DECIMAL UNSIGNED NULL,
+  `preco` DECIMAL(10,2) UNSIGNED NOT NULL,
+  `custo` DECIMAL(10,2) UNSIGNED NULL,
   `status` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`codigo`))
 ENGINE = InnoDB;
@@ -205,15 +205,15 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `db_samaforte`.`item_orcamento` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `quantidade` INT NOT NULL,
-  `preco` DECIMAL UNSIGNED NOT NULL,
+  `preco` DECIMAL(10,2) UNSIGNED NOT NULL,
   `dataHora` DATETIME NOT NULL,
   `statusVenda` TINYINT(1) NOT NULL DEFAULT 0,
   `id_orcamento` INT NOT NULL,
   `id_produto` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `dataHora_UNIQUE` (`dataHora` ASC) VISIBLE,
-  INDEX `fk_item_orcamento_orcamento1_idx` (`id_orcamento` ASC) VISIBLE,
-  INDEX `fk_item_orcamento_produto1_idx` (`id_produto` ASC) VISIBLE,
+  UNIQUE INDEX `dataHora_UNIQUE` (`dataHora` ASC) ,
+  INDEX `fk_item_orcamento_orcamento1_idx` (`id_orcamento` ASC) ,
+  INDEX `fk_item_orcamento_produto1_idx` (`id_produto` ASC) ,
   CONSTRAINT `fk_item_orcamento_orcamento1`
     FOREIGN KEY (`id_orcamento`)
     REFERENCES `db_samaforte`.`orcamento` (`id`)

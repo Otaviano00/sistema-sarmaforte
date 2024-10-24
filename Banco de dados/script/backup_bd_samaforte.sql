@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `item_orcamento`;
 CREATE TABLE `item_orcamento` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `quantidade` int(11) NOT NULL,
-  `preco` decimal(10,0) unsigned NOT NULL,
+  `preco` decimal(10,2) unsigned NOT NULL,
   `dataHora` datetime NOT NULL,
   `statusVenda` tinyint(1) NOT NULL DEFAULT 0,
   `id_orcamento` int(11) NOT NULL,
@@ -206,8 +206,8 @@ CREATE TABLE `produto` (
   `quantidadeCritica` int(10) unsigned NOT NULL,
   `imagem` varchar(255) DEFAULT NULL,
   `fornecedor` varchar(50) NOT NULL,
-  `preco` decimal(10,0) unsigned NOT NULL,
-  `custo` decimal(10,0) unsigned DEFAULT NULL,
+  `preco` decimal(10,2) unsigned NOT NULL,
+  `custo` decimal(10,2) unsigned DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`codigo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -300,9 +300,9 @@ DROP TABLE IF EXISTS `venda`;
 CREATE TABLE `venda` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` datetime NOT NULL,
-  `desconto` decimal(10,0) DEFAULT 0,
+  `desconto` decimal(10,2) DEFAULT 0,
   `forma_pagamento` varchar(45) NOT NULL,
-  `valor` decimal(10,0) unsigned NOT NULL,
+  `valor` decimal(10,2) unsigned NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_orcamento` int(11) NOT NULL,
   PRIMARY KEY (`id`),

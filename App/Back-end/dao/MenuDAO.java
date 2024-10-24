@@ -9,7 +9,7 @@ import model.Menu;
 
 public class MenuDAO {
 
-    public boolean cadastrar(Menu menu) {
+    public static boolean cadastrar(Menu menu) {
         String sql = "INSERT INTO menu (nome, link, imagem, status) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
@@ -45,7 +45,7 @@ public class MenuDAO {
         }
     }
 
-    public List<Menu> listar() {
+    public static List<Menu> listar() {
         String sql = "SELECT * FROM menu";
         List<Menu> menus = new ArrayList<>();
 
@@ -90,7 +90,7 @@ public class MenuDAO {
         return menus;
     }
 
-    public Menu listarPorId(int id) {
+    public static Menu listarPorId(int id) {
         String sql = "SELECT * FROM menu WHERE id = ?";
         Menu menu = new Menu();
 
@@ -133,7 +133,7 @@ public class MenuDAO {
         return menu;
     }
 
-    public boolean alterar(Menu menu) {
+    public static boolean alterar(Menu menu) {
         String sql = "UPDATE menu SET nome = ?, link = ?, imagem = ?, status = ? WHERE id = ?";
 
         Connection conn = null;
@@ -170,7 +170,7 @@ public class MenuDAO {
         }
     }
 
-    public boolean ativar(Menu menu) {
+    public static boolean ativar(Menu menu) {
 
         String sql = ""
                 + " UPDATE menu"
@@ -214,7 +214,7 @@ public class MenuDAO {
         }
     }
 
-    public boolean desativar(Menu menu) {
+    public static boolean desativar(Menu menu) {
 
         String sql = ""
                 + " UPDATE menu"

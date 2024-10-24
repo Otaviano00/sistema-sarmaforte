@@ -9,7 +9,7 @@ import model.Produto;
 
 public class ProdutoDAO {
 
-    public boolean cadastrar(Produto produto) {
+    public static boolean cadastrar(Produto produto) {
         String sql = "INSERT INTO produto (codigo, descricao, nome, quantidade, quantidadeCritica, imagem, fornecedor, preco, custo, status) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
         Connection conn = null;
@@ -51,7 +51,7 @@ public class ProdutoDAO {
         }
     }
 
-    public List<Produto> listar() {
+    public static List<Produto> listar() {
         String sql = "SELECT * FROM produto";
         List<Produto> produtos = new ArrayList<>();
 
@@ -100,7 +100,7 @@ public class ProdutoDAO {
         return produtos;
     }
 
-    public Produto listarPorId(int codigo) {
+    public static Produto listarPorId(int codigo) {
         String sql = "SELECT * from produto WHERE codigo = ?";
         Produto produto = new Produto();
 
@@ -148,7 +148,7 @@ public class ProdutoDAO {
         return produto;
     }
 
-    public boolean alterar(Produto produto) {
+    public static boolean alterar(Produto produto) {
         String sql = "UPDATE produto SET codigo = ?, descricao = ?, nome = ? quantidade = ?, quantidadeCritica = ?, imagem = ?, fornecedor = ?, preco = ?, custo = ?, status = ? WHERE codigo = ?";
 
         Connection conn = null;
@@ -189,7 +189,7 @@ public class ProdutoDAO {
         }
     }
 
-    public boolean ativar(Produto produto) {
+    public static boolean ativar(Produto produto) {
 
         String sql = ""
                 + " UPDATE produto"
@@ -232,7 +232,7 @@ public class ProdutoDAO {
 
         }
     }
-    public boolean desativar (Produto produto) {
+    public static boolean desativar (Produto produto) {
         
         String sql = ""
                 + " UPDATE produto"

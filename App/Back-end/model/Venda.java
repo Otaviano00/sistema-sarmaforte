@@ -1,11 +1,11 @@
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Venda {
 
     private int id;
-    private LocalDate data;
+    private LocalDateTime data;
     private double valor;
     private double desconto;
     private String formaPagamento;
@@ -20,11 +20,11 @@ public class Venda {
         this.id = id;
     }
 
-    public LocalDate getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 
@@ -68,7 +68,7 @@ public class Venda {
         this.orcamento = orcamento;
     }
 
-    public Venda(int id, LocalDate data, double valor, double desconto, String formaPagamento, Usuario usuario, Orcamento orcamento) {
+    public Venda(int id, LocalDateTime data, double valor, double desconto, String formaPagamento, Usuario usuario, Orcamento orcamento) {
         this.id = id;
         this.data = data;
         this.valor = valor;
