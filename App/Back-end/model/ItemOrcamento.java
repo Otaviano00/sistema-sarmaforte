@@ -6,6 +6,7 @@ public class ItemOrcamento {
 
     private int id;
     private Produto produto;
+    private Orcamento orcamento;
     private int quantidade;
     private double preco;
     private LocalDateTime dataHora;
@@ -25,6 +26,14 @@ public class ItemOrcamento {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    public Orcamento getOrcamento() {
+        return orcamento;
+    }
+
+    public void setOrcamento(Orcamento orcamento) {
+        this.orcamento = orcamento;
     }
 
     public int getQuantidade() {
@@ -59,9 +68,10 @@ public class ItemOrcamento {
         this.statusVenda = statusVenda;
     }
 
-    public ItemOrcamento(int id, Produto produto, int quantidade, double preco, LocalDateTime dataHora, boolean statusVenda) {
+    public ItemOrcamento(int id, Produto produto, Orcamento orcamento, int quantidade, double preco, LocalDateTime dataHora, boolean statusVenda) {
         this.id = id;
         this.produto = produto;
+        this.orcamento = orcamento;
         this.quantidade = quantidade;
         this.preco = preco;
         this.dataHora = dataHora;

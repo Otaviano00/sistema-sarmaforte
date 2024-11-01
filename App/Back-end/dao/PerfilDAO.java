@@ -9,7 +9,7 @@ import model.Perfil;
 
 public class PerfilDAO {
 
-    public boolean cadastrar(Perfil perfil) {
+    public static boolean cadastrar(Perfil perfil) {
         String sql = "INSERT INTO perfil (nome, descricao, hierarquia, status) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
@@ -45,7 +45,7 @@ public class PerfilDAO {
         }
     }
 
-    public List<Perfil> listar() {
+    public static List<Perfil> listar() {
         String sql = "SELECT * FROM perfil";
         List<Perfil> perfis = new ArrayList<>();
 
@@ -90,7 +90,7 @@ public class PerfilDAO {
         return perfis;
     }
 
-    public Perfil listarPorId(int id) {
+    public static Perfil listarPorId(int id) {
         String sql = "SELECT * FROM perfil WHERE id = ?";
         Perfil perfil = new Perfil();
 
@@ -133,7 +133,7 @@ public class PerfilDAO {
         return perfil;
     }
 
-    public boolean alterar(Perfil perfil) {
+    public static boolean alterar(Perfil perfil) {
         String sql = "UPDATE perfil SET nome = ?, descricao = ?, hierarquia = ?, status = ? WHERE id = ?";
 
         Connection conn = null;
@@ -170,7 +170,7 @@ public class PerfilDAO {
         }
     }
 
-    public boolean ativar(Perfil perfil) {
+    public static boolean ativar(Perfil perfil) {
 
         String sql = ""
                 + " UPDATE menu"
@@ -214,7 +214,7 @@ public class PerfilDAO {
         }
     }
 
-    public boolean desativar(Perfil perfil) {
+    public static boolean desativar(Perfil perfil) {
 
         String sql = ""
                 + " UPDATE menu"
