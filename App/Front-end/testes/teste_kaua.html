@@ -4,58 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-        }
-        header {
-            height: 50px;
-            width: 100vw;
-            background-color: blue;
-            position: relative;
-        }
-        a {
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: aqua;
-            padding: 10px;
-            text-decoration: none;
-        }
-        img {
-            width: 30px;
-            height: 30px;
-            padding-right: 5px;
-        }
-        nav {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-        }
-
-        a:hover {
-            background-color: aquamarine;
-        }
-    </style>
+    <link rel="stylesheet" href="../style/main.css">
+    <title>Home</title>
+    
 </head>
 <body>
     <header>
-        SAMAFORTE
+        <div class="logo">
+            <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
+            <a href="home.jsp">
+                <img id="samaforte" src="images/logo.svg" alt="logo da Samaforte">
+            </a>
+            <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
+        </div>
+        <div id="include">
+            <a href="#" class="info_usuario">
+                <div id="nome_cargo">
+                    <span id="nome">Admininistrador</span>
+                    <span id="cargo">Admin</span>
+                </div>
+                <img src="images/icone_info.svg" alt="icone do usuário">
+            </a>
+            <a href="#" id="sair">
+                <img src="images/icone_sair.svg" alt="sair">
+            </a>
+        </div>
     </header>
     <nav>
-        <a href="#"><img src="cadeado.png" alt=""><span>CLIENTES</span></a>
-        <a href="#"><img src="cadeado.png" alt=""><span>PRODUTOS</span></a>
-        <a href="#"><img src="cadeado.png" alt=""><span>VENDAS</span></a>
-        <a href="#"><img src="cadeado.png" alt=""><span>GERENCIA</span></a>
+        <div class="botao" id="home">
+            <a href="teste_kaua.html"><img src="images/icone_home.svg" alt="home"></a>
+        </div>
+        <div class="botao">
+            <a href="#"><img src="images/icone_gerencia.svg" alt=""><span>GERENCIA</span></a>
+        </div>
+        <div class="botao">
+            <a href="#"><img src="images/icone_orcamento.svg" alt=""><span>ORÇAMENTOS</span></a>
+        </div>
+        <div class="botao">
+            <a href="#"><img src="images/icone_vendas.svg" alt="" style="position: relative; top: -3px;"><span>VENDAS</span></a>
+        </div>
+        <div class="botao">
+            <a href="#"><img src="images/icone_produto.svg" alt=""><span>PRODUTOS</span></a>
+        </div>
+        <div class="botao">
+            <a href="#"><img src="images/icone_cliente.svg" alt=""><span>CLIENTES</span></a>
+        </div>
+        <div class="pesquisa">
+            <img src="images/icone_pesquisa.svg" alt="lupa">
+            <input type="text" name="pesquisa" placeholder="Pesquisar">
+        </div>
     </nav>
     <div class="flex">
-
+     
     </div>
     <footer>
-
+        <p> &copy; Samaforte - Natanel</p>
     </footer>
 </body>
 </html>
