@@ -5,17 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/main.css">
+    
     <title>Home</title>
     
 </head>
 <body>
+    <script>
+        function ativar_menu() {
+            const menu = document.querySelector("#menu");
+            menu.classList.toggle("ativo");
+        }
+    </script>
     <header>
         <div class="logo">
             <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
-            <a href="home.jsp">
-                <img id="samaforte" src="images/logo.svg" alt="logo da Samaforte">
+            <a href="home.jsp" >
+                <img src="images/logo.svg" alt="logo da Samaforte" id="samaforte">
             </a>
-            <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
+            <img id="bloco2_logo" src="images/blocos_direita.svg" alt="" >
         </div>
         <div id="include">
             <a href="#" class="info_usuario">
@@ -34,8 +41,30 @@
         <div class="botao" id="home">
             <a href="teste_kaua.html"><img src="images/icone_home.svg" alt="home"></a>
         </div>
-        <div class="botao">
-            <a href="#"><img src="images/icone_gerencia.svg" alt=""><span>GERENCIA</span></a>
+        <div id="gerencia" style="min-width: fit-content; width: 10%; padding-right: 20px;">
+            <div class="botao" onclick="ativar_menu()" style=" min-width: 100%;">
+                <a href="#">
+                    <img src="images/icone_gerencia.svg" alt="">
+                    <span>GERENCIA</span>
+                    <img src="images/icone_expandir.svg" alt="" style="width: 10%; height: 10%; margin-left: 5px;">
+                </a>
+            </div>
+            <div id="menu">
+                <div class="botoes_menu">
+                    <div class="botao_menu">
+                        <a href="#"><img src="images/icone_usuario.svg" alt=""><span>USUÁRIOS</span></a>
+                    </div>
+                    <div class="botao_menu">
+                        <a href="#"><img src="images/icone_perfil.svg" alt=""><span>PERFIS</span></a>
+                    </div>
+                    <div class="botao_menu">
+                        <a href="#"><img src="images/icone_menu.svg" alt=""><span>MENUS</span></a>
+                    </div>
+                    <div class="botao_menu">
+                        <a href="#"><img src="images/icone_relatorio.svg" alt=""><span>RELATÓRIOS</span></a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="botao">
             <a href="#"><img src="images/icone_orcamento.svg" alt=""><span>ORÇAMENTOS</span></a>
@@ -55,7 +84,6 @@
         </div>
     </nav>
     <div class="flex">
-     
     </div>
     <footer>
         <p> &copy; Samaforte - Natanel</p>

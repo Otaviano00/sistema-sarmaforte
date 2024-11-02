@@ -1,3 +1,5 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +13,14 @@
 </head>
 <body>
     <header>
-        <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
-        <a href="home.jsp">
-            <img id="logo" src="images/logo.svg" alt="logo da Samaforte">
-        </a>
-        <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
+         <div class="logo">
+            <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
+            <a href="home.jsp">
+                <img id="samaforte" src="images/logo.svg" alt="logo da Samaforte">
+            </a>
+            <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
+        </div>
+        <%@include file="infoLogin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
