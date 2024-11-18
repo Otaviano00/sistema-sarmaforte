@@ -70,7 +70,7 @@ public class ProdutoDAO {
                 produto.setDescricao(rset.getString("descricao"));
                 produto.setNome(rset.getString("nome"));
                 produto.setQuantidade(rset.getInt("quantidade"));
-                produto.setQuantidadeCritica(rset.getInt("quantidadeCritca"));
+                produto.setQuantidadeCritica(rset.getInt("quantidadeCritica"));
                 produto.setImagem(rset.getString("imagem"));
                 produto.setFornecedor(rset.getString("fornecedor"));
                 produto.setPreco(rset.getDouble("preco"));

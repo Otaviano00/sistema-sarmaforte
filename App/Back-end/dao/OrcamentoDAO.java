@@ -1,15 +1,16 @@
 package dao;
 
+
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
-import model.Orcamento;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import model.Cliente;
 import model.ItemOrcamento;
+import model.Orcamento;
 import model.Produto;
 
 public class OrcamentoDAO {
@@ -17,8 +18,8 @@ public class OrcamentoDAO {
     public static boolean registrar(Orcamento orcamento) {
         String sql = ""
                 + " INSERT INTO"
-                + " orcamento(dataCriacao, dataValidade, status, informacoes, id_cliente)"
-                + " VALUES (?,?,?,?,?)";
+                + " orcamento(dataCriacao, dataValidade, status)"
+                + " VALUES (?,?,?)";
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -33,8 +34,6 @@ public class OrcamentoDAO {
             pstm.setTimestamp(1, Timestamp.valueOf(orcamento.getDataCriacao()));
             pstm.setTimestamp(2, Timestamp.valueOf(orcamento.getDataValidade()));
             pstm.setString(3, orcamento.getStatus());
-            pstm.setString(4, orcamento.getInformacao());
-            pstm.setInt(5, orcamento.getCliente().getId());
 
             pstm.execute();
 
@@ -61,20 +60,14 @@ public class OrcamentoDAO {
 
         String sql = ""
                 + " SELECT"
-                + " o.id,"
-                + " o.dataCriacao,"
-                + " o.dataValidade,"
-                + " o.status,"
-                + " o.informacoes,"
-                + " o.id_cliente,"
-                + " c.nome,"
-                + " c.telefone,"
-                + " c.cpf,"
-                + " c.endereco"
+                + " id,"
+                + " dataCriacao,"
+                + " dataValidade,"
+                + " status,"
+                + " informacoes,"
+                + " id_cliente"
                 + " FROM"
-                + " cliente c INNER JOIN orcamento o"
-                + " ON"
-                + " c.id = o.id_cliente";
+                + " orcamento";
 
         List<Orcamento> orcamentos = new ArrayList<Orcamento>();
 
@@ -101,26 +94,19 @@ public class OrcamentoDAO {
                  */
                 try {
 
-                    Timestamp sqlCriacao = rset.getTimestamp("o.dataCriacao");
-                    Timestamp sqlValidade = rset.getTimestamp("o.dataValidade");
-                    
-                    Cliente cliente = new Cliente();
+                    Timestamp sqlCriacao = rset.getTimestamp("dataCriacao");
+                    Timestamp sqlValidade = rset.getTimestamp("dataValidade");
 
-                    cliente.setId(rset.getInt("o.id_cliente"));
-                    cliente.setNome(rset.getString("c.nome"));
-                    cliente.setTelefone(rset.getString("c.telefone"));
-                    cliente.setCpf(rset.getString("c.cpf"));
-                    cliente.setEndereco(rset.getString("c.endereco"));
-                    
+                    Cliente cliente = ClienteDAO.listarPorId(rset.getInt("id_cliente"));
                     Orcamento orcamento = new Orcamento();
-
-                    orcamento.setId(rset.getInt("o.id"));
+                    
+                    orcamento.setId(rset.getInt("id"));
                     orcamento.setDataCriacao(sqlCriacao.toLocalDateTime());
                     orcamento.setDataValidade(sqlValidade.toLocalDateTime());
-                    orcamento.setStatus(rset.getString("o.status"));
-                    orcamento.setInformacao(rset.getString("o.informacoes"));
+                    orcamento.setStatus(rset.getString("status"));
+                    orcamento.setInformacao(rset.getString("informacoes"));
                     orcamento.setCliente(cliente);
-
+                    
                     orcamentos.add(orcamento);
 
                 } catch (Exception e) {
@@ -161,28 +147,21 @@ public class OrcamentoDAO {
 
         String sql = ""
                 + " SELECT"
-                + " o.id,"
-                + " o.dataCriacao,"
-                + " o.dataValidade,"
-                + " o.status,"
-                + " o.informacoes,"
-                + " o.id_cliente,"
-                + " c.nome,"
-                + " c.telefone,"
-                + " c.cpf,"
-                + " c.endereco"
+                + " id,"
+                + " dataCriacao,"
+                + " dataValidade,"
+                + " status,"
+                + " informacoes,"
+                + " id_cliente"
                 + " FROM"
-                + " cliente c INNER JOIN orcamento o"
-                + " ON"
-                + " c.id = o.id_cliente"
+                + " orcamento"
                 + " WHERE"
-                + " o.id = ?";
+                + " id = ?";
 
         Connection conn = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
-
-        Cliente cliente = new Cliente();
+        
         Orcamento orcamento = new Orcamento();
 
         try {
@@ -199,20 +178,16 @@ public class OrcamentoDAO {
 
                 try {
 
-                    Timestamp sqlCriacao = rset.getTimestamp("o.dataCriacao");
-                    Timestamp sqlValidade = rset.getTimestamp("o.dataValidade");
+                    Timestamp sqlCriacao = rset.getTimestamp("dataCriacao");
+                    Timestamp sqlValidade = rset.getTimestamp("dataValidade");
 
-                    cliente.setId(rset.getInt("o.id_cliente"));
-                    cliente.setNome(rset.getString("c.nome"));
-                    cliente.setTelefone(rset.getString("c.telefone"));
-                    cliente.setCpf(rset.getString("c.cpf"));
-                    cliente.setEndereco(rset.getString("c.endereco"));
-
-                    orcamento.setId(rset.getInt("o.id"));
+                    Cliente cliente = ClienteDAO.listarPorId(rset.getInt("id_cliente"));
+                    
+                    orcamento.setId(rset.getInt("id"));
                     orcamento.setDataCriacao(sqlCriacao.toLocalDateTime());
                     orcamento.setDataValidade(sqlValidade.toLocalDateTime());
-                    orcamento.setStatus(rset.getString("o.status"));
-                    orcamento.setInformacao(rset.getString("o.informacoes"));
+                    orcamento.setStatus(rset.getString("status"));
+                    orcamento.setInformacao(rset.getString("informacoes"));
                     orcamento.setCliente(cliente);
 
                 } catch (Exception e) {
@@ -422,14 +397,7 @@ public class OrcamentoDAO {
 
     public static List<ItemOrcamento> listarItensOrcamento(int idOrcamento) {
 
-        String sql = ""
-                + " SELECT"
-                + " i.id, i.quantidade, i.preco, i.dataHora, i.statusVenda, i.id_orcamento, i.id_produto,"
-                + " p.codigo, p.descricao, p.nome, p.quantidade, p.quantidadeCritica, p.imagem, p.fornecedor, p.preco, p.custo, p.status"
-                + " FROM"
-                + " produto p INNER JOIN item_orcamento i ON p.codigo = i.id_produto"
-                + " WHERE"
-                + " i.id_orcamento = ?";
+        String sql = " SELECT * FROM item_orcamento WHERE id_orcamento = ?";
 
         List<ItemOrcamento> itens = new ArrayList<ItemOrcamento>();
 
@@ -446,30 +414,19 @@ public class OrcamentoDAO {
 
             while (rset.next()) {
 
-                Timestamp sqlDataHora = rset.getTimestamp("i.dataHora");
+                Timestamp sqlDataHora = rset.getTimestamp("dataHora");
 
                 Orcamento orca = OrcamentoDAO.listarPorId(idOrcamento);
 
-                Produto pro = new Produto();
-
-                pro.setCodigo(rset.getInt("p.codigo"));
-                pro.setDescricao(rset.getString("p.descricao"));
-                pro.setNome(rset.getString("p.nome"));
-                pro.setQuantidade(rset.getInt("p.quantidade"));
-                pro.setQuantidadeCritica(rset.getInt("p.quantidadeCritica"));
-                pro.setImagem(rset.getString("p.imagem"));
-                pro.setFornecedor(rset.getString("p.fornecedor"));
-                pro.setPreco(rset.getDouble("p.preco"));
-                pro.setCusto(rset.getDouble("p.custo"));
-                pro.setStatus(rset.getBoolean("p.status"));
+                Produto pro = ProdutoDAO.listarPorId(rset.getInt("id_produto"));
 
                 ItemOrcamento item = new ItemOrcamento();
 
-                item.setId(rset.getInt("i.id"));
-                item.setQuantidade(rset.getInt("i.quantidade"));
-                item.setPreco(rset.getDouble("i.preco"));
+                item.setId(rset.getInt("id"));
+                item.setQuantidade(rset.getInt("quantidade"));
+                item.setPreco(rset.getDouble("preco"));
                 item.setDataHora(sqlDataHora.toLocalDateTime());
-                item.setStatusVenda(rset.getBoolean("i.statusVenda"));
+                item.setStatusVenda(rset.getBoolean("statusVenda"));
                 item.setOrcamento(orca);
                 item.setProduto(pro);
 

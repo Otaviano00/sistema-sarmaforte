@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Karla' rel='stylesheet'>
     <link rel="stylesheet" href="style/main.css">
+    <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
     <title>Home</title>
     
 </head>

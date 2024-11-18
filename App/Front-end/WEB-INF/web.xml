@@ -4,10 +4,36 @@
         <servlet-name>ProcessarLogin</servlet-name>
         <servlet-class>controller.ProcessarLogin</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GerenciarOrcamento</servlet-name>
+        <servlet-class>controller.GerenciarOrcamento</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarPerfil</servlet-name>
+        <servlet-class>controller.GerenciarPerfil</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarUsuario</servlet-name>
+        <servlet-class>controller.GerenciarUsuario</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ProcessarLogin</servlet-name>
         <url-pattern>/ProcessarLogin</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarOrcamento</servlet-name>
+        <url-pattern>/GerenciarOrcamento</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarPerfil</servlet-name>
+        <url-pattern>/GerenciarPerfil</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarUsuario</servlet-name>
+        <url-pattern>/GerenciarUsuario</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30

@@ -32,7 +32,7 @@ public class ProcessarLogin extends HttpServlet {
             Usuario usuario = UsuarioDAO.efetuarLogin(login, senha);
             if (usuario != null) {
                 criarVariavelSessao(usuario, request, response);
-                response.sendRedirect("index.html");
+                response.sendRedirect("home.jsp");
             } else {
                 exibirMensagem("Login ou senha inválidos. Tente Novamente.", response);
                 response.sendRedirect("login.html");

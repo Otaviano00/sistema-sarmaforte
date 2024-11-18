@@ -2,15 +2,14 @@
     /*Menu de gerencia*/
 
     #menu {
-        display: flex;
+        display: none;
         flex-direction: row;
         justify-content: left;
         background-color: #fff;
         position: absolute;
         min-width: fit-content;
         width: 10%;
-        opacity: 0;
-        visibility: hidden;
+        z-index: 999;
     }
 
     .botao_menu {
@@ -22,7 +21,7 @@
         text-decoration: none;
         padding: 10px;
         padding-left: 10%;
-        box-shadow:inset 0px 0px 0px 1px #979797c2;
+        box-shadow:inset 0px 0px 1px 1px #979797c2;
         background-color: #D8D8D8;
     }
 
@@ -55,11 +54,9 @@
         background-color: #e4e6e9;
     }
 
-    nav #menu.ativo {
-        opacity: 1;
-        visibility: visible;
+    #gerencia:hover #menu {
+        display: block;
     }
-
 
     /*Botões de navegação*/
 
@@ -118,10 +115,10 @@
 </script>
 
 <div class="botao" id="home">
-    <a href="teste_kaua.html"><img src="images/icone_home.svg" alt="home"></a>
+    <a href="home.jsp"><img src="images/icone_home.svg" alt="home"></a>
 </div>
 <div id="gerencia" style="min-width: fit-content; width: 10%; padding-right: 20px;">
-    <div class="botao" onclick="ativar_menu()" style=" min-width: 100%;">
+    <div class="botao" onmouseover="ativar_menu()" style=" min-width: 100%;">
         <a href="#">
             <img src="images/icone_gerencia.svg" alt="">
             <span>GERENCIA</span>
@@ -129,24 +126,22 @@
         </a>
     </div>
     <div id="menu">
-        <div class="botoes_menu">
-            <div class="botao_menu">
-                <a href="#"><img src="images/icone_usuario.svg" alt=""><span>USUÁRIOS</span></a>
-            </div>
-            <div class="botao_menu">
-                <a href="#"><img src="images/icone_perfil.svg" alt=""><span>PERFIS</span></a>
-            </div>
-            <div class="botao_menu">
-                <a href="#"><img src="images/icone_menu.svg" alt=""><span>MENUS</span></a>
-            </div>
-            <div class="botao_menu">
-                <a href="#"><img src="images/icone_relatorio.svg" alt=""><span>RELATÓRIOS</span></a>
-            </div>
+        <div class="botao_menu">
+            <a href="usuarios.jsp"><img src="images/icone_usuario.svg" alt=""><span>USUÁRIOS</span></a>
+        </div>
+        <div class="botao_menu">
+            <a href="perfis.jsp"><img src="images/icone_perfil.svg" alt=""><span>PERFIS</span></a>
+        </div>
+        <div class="botao_menu">
+            <a href="#"><img src="images/icone_menu.svg" alt=""><span>MENUS</span></a>
+        </div>
+        <div class="botao_menu">
+            <a href="#"><img src="images/icone_relatorio.svg" alt=""><span>RELATÓRIOS</span></a>
         </div>
     </div>
 </div>
 <div class="botao">
-    <a href="#"><img src="images/icone_orcamento.svg" alt=""><span>ORÇAMENTOS</span></a>
+    <a href="orcamentos.jsp"><img src="images/icone_orcamento.svg" alt=""><span>ORÇAMENTOS</span></a>
 </div>
 <div class="botao">
     <a href="#"><img src="images/icone_vendas.svg" alt="" style="position: relative; top: -3px;"><span>VENDAS</span></a>

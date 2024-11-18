@@ -1,0 +1,111 @@
+
+body {
+    height: 100%;
+    font-family: "Karla";
+}
+
+.flex {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.bloco{
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #f0eeee;
+    height: 100%;
+    min-height: 100%;
+    width: 97.5%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+dialog::backdrop {
+    background-color: rgb(0 0 0 /.5);
+}
+
+dialog {
+    margin: auto;
+    width: 50%;
+    height: 30%;
+}
+
+.seletor {
+    width: 100%;
+    border-radius: 10px;
+}
+
+#dados_orcamento, #listar_itens {
+    flex: 1;
+    max-height: 100vh;
+    min-height: 200px;
+}
+
+#dados_orcamento {
+    max-width: 20%;
+    height: space-around;
+}
+
+#listar_itens {
+    max-width: 80vw;
+}
+
+#orcamentoTabela {
+    background-color: white;
+}
+
+#orcamentoTabela thead {
+    background-color: rgb(187, 187, 187);
+    font-weight: bolder;
+    text-align: center;
+    width: 80vw;
+}
+
+#orcamentoTabela tfoot {
+    background-color: rgb(187, 187, 187);
+    font-weight: bolder;
+    font-size: 2em;
+}
+
+tfoot td {
+    text-align: center;
+}
+
+#buscar_item {
+    display: flex;
+    justify-content: right;
+    align-items: end;
+}
+
+#buscar_item button {
+    width: 10%;
+    height: 30px;
+    margin-left: 5px;
+    border-radius: 10px;
+    background-color: #142E50;
+    color: #FFB729;
+    font-weight: bold;
+}
+
+#buscar_item button:hover {
+    background-color: #366cb4;
+    cursor: pointer;
+}
+
+#finalizar {
+    position: relative;
+    bottom: 0;
+}
