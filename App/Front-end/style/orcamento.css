@@ -1,3 +1,7 @@
+* {
+    overflow: visible;
+}
+
 
 body {
     height: 100%;
@@ -46,6 +50,7 @@ dialog {
 .seletor {
     width: 100%;
     border-radius: 10px;
+    overflow: visible;
 }
 
 #dados_orcamento, #listar_itens {
@@ -63,22 +68,6 @@ dialog {
     max-width: 80vw;
 }
 
-#orcamentoTabela {
-    background-color: white;
-}
-
-#orcamentoTabela thead {
-    background-color: rgb(187, 187, 187);
-    font-weight: bolder;
-    text-align: center;
-    width: 80vw;
-}
-
-#orcamentoTabela tfoot {
-    background-color: rgb(187, 187, 187);
-    font-weight: bolder;
-    font-size: 2em;
-}
 
 tfoot td {
     text-align: center;

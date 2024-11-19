@@ -1,10 +1,12 @@
 * {
     padding: 0;
     margin: 0;
+    overflow-x: hidden;
 }
 
-html, body {
-    overflow-x: hidden; 
+body {
+    height: 100%;
+    font-family: "Karla";
 }
 
 /*Cabeça da página*/
@@ -132,6 +134,92 @@ nav {
     width: 100%;
     border: none;
     outline: none;
+}
+
+/*Conteúdo*/
+
+.flex {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+h1.titulo {
+    padding: 0px 10px 0 10px;
+    border-bottom: 5px solid #FFB729;
+    font-size: 4em;
+    color: #142E50;
+
+}
+
+button.novo {
+    margin: 2% auto;
+    padding: 5px 20px;
+    font-size: 1.1em;
+    font-weight: bolder;
+    border-radius: 5px;
+    border: none;
+    background-color: #008610;
+    color: white;
+    text-align: center; 
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button.novo:hover {
+    background-color: #12a123;
+    cursor: pointer;
+}
+
+.tabela {
+    width: 80%;
+    padding: 0 10px;
+    margin-bottom: 5%;
+    background-color: #f0eeee;
+    border-radius: 5px;
+    border: 1px solid #D8D8D8;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tabela .table {
+    background-color: white;
+}
+
+thead {
+    background-color: #142E50;
+    color: #FFB729;
+    font-weight: bolder;
+    text-align: center;
+    width: 80vw;
+}
+
+tfoot {
+    background-color: rgb(187, 187, 187);
+    font-weight: bolder;
+    font-size: 2em;
+}
+
+.botao_acao {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #ffffff00;
+    cursor: pointer;
+}
+
+.botao_ativo {
+    background-color: #008610;
+    color: white;
+    font-weight: bolder;
+}
+
+.botao_desativo {
+    background-color: #FF2D29;
+    color: white;
+    font-weight: bolder;
 }
 
 /*Rodapé*/

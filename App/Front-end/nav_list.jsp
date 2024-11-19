@@ -8,7 +8,7 @@
         background-color: #fff;
         position: absolute;
         min-width: fit-content;
-        width: 10%;
+        width: calc(10% + 20px);
         z-index: 999;
     }
 

@@ -286,9 +286,9 @@ public class GerenciarUsuario extends HttpServlet {
             case 4:
                 try {
 
-                    int in = Integer.parseInt(request.getParameter("id"));
-                    usu.setId(in);
-                    UsuarioDAO.destivar(usu);
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    usu.setId(id);
+                    UsuarioDAO.desativar(usu);
                     response.sendRedirect("usuarios.jsp");
 
                 } catch (Exception e) {
@@ -303,6 +303,14 @@ public class GerenciarUsuario extends HttpServlet {
 
                 }
                 break;
+            default: 
+                String mensagem = "Ação não encontrada!";
+                PrintWriter out = response.getWriter();
+                out.print("<script>");
+                out.print("alert('" + mensagem + "');");
+                out.print("location.href = 'usuarios.jsp';");
+                out.print("</script>");
+                out.close();
 
         }
 

@@ -21,6 +21,7 @@
         <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
         <script defer src="script/orcamento.js"></script>
+        <script defer src="script/tabela.js"> </script>
 
         <link rel="stylesheet" href="style/main.css">
         <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
@@ -88,7 +89,7 @@
                                 <%= orcamentos.get(i).getId()%>
                             </td>
                             <td>
-                                <%= orcamentos.get(i).getCliente().getNome()%>
+                                <%= orcamentos.get(i).getCliente().getNome() == null? "---" : orcamentos.get(i).getCliente().getNome() %>
                             </td>
                             <td>
                                 <%= orcamentos.get(i).getDataCriacao().toLocalDate().toString()%>

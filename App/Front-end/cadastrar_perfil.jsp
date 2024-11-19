@@ -32,7 +32,7 @@
     <div class="flex">
         <form action="GerenciarPerfil" method="post">
             <input type="hidden" name="valor" value="1">
-            <p> Nome <input type="text" name="nome" pattern="[A-Za-z]+" maxlength="10" title="Apenas caracters alfabéticos!" size="8" required></p>
+            <p> Nome <input type="text" name="nome" maxlength="10" title="Apenas caracters alfabéticos!" required></p>
             <p>Descricao</p><textarea name="descricao" rows="3" cols="30"></textarea>
             <p>
                 Hierarquia 

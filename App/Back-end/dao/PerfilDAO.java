@@ -173,7 +173,7 @@ public class PerfilDAO {
     public static boolean ativar(Perfil perfil) {
 
         String sql = ""
-                + " UPDATE menu"
+                + " UPDATE perfil"
                 + " SET"
                 + " status = ?"
                 + " WHERE"
@@ -216,12 +216,7 @@ public class PerfilDAO {
 
     public static boolean desativar(Perfil perfil) {
 
-        String sql = ""
-                + " UPDATE menu"
-                + " SET"
-                + " status = ?"
-                + " WHERE"
-                + " id = ?";
+        String sql = "UPDATE perfil SET status = ? WHERE id = ?";
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -232,7 +227,7 @@ public class PerfilDAO {
 
             pstm.setBoolean(1, false);
             pstm.setInt(2, perfil.getId());
-
+   
             pstm.execute();
 
             return true;

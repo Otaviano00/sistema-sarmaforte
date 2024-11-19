@@ -23,10 +23,10 @@ import model.Produto;
 public class GerenciarOrcamento extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
         PrintWriter out = response.getWriter();
         String acao = request.getParameter("acao");
+        
         if (acao.equals("registrar")) {
             Orcamento orcamento = new Orcamento();
             orcamento.setDataCriacao(LocalDateTime.now());
@@ -38,6 +38,7 @@ public class GerenciarOrcamento extends HttpServlet {
             String idOrcamento = String.valueOf(orcamentos.get(orcamentos.size()-1).getId());
  
             response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao=registrar");
+            
         } else if (acao.equals("mudarCliente")) {
             String acaoOrcamento = request.getParameter("acaoOrcamento");
             int idOrcamento = Integer.parseInt(request.getParameter("idOrcamento"));
@@ -47,7 +48,8 @@ public class GerenciarOrcamento extends HttpServlet {
             orcamento.getCliente().setId(idCliente);
             OrcamentoDAO.alterar(orcamento);
             
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento +"");
+            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento);
+            
         } else if (acao.equals("adicionarItem")) {
             String acaoOrcamento = request.getParameter("acao_orcamento");
             
@@ -80,6 +82,7 @@ public class GerenciarOrcamento extends HttpServlet {
             OrcamentoDAO.excluir(idOrcamento);
             
             response.sendRedirect("orcamentos.jsp");
+            
         } else if (acao.equals("excluirItem")) {
             String acaoOrcamento = request.getParameter("acaoOrcamento");
             
@@ -89,6 +92,7 @@ public class GerenciarOrcamento extends HttpServlet {
             OrcamentoDAO.excluirItem(idItem);
             
             response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento +"");
+            
         } else if (acao.equals("alterarItem")) {
             String acaoOrcamento = request.getParameter("acao_orcamento");
             
@@ -121,10 +125,10 @@ public class GerenciarOrcamento extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+            throws ServletException, IOException {     
         PrintWriter out = response.getWriter();
         String acao = request.getParameter("acao");
+        
         if (acao.equals("adicionarInformacao")) {
             String acaoOrcamento = request.getParameter("acaoOrcamento");
             int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));

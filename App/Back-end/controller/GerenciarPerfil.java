@@ -212,7 +212,6 @@ public class GerenciarPerfil extends HttpServlet {
             case 4:
 
                 try {
-
                     // DESATIVAR PERFIL
                     int id = Integer.parseInt(request.getParameter("id"));
                     p.setId(id);
@@ -232,6 +231,14 @@ public class GerenciarPerfil extends HttpServlet {
                 }
 
                 break;
+            default: 
+                String mensagem = "Ação não encontrada!";
+                PrintWriter out = response.getWriter();
+                out.print("<script>");
+                out.print("alert('" + mensagem + "');");
+                out.print("location.href = 'usuarios.jsp';");
+                out.print("</script>");
+                out.close();
 
         }
 

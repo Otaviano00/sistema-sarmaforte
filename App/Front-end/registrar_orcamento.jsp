@@ -26,6 +26,7 @@
         <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
         <script defer src="script/orcamento.js"></script>
+        <script defer src="script/tabela.js"> </script>
 
         <link rel="stylesheet" href="style/main.css">
         <link rel="stylesheet" href="style/orcamento.css">
@@ -80,7 +81,15 @@
                             <%
                                 List<Cliente> clientes = ClienteDAO.listar();
                                 for (Cliente cliente : clientes) {
-                                    if (cliente.getId() == orcamento.getCliente().getId()) {
+                                    
+                                    if (acaoOrcamento.equals("registrar") && cliente.getNome().equals("---")) {
+                            %>
+                                <option value="<%= cliente.getId()%>" selected>
+                                    <%= cliente.getNome()%>
+                                </option>    
+                            <%
+
+                                    } else if (cliente.getId() == orcamento.getCliente().getId()) {
                             %>
                                 <option value="<%= cliente.getId()%>" selected>
                                     <%= cliente.getNome()%>
@@ -121,7 +130,7 @@
                             <p><%= orcamento.getCliente().getEndereco() != null? orcamento.getCliente().getEndereco() : "---"%></p>
                         </div>
                     </section>
-                        <form action="GerenciarOrcamento" method="post">
+                        <form action="GerenciarOrcamento" method="POST">
                             <input type="hidden" name="acao" value="adicionarInformacao">
                             <input type="hidden" name="acaoOrcamento" value="<%= acaoOrcamento%>">
                             <input type="hidden" name="id_orcamento" value="<%= id%>">

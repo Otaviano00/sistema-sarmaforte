@@ -343,7 +343,7 @@ public class UsuarioDAO {
         }
     }
 
-    public static boolean destivar(Usuario usuario) {
+    public static boolean desativar(Usuario usuario) {
 
         String sql = ""
                 + " UPDATE usuario"
