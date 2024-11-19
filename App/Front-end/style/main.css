@@ -206,8 +206,12 @@ tfoot {
 .botao_acao {
     padding: 5px;
     border-radius: 10px;
-    background-color: #ffffff00;
+    background-color: #aeaeae;
     cursor: pointer;
+}
+
+.botao_acao:hover {
+    opacity: 0.8;
 }
 
 .botao_ativo {

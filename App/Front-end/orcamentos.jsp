@@ -30,7 +30,6 @@
         <title>Home</title>
     </head>
     <body>
-
         <header>
              <div class="logo">
                 <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
@@ -45,77 +44,85 @@
             <%@include file="nav_list.jsp"%>
         </nav>
         <div class="flex">
-            <a href="GerenciarOrcamento?acao=registrar">
-                Registrar Orçamento
-            </a>
-
-            <table id="orcamentoTabela" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            Cliente
-                        </th>
-                        <th>
-                            Data de Criação
-                        </th>
-                        <th>
-                            Data de Validade
-                        </th>
-                        <th>
-                            Status
-                        </th>
-                        <th>
-                            Opções
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        List<Orcamento> orcamentos = OrcamentoDAO.listar();
-
-                        for (int i = 0; i < orcamentos.size(); i++) {
-                    %>
+            <h1 class="titulo">
+                ORÇAMENTOS
+            </h1>
+            <button class="novo" onclick="location.href = ('GerenciarOrcamento?acao=registrar')">
+                <div style="display: flex; justify-content: center; align-items: center; margin: auto; gap: 10px;">
+                    <span style="font-size: 2em;">+</span>
+                    Novo Orçamento
+                </div>
+            </button>
+            <div class="tabela">
+                <table class="table table-striped" style="background-color: white;">
+                    <thead>
                         <tr>
-                            <td>
-                                <%= i+1%>
-                            </td>
-                            <td>
-                                <%= orcamentos.get(i).getId()%>
-                            </td>
-                            <td>
-                                <%= orcamentos.get(i).getCliente().getNome() == null? "---" : orcamentos.get(i).getCliente().getNome() %>
-                            </td>
-                            <td>
-                                <%= orcamentos.get(i).getDataCriacao().toLocalDate().toString()%>
-                            </td>
-                            <td>
-                                <%= orcamentos.get(i).getDataValidade().toLocalDate().toString()%>
-                            </td>
-                            <td>
-                                <%= orcamentos.get(i).getStatus()%>
-                            </td>
-                            <td>
-                                <a href="registrar_orcamento.jsp?id=<%= orcamentos.get(i).getId()%>&acao=alterar"><button>Alterar</button></a>
-                                <button onclick="cancelarOrcamento(parseInt(<%= orcamentos.get(i).getId()%>))">Excluir</button>
-                            </td>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Cliente
+                            </th>
+                            <th>
+                                Data de Criação
+                            </th>
+                            <th>
+                                Data de Validade
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Opções
+                            </th>
                         </tr>
-                    <%
-                        }
-                    %>
-                    
-                </tbody>
-
-            </table>
-
+                    </thead>
+                    <tbody>
+                        <%
+                            List<Orcamento> orcamentos = OrcamentoDAO.listar();
+    
+                            for (int i = 0; i < orcamentos.size(); i++) {
+                        %>
+                            <tr>
+                                <td>
+                                    <%= i+1%>
+                                </td>
+                                <td>
+                                    <%= orcamentos.get(i).getId()%>
+                                </td>
+                                <td>
+                                    <%= orcamentos.get(i).getCliente().getNome() == null? "---" : orcamentos.get(i).getCliente().getNome() %>
+                                </td>
+                                <td>
+                                    <%= orcamentos.get(i).getDataCriacao().toLocalDate().toString()%>
+                                </td>
+                                <td>
+                                    <%= orcamentos.get(i).getDataValidade().toLocalDate().toString()%>
+                                </td>
+                                <td>
+                                    <%= orcamentos.get(i).getStatus()%>
+                                </td>
+                                
+                                <td>
+                                    <button onclick="location.href = 'registrar_orcamento.jsp?id=<%= orcamentos.get(i).getId()%>&acao=alterar'" class="botao_acao" title="Alterar do orçamento <%= i+1%>">
+                                        <img src="images/icone_alterar.svg" alt="Alterar">
+                                    </button>
+                                    <button onclick="location.href = 'GerenciarOrcamento?acao=excluir&idOrcamento=<%= orcamentos.get(i).getId()%>'" class="botao_acao" title="Excluir o orçamento <%= i+1%>">
+                                        <img src="images/icone_excluir.svg" alt="Excluir">
+                                    </button>
+                                </td>
+                            </tr>
+                        <%
+                            }
+                        %>
+                        
+                    </tbody>
+    
+                </table>
+            </div>
         </div>
-        <footer>
-            <p> &copy; Samaforte - Natanel</p>
-        </footer>
     </body>
 </html>

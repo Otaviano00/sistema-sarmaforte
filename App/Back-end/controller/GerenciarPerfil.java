@@ -36,10 +36,10 @@ public class GerenciarPerfil extends HttpServlet {
             throws UnsupportedEncodingException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        int valor = Integer.parseInt(request.getParameter("valor"));
+        int acao = Integer.parseInt(request.getParameter("acao"));
         Perfil p = new Perfil();
 
-        switch (valor) {
+        switch (acao) {
 
             case 1:
 

@@ -31,7 +31,7 @@
     </nav>
     <div class="flex">
         <form action="GerenciarPerfil" method="post">
-            <input type="hidden" name="valor" value="1">
+            <input type="hidden" name="acao" value="1">
             <p> Nome <input type="text" name="nome" maxlength="10" title="Apenas caracters alfabéticos!" required></p>
             <p>Descricao</p><textarea name="descricao" rows="3" cols="30"></textarea>
             <p>

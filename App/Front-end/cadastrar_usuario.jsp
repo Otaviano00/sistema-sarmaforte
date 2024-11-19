@@ -30,7 +30,7 @@
     </nav>
     <div class="flex">
         <form action="GerenciarUsuario" method="post">
-            <input type="hidden" name="valor" value="1">
+            <input type="hidden" name="acao" value="1">
             <p>
                 Nome:<input type="text" name="nome" 
                             maxlength="50" required>

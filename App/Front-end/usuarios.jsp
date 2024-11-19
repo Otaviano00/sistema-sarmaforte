@@ -26,7 +26,7 @@
 
     <link rel="stylesheet" href="style/main.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
-    <title>Cadastrar Usuário</title>
+    <title>Usuário</title>
     
 </head>
 <body>
@@ -92,12 +92,12 @@
                             <% } else {%>
                                 <td>
                                     <% if (user.isStatus()) {%>
-                                        <button onclick="location.href = 'GerenciarUsuario?id=<%= user.getId()%>&valor=4'" class="botao_acao botao_ativo" title="Clique para desativar o usuário <%= user.getNome()%>">
+                                        <button onclick="location.href = 'GerenciarUsuario?id=<%= user.getId()%>&acao=4'" class="botao_acao botao_ativo" title="Clique para desativar o usuário <%= user.getNome()%>">
                                             Ativo
                                         </button>
                                         
                                     <% } else {%>
-                                        <button onclick="location.href = 'GerenciarUsuario?id=<%= user.getId()%>&valor=3'" class="botao_acao botao_desativo" title="Clique para ativar o usuário <%= user.getNome()%>">
+                                        <button onclick="location.href = 'GerenciarUsuario?id=<%= user.getId()%>&acao=3'" class="botao_acao botao_desativo" title="Clique para ativar o usuário <%= user.getNome()%>">
                                             Desativo
                                         </button>
                                     <% }%>

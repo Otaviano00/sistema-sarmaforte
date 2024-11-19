@@ -144,13 +144,13 @@
     <a href="orcamentos.jsp"><img src="images/icone_orcamento.svg" alt=""><span>ORÇAMENTOS</span></a>
 </div>
 <div class="botao">
-    <a href="#"><img src="images/icone_vendas.svg" alt="" style="position: relative; top: -3px;"><span>VENDAS</span></a>
+    <a href="vendas.jsp"><img src="images/icone_vendas.svg" alt="" style="position: relative; top: -3px;"><span>VENDAS</span></a>
 </div>
 <div class="botao">
-    <a href="#"><img src="images/icone_produto.svg" alt=""><span>PRODUTOS</span></a>
+    <a href="produtos.jsp"><img src="images/icone_produto.svg" alt=""><span>PRODUTOS</span></a>
 </div>
 <div class="botao">
-    <a href="#"><img src="images/icone_cliente.svg" alt=""><span>CLIENTES</span></a>
+    <a href="clientes.jsp"><img src="images/icone_cliente.svg" alt=""><span>CLIENTES</span></a>
 </div>
 <div class="pesquisa">
     <img src="images/icone_pesquisa.svg" alt="lupa">

@@ -36,7 +36,7 @@
             <% Usuario usu = UsuarioDAO.listarPorId(Integer.parseInt(request.getParameter("id"))); %>
             <% if (usu.getLogin().equals("admin")) {%>
 
-            <input type="hidden" name="valor" value="2">
+            <input type="hidden" name="acao" value="2">
             <input type="hidden" name="id" value="<%= usu.getId()%>">
             <input type="hidden" name="nome" value="<%= usu.getNome()%>">
             <input type="hidden" name="telefone" value="<%= usu.getTelefone()%>">
@@ -64,7 +64,7 @@
 
             <% } else {%>
 
-            <input type="hidden" name="valor" value="2">
+            <input type="hidden" name="acao" value="2">
             <input type="hidden" name="id" value="<%= usu.getId()%>">
             <input type="hidden" name="status" value="<%= usu.isStatus()%>">
 

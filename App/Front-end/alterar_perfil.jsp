@@ -33,7 +33,7 @@
         <% int idPer = Integer.parseInt(request.getParameter("idPerfil"));
         Perfil p = PerfilDAO.listarPorId(idPer);%>
         <form action="GerenciarPerfil" method="post">
-            <input type="hidden" name="valor" value="2">
+            <input type="hidden" name="acao" value="2">
             <input type="hidden" name="status" value="<%= p.isStatus()%>">
             <input type="hidden" name="id" value="<%= p.getId()%>">
             <p>Nome<input type="text" name="nome" value="<%= p.getNome()%>" pattern="[A-Za-z]+" maxlength="10" title="Apenas caracters alfabéticos!" size="8" required></p>

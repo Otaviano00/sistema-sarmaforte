@@ -38,12 +38,12 @@ public class GerenciarUsuario extends HttpServlet {
             throws UnsupportedEncodingException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        int valor = Integer.parseInt(request.getParameter("valor"));
+        int acao = Integer.parseInt(request.getParameter("acao"));
 
         Usuario usu = new Usuario();
         Perfil per = new Perfil();
 
-        switch (valor) {
+        switch (acao) {
 
             case 1:
                 try {

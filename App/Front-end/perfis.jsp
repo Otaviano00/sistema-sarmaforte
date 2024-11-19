@@ -20,12 +20,11 @@
     <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
-    <script defer src="script/perfil.js"></script>
     <script defer src="script/tabela.js"> </script>
 
     <link rel="stylesheet" href="style/main.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
-    <title>Cadastrar Perfil</title>
+    <title>Perfil</title>
     
 </head>
 <body>
@@ -86,12 +85,12 @@
                             <% } else {%>
                                 <td>
                                     <% if (perfis.get(i).isStatus() == true) {%>
-                                        <button onclick="location.href = 'GerenciarPerfil?id=<%= perfis.get(i).getId()%>&valor=4'" class="botao_acao botao_ativo" title="Clique para desativar o perfil <%= perfis.get(i).getNome()%>">
+                                        <button onclick="location.href = 'GerenciarPerfil?id=<%= perfis.get(i).getId()%>&acao=4'" class="botao_acao botao_ativo" title="Clique para desativar o perfil <%= perfis.get(i).getNome()%>">
                                             Ativo
                                         </button>
                                         
                                     <% } else {%>
-                                        <button onclick="location.href = 'GerenciarPerfil?id=<%= perfis.get(i).getId()%>&valor=3'" class="botao_acao botao_desativo" title="Clique para ativar o perfil <%= perfis.get(i).getNome()%>">
+                                        <button onclick="location.href = 'GerenciarPerfil?id=<%= perfis.get(i).getId()%>&acao=3'" class="botao_acao botao_desativo" title="Clique para ativar o perfil <%= perfis.get(i).getNome()%>">
                                             Desativo
                                         </button>
                                     <% }%>

@@ -22,7 +22,7 @@ public class MenuDAO {
             pstm.setString(1, menu.getNome());
             pstm.setString(2, menu.getLink());
             pstm.setString(3, menu.getImagem());
-            pstm.setBoolean(4, menu.isStatus());
+            pstm.setBoolean(4, true);
 
             pstm.execute();
             return true;
