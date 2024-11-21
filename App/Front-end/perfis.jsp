@@ -28,7 +28,6 @@
     
 </head>
 <body>
-    <%@include file="infoAdmin.jsp" %>
     <header>
          <div class="logo">
             <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
@@ -38,6 +37,7 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
+        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -73,14 +73,16 @@
                             <td><%= perfis.get(i).getNome()%></td>
                             <td><%= perfis.get(i).getDescricao() == null? "---" : perfis.get(i).getDescricao()%></td>
                             <td><%= perfis.get(i).getHierarquia()%></td>                  
-                            <% if (perfis.get(i).getNome().equals("Admin") || perfis.get(i).getNome().equals("Padrão")) {%>
+                            <% if (perfis.get(i).getId() == 1 || perfis.get(i).getId() == 5) {%>
                                 <td>
                                     <button class="botao_acao botao_ativo">
                                         Ativo
                                     </button>
                                 </td>
                                 <td>
-                                    --
+                                    <button onclick="location.href = 'detalhes_perfil.jsp?id=<%= perfis.get(i).getId()%>'" class="botao_acao" title="Detalhes do perfil <%= perfis.get(i).getNome()%>">
+                                        <img src="images/icone_detalhes.svg" alt="Detalhes">
+                                    </button>
                                 </td>
                             <% } else {%>
                                 <td>
@@ -96,9 +98,17 @@
                                     <% }%>
                                 </td>
                                 <td>
-                                    <button onclick="location.href = 'alterar_perfil.jsp?idPerfil=<%= perfis.get(i).getId()%>'" class="botao_acao" title="Alterar dados do <%= perfis.get(i).getNome()%>">
+                                    <button onclick="location.href = 'alterar_perfil.jsp?id=<%= perfis.get(i).getId()%>'" class="botao_acao" title="Alterar dados do perfil <%= perfis.get(i).getNome()%>">
                                         <img src="images/icone_alterar.svg" alt="Alterar">
                                     </button>
+                                    <button onclick="location.href = 'detalhes_perfil.jsp?id=<%= perfis.get(i).getId()%>'" class="botao_acao" title="Detalhes do perfil <%= perfis.get(i).getNome()%>">
+                                        <img src="images/icone_detalhes.svg" alt="Detalhes">
+                                    </button>
+                                    <% if (hierarquia == 0) {%>
+                                        <button onclick="location.href = 'GerenciarPerfil?id=<%= perfis.get(i).getId()%>&acao=5'" class="botao_acao" title="Excluir o perfil <%= perfis.get(i).getNome()%>">
+                                            <img src="images/icone_excluir.svg" alt="Excluir">
+                                        </button>
+                                    <% }%>
                                 </td>
                             <% }%>
                         </tr>

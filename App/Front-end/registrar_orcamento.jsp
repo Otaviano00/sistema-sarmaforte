@@ -70,7 +70,7 @@
                     ADICIONAR ITEM
                 </button>
             </section>
-            <div style="display: flex; justify-content: start; align-items: start; min-width: 100%;">
+            <div style="display: flex; justify-content: left; align-items: flex-start; width: calc(97% - 20px); margin: 10px; margin-left: -40px; box-sizing: border-box; ">
                 <section id="dados_orcamento" class="bloco">
                     <input type="hidden" id="id_orcamento" value="<%= id%>">
                     <input type="hidden" id="acao_orcamento" value="<%= acaoOrcamento%>">
@@ -82,14 +82,7 @@
                                 List<Cliente> clientes = ClienteDAO.listar();
                                 for (Cliente cliente : clientes) {
                                     
-                                    if (acaoOrcamento.equals("registrar") && cliente.getNome().equals("---")) {
-                            %>
-                                <option value="<%= cliente.getId()%>" selected>
-                                    <%= cliente.getNome()%>
-                                </option>    
-                            <%
-
-                                    } else if (cliente.getId() == orcamento.getCliente().getId()) {
+                                 if (cliente.getId() == orcamento.getCliente().getId()) {
                             %>
                                 <option value="<%= cliente.getId()%>" selected>
                                     <%= cliente.getNome()%>
@@ -140,7 +133,7 @@
                     <section id="dados_vendedor">
                     </section>
                 </section>
-                <section id="listar_itens" class="bloco">
+                <section id="listar_itens" class="tabela bloco">
                     <dialog>
                         <form action="GerenciarOrcamento" method="get">
                             <input type="hidden" name="acao" id="acao_item" value="adicionarItem">
@@ -159,7 +152,7 @@
                             Fechar
                         </button>
                     </dialog>
-                    <table id="orcamentoTabela" class="table table-striped">
+                    <table class="table table-striped" style="background-color: white;">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -183,18 +176,18 @@
                             %>
                                 <tr>
                                     <td>
-                                       <%= i+1%>
+                                        <%= i+1%>
                                     </td>
                                     <td>
-                                        <button onclick="excluirItem(parseInt(<%= itens.get(i).getId()%>), parseInt(<%= id%>))">
-                                            Excluir
+                                        <button onclick="alterarItem(parseInt(<%= i%>), parseInt(<%= itens.get(i).getId()%>))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
+                                            <img src="images/icone_alterar.svg" alt="Alterar">
                                         </button>
-                                        <button onclick="alterarItem(parseInt(<%= i%>), parseInt(<%= itens.get(i).getId()%>))">
-                                            Alterar
+                                        <button onclick="location.href = 'GerenciarOrcamento?acao=excluirItem&idOrcamento=<%= itens.get(i).getOrcamento().getId()%>&idItem=<%= itens.get(i).getId()%>&acaoOrcamento=<%= acaoOrcamento%>'" class="botao_acao" title="Excluir <%= itens.get(i).getProduto().getNome()%>">
+                                            <img src="images/icone_excluir.svg" alt="Excluir">
                                         </button>
                                     </td>
                                     <td>
-                                       <%= itens.get(i).getProduto().getCodigo()%>
+                                        <%= itens.get(i).getProduto().getCodigo()%>
                                     </td>
                                     <td>
                                         <%= itens.get(i).getProduto().getNome()%>
@@ -224,6 +217,7 @@
                             </tr>
                         </tfoot>
                     </table>
+                    
                 </section>
             </div> 
 

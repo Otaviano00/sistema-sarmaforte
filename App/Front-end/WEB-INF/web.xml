@@ -20,6 +20,10 @@
         <servlet-name>GerenciarProduto</servlet-name>
         <servlet-class>controller.GerenciarProduto</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GerenciarMenu</servlet-name>
+        <servlet-class>controller.GerenciarMenu</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ProcessarLogin</servlet-name>
@@ -40,6 +44,10 @@
     <servlet-mapping>
         <servlet-name>GerenciarProduto</servlet-name>
         <url-pattern>/GerenciarProduto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarMenu</servlet-name>
+        <url-pattern>/GerenciarMenu</url-pattern>
     </servlet-mapping>
 
     <session-config>

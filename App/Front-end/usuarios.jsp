@@ -30,7 +30,6 @@
     
 </head>
 <body>
-    <%@include file="infoAdmin.jsp" %>
     <header>
          <div class="logo">
             <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
@@ -40,6 +39,7 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
+        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -87,7 +87,9 @@
                                     </button>
                                 </td>
                                 <td>
-                                    --
+                                    <button onclick="location.href = 'detalhes_usuario.jsp?id=<%= user.getId()%>'" class="botao_acao" title="Detalhes do usuário <%= user.getNome()%>">
+                                        <img src="images/icone_detalhes.svg" alt="Detalhes">
+                                    </button>
                                 </td>
                             <% } else {%>
                                 <td>
@@ -103,9 +105,17 @@
                                     <% }%>
                                 </td>
                                 <td>
-                                    <button onclick="location.href = 'alterar_usuario.jsp?id=<%= user.getId()%>'" class="botao_acao" title="Alterar dados do <%= user.getNome()%>">
+                                    <button onclick="location.href = 'alterar_usuario.jsp?id=<%= user.getId()%>'" class="botao_acao" title="Alterar dados do usuário <%= user.getNome()%>">
                                         <img src="images/icone_alterar.svg" alt="Alterar">
                                     </button>
+                                    <button onclick="location.href = 'detalhes_usuario.jsp?id=<%= user.getId()%>'" class="botao_acao" title="Detalhes do usuário <%= user.getNome()%>">
+                                        <img src="images/icone_detalhes.svg" alt="Detalhes">
+                                    </button>
+                                    <% if (hierarquia == 0) {%>
+                                        <button onclick="location.href = 'GerenciarUsuario?id=<%= user.getId()%>&acao=5'" class="botao_acao" title="Excluir o usuário <%= user.getNome()%>">
+                                            <img src="images/icone_excluir.svg" alt="Excluir">
+                                        </button>
+                                    <%}%>
                                 </td>
                             <% }%>
                         </tr>

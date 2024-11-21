@@ -74,11 +74,14 @@
                             <td><%= clientes.get(i).getEndereco() == null? "---" : clientes.get(i).getEndereco()%></td>       
                             <td><%= clientes.get(i).getCpf() == null? "---" : clientes.get(i).getCpf()%></td>  
                             <td>
-                                <button onclick="location.href = 'alterar_cliente.jsp?idCliente=<%= clientes.get(i).getId()%>'" class="botao_acao" title="Alterar dados do cliente <%= clientes.get(i).getNome()%>">
+                               <button onclick="location.href = 'alterar_cliente.jsp?idCliente=<%= clientes.get(i).getId()%>'" class="botao_acao" title="Alterar dados do cliente <%= clientes.get(i).getNome()%>">
                                     <img src="images/icone_alterar.svg" alt="Alterar">
                                 </button>
                                 <button onclick="location.href = 'GerenciarCliente?id=<%= clientes.get(i).getId()%>'" class="botao_acao" title="Excluir o cliente <%= clientes.get(i).getNome()%>">
                                     <img src="images/icone_excluir.svg" alt="Excluir">
+                                </button> 
+                                <button onclick="location.href = 'GerenciarCliente?id=<%= clientes.get(i).getId()%>'" class="botao_acao" title="Detalhes do cliente <%= clientes.get(i).getNome()%>">
+                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
                                 </button>
                             </td>
                         </tr>

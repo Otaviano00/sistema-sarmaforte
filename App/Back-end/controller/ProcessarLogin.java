@@ -70,7 +70,7 @@ public class ProcessarLogin extends HttpServlet {
         sessao.setAttribute("nomeUsuario", nomeUsuario);
         sessao.setAttribute("idPerfil", idPerfil);
         sessao.setAttribute("nomePerfil", nomePerfil);
-        sessao.setAttribute("hieraquia", hierarquia);
+        sessao.setAttribute("hierarquia", hierarquia);
        
     }
 

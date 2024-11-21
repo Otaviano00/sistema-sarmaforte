@@ -25,12 +25,13 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
+        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
     </nav>
     <div class="flex">
-        <% int idPer = Integer.parseInt(request.getParameter("idPerfil"));
+        <% int idPer = Integer.parseInt(request.getParameter("id"));
         Perfil p = PerfilDAO.listarPorId(idPer);%>
         <form action="GerenciarPerfil" method="post">
             <input type="hidden" name="acao" value="2">

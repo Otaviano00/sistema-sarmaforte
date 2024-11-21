@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import model.Menu;
 import model.Perfil;
 
 public class PerfilDAO {
@@ -216,7 +217,12 @@ public class PerfilDAO {
 
     public static boolean desativar(Perfil perfil) {
 
-        String sql = "UPDATE perfil SET status = ? WHERE id = ?";
+        String sql = ""
+                + " UPDATE perfil"
+                + " SET"
+                + " status = ?"
+                + " WHERE"
+                + " id = ?";
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -227,7 +233,7 @@ public class PerfilDAO {
 
             pstm.setBoolean(1, false);
             pstm.setInt(2, perfil.getId());
-   
+
             pstm.execute();
 
             return true;
@@ -251,6 +257,181 @@ public class PerfilDAO {
             }
 
         }
+
+    }
+    
+     public static boolean excluir(Perfil perfil) {
+
+        String sqlUpdate = "UPDATE usuario SET id_perfil = 5 WHERE id_perfil = ?"; 
+         
+        String sql = " DELETE FROM perfil WHERE id = ?;";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        PreparedStatement pstmUpdate = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            
+            pstmUpdate = (PreparedStatement) conn.prepareStatement(sqlUpdate);
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+
+            
+            pstmUpdate.setInt(1, perfil.getId());
+            pstm.setInt(1, perfil.getId());
+
+            pstmUpdate.execute();
+            pstm.execute();
+
+            return true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return false;
+
+        } finally {
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (pstmUpdate != null) {
+                    pstmUpdate.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public static boolean vincular(int id_perfil, int id_menu) {
+
+        String sql = "INSERT INTO perfil_menu (id_perfil, id_menu) VALUES (?,?)";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+
+            pstm.setInt(1, id_perfil);
+            pstm.setInt(2, id_menu);
+            pstm.execute();
+
+            return true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return false;
+
+        } finally {
+
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public static boolean desvincular(int id_perfil, int id_menu) {
+
+        String sql = "DELETE FROM perfil_menu WHERE id_perfil = ? AND id_menu = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+
+            pstm.setInt(1, id_perfil);
+            pstm.setInt(2, id_menu);
+            pstm.execute();
+
+            return true;
+
+        } catch (Exception e) {
+
+            return false;
+
+        } finally {
+
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    public static List<Menu> listarMenus(int id_perfil) {
+
+        String sql = "SELECT id_menu FROM perfil_menu WHERE id_perfil = ?";
+
+        List<Menu> menus = new ArrayList<Menu>();
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+            pstm.setInt(1, id_perfil);
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+
+                Menu menu = MenuDAO.listarPorId(rset.getInt("id_menu"));
+                menus.add(menu);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) {
+                    rset.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return menus;
 
     }
 }

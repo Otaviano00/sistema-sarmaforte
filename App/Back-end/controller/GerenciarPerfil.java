@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 //import javax.servlet.ServletException;
 //import javax.servlet.http.HttpServlet;
 //import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ public class GerenciarPerfil extends HttpServlet {
                     String nome = request.getParameter("nome");
                     String descricao = request.getParameter("descricao");
                     int hierarquia = Integer.parseInt(request.getParameter("hierarquia"));
+                    String[] menus = request.getParameterValues("menu");
                     boolean status = true;
 
                     p.setNome(nome);
@@ -85,12 +87,21 @@ public class GerenciarPerfil extends HttpServlet {
                       Não sei o que voce queria dizer quando disse "exibir uma janela com as informações de cadastro"
                     o alert parece não aceitar o clássico '\n', vai saber, vou deixar para o vcs do Front-End.
                      */
+                      
                     String mensagem = "Deseja inserir esses dados?";
                     String mensagem2 = "Cadastro bem sussedido!";
                     PrintWriter out = response.getWriter();
                     out.print("<script>");
                     out.print("alert('" + mensagem + "');");
                     PerfilDAO.cadastrar(p);
+                    
+                    List<Perfil> perfis = PerfilDAO.listar();
+                    int idPerfil = perfis.get(perfis.size()-1).getId();    
+                    
+                    for (String idMenu : menus) {
+                        PerfilDAO.vincular(idPerfil, Integer.parseInt(idMenu) );
+                    }
+                    
                     out.print("alert('" + mensagem2 + "');");
                     out.print("location.href = 'perfis.jsp';");
                     out.print("</script>");
@@ -144,7 +155,7 @@ public class GerenciarPerfil extends HttpServlet {
                                 PrintWriter out = response.getWriter();
                                 out.print("<script>");
                                 out.print("alert('" + mensagem + "');");
-                                out.print("location.href = 'alterar_perfil.jsp?idPerfil=" + exis.getId() + "';");
+                                out.print("location.href = 'alterar_perfil.jsp?id=" + exis.getId() + "';");
                                 out.print("</script>");
                                 out.close();
                                 break;
@@ -165,7 +176,11 @@ public class GerenciarPerfil extends HttpServlet {
                     PrintWriter out = response.getWriter();
                     out.print("<script>");
                     out.print("alert('" + mensagem + "');");
-                    PerfilDAO.alterar(p);
+                    if (p.getId() == 1 || p.getId() == 5) {
+                        mensagem2 = "Não pode alterar esse perfil!";
+                    } else {
+                        PerfilDAO.alterar(p);
+                    }
                     out.print("alert('" + mensagem2 + "');");
                     out.print("location.href = 'perfis.jsp';");
                     out.print("</script>");
@@ -231,12 +246,34 @@ public class GerenciarPerfil extends HttpServlet {
                 }
 
                 break;
+            case 5:
+
+                try {
+                    // EXCLUIR
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    p.setId(id);
+                    PerfilDAO.excluir(p);
+                    response.sendRedirect("perfis.jsp");
+
+                } catch (Exception e) {
+
+                    String mensagem = "Ocorreu um problema com o banco de dados!";
+                    PrintWriter out = response.getWriter();
+                    out.print("<script>");
+                    out.print("alert('" + mensagem + "');");
+                    out.print("location.href = 'perfis.jsp';");
+                    out.print("</script>");
+                    out.close();
+
+                }
+
+                break;
             default: 
                 String mensagem = "Ação não encontrada!";
                 PrintWriter out = response.getWriter();
                 out.print("<script>");
                 out.print("alert('" + mensagem + "');");
-                out.print("location.href = 'usuarios.jsp';");
+                out.print("location.href = 'perfis.jsp';");
                 out.print("</script>");
                 out.close();
 

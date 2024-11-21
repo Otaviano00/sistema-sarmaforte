@@ -77,24 +77,40 @@
                             <td><%= produtos.get(i).getQuantidade()%></td>    
                             <td><%= String.format("R$  %,.2f", produtos.get(i).getPreco())%></td>
                             <td>
-                                <% if (produtos.get(i).isStatus() == true) {%>
-                                    <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=4'" class="botao_acao botao_ativo" title="Clique para desativar o produto <%= produtos.get(i).getNome()%>">
+                                <% if (hierarquia < 2) {%>
+                                    <% if (produtos.get(i).isStatus() == true) {%>
+                                        <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=4'" class="botao_acao botao_ativo" title="Clique para desativar o produto <%= produtos.get(i).getNome()%>">
+                                            Ativo
+                                        </button>
+                                        
+                                    <% } else {%>
+                                        <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=3'" class="botao_acao botao_desativo" title="Clique para ativar o produto <%= produtos.get(i).getNome()%>">
+                                            Desativo
+                                        </button>
+                                    <% }%>
+                                <%
+                                    } else {
+                                %>
+                                    <button class="botao_acao botao_ativo">
                                         Ativo
                                     </button>
-                                    
-                                <% } else {%>
-                                    <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=3'" class="botao_acao botao_desativo" title="Clique para ativar o produto <%= produtos.get(i).getNome()%>">
-                                        Desativo
-                                    </button>
-                                <% }%>
+                                <%
+                                    }
+                                %>
                             </td>  
                             <td>
-                                <button onclick="location.href = 'alterar_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Alterar dados do produto <%= produtos.get(i).getNome()%>">
-                                    <img src="images/icone_alterar.svg" alt="Alterar">
-                                </button>
-                                <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Excluir o produto <%= produtos.get(i).getNome()%>">
-                                    <img src="images/icone_excluir.svg" alt="Excluir">
-                                </button>
+                                <%
+                                    if (hierarquia < 2) {
+                                %>
+                                    <button onclick="location.href = 'alterar_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Alterar dados do produto <%= produtos.get(i).getNome()%>">
+                                        <img src="images/icone_alterar.svg" alt="Alterar">
+                                    </button>
+                                    <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Excluir o produto <%= produtos.get(i).getNome()%>">
+                                        <img src="images/icone_excluir.svg" alt="Excluir">
+                                    </button>
+                                <%
+                                    }
+                                %>
                                 <button onclick="location.href = 'detalhes_produto?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
                                     <img src="images/icone_detalhes.svg" alt="Detalhes">
                                 </button>

@@ -26,6 +26,7 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
+        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -34,7 +35,7 @@
         <form action="GerenciarUsuario" method="post">
 
             <% Usuario usu = UsuarioDAO.listarPorId(Integer.parseInt(request.getParameter("id"))); %>
-            <% if (usu.getLogin().equals("admin")) {%>
+            <% if (usu.getLogin().equals("Admin")) {%>
 
             <input type="hidden" name="acao" value="2">
             <input type="hidden" name="id" value="<%= usu.getId()%>">

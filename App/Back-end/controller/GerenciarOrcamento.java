@@ -32,6 +32,7 @@ public class GerenciarOrcamento extends HttpServlet {
             orcamento.setDataCriacao(LocalDateTime.now());
             orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
             orcamento.setStatus("pendente");
+            orcamento.setCliente(ClienteDAO.listarPorId(5));
             boolean ok = OrcamentoDAO.registrar(orcamento);
             
             List<Orcamento> orcamentos = OrcamentoDAO.listar();

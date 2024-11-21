@@ -53,9 +53,11 @@
 
 <%    
     String nome = (String) session.getAttribute("nomeUsuario");
+    Integer idU = (Integer) session.getAttribute("idUsuario");
     String cargo = (String) session.getAttribute("nomePerfil");
+    Integer hierarquia = (Integer) session.getAttribute("hierarquia");
     
-    if (nome == null || cargo == null) {
+    if (nome == null || cargo == null || idU == null || hierarquia == null) {
         String mensagem = "Você não está logado no sistema.";
         out.print("<script>");
         out.print("alert('" + mensagem + "');");
@@ -63,15 +65,16 @@
         out.print("</script>");
     }
 
+    hierarquia = hierarquia == null? 0 : hierarquia;
 %>
 
 <div id="include">
-    <a href="#" class="info_usuario">
+    <a href="detalhes_usuario.jsp?id=<%= idU%>" class="info_usuario">
         <div id="nome_cargo">
             <span id="nome"><%= nome%></span>
             <span id="cargo"><%= cargo%></span>
         </div>
-        <img src="images/icone_info.svg" alt="icone do usuÃ¡rio">
+        <img src="images/icone_info.svg" alt="icone do usuário">
     </a>
     <a href="deslogar.jsp" id="sair">
         <img src="images/icone_sair.svg" alt="sair">

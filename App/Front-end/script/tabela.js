@@ -1,6 +1,6 @@
 $(document).ready(function() {
    $('.table').DataTable({
-      language: {
+        language: {
           lengthMenu: "Exibindo _MENU_ registros por página",
           zeroRecords: "Nenhum registro encontrado",
           info: "Mostrando página _PAGE_ de _PAGES_",
@@ -14,9 +14,10 @@ $(document).ready(function() {
               previous: "<"
           },
           loadingRecords: "Carregando...",
-          processing: "Processando..."
-      }
+          processing: "Processando...",
+          emptyTable: 'Sem registros nessa tabela'
+      },
+        "scrollX": true, // Ativa o scroll horizontal
+        "loadingRecords": true
     });
-  
-
 });

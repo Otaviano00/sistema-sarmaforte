@@ -72,13 +72,18 @@
                             <td><%= vendas.get(i).getOrcamento().getCliente().getNome()%></td>
                             <td><%= vendas.get(i).getUsuario().getNome()%></td> 
                             <td><%= vendas.get(i).getData().toLocalDate()%></td>       
-                            <td><%= String.format("%,.2f", vendas.get(i).getValor())%></td>  
+                            <td><%= String.format("R$ %,.2f", vendas.get(i).getValor())%></td>  
                             <td>
-                                <button onclick="location.href = 'alterar_venda.jsp?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Alterar dessa venda <%= i+1%>">
-                                    <img src="images/icone_alterar.svg" alt="Alterar">
-                                </button>
-                                <button onclick="location.href = 'GerenciarVenda?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Excluir venda <%= i+1%>">
-                                    <img src="images/icone_excluir.svg" alt="Excluir">
+                                <% if (hierarquia < 2) {%>
+                                    <button onclick="location.href = 'alterar_venda.jsp?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Alterar dessa venda <%= i+1%>">
+                                        <img src="images/icone_alterar.svg" alt="Alterar">
+                                    </button>
+                                    <button onclick="location.href = 'GerenciarVenda?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Excluir venda <%= i+1%>">
+                                        <img src="images/icone_excluir.svg" alt="Excluir">
+                                    </button>
+                                <% }%>
+                                <button onclick="location.href = 'detalhes_venda?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Detalhes da venda <%= i+1%>">
+                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
                                 </button>
                             </td>
                         </tr>

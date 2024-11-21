@@ -111,7 +111,7 @@ public class GerenciarUsuario extends HttpServlet {
 
                         if (usu.getEmail().equals(u.getEmail())) {
 
-                            String mensagem = "CPF já existente!";
+                            String mensagem = "Email já existente!";
                             PrintWriter out = response.getWriter();
                             out.print("<script>");
                             out.print("alert('" + mensagem + "');");

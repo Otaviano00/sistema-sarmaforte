@@ -62,23 +62,17 @@ public class UsuarioDAO {
 
         String sql = ""
                 + " SELECT"
-                + " u.id,"
-                + " u.nome,"
-                + " u.telefone,"
-                + " u.login,"
-                + " u.senha,"
-                + " u.cpf,"
-                + " u.email,"
-                + " u.id_perfil,"
-                + " u.status,"
-                + " p.nome,"
-                + " p.descricao,"
-                + " p.hierarquia,"
-                + " p.status"
+                + " id,"
+                + " nome,"
+                + " telefone,"
+                + " login,"
+                + " senha,"
+                + " cpf,"
+                + " email,"
+                + " id_perfil,"
+                + " status "
                 + " FROM"
-                + " usuario u INNER JOIN perfil p"
-                + " ON"
-                + " u.id_perfil = p.id";
+                + " usuario";
 
         List<Usuario> usuarios = new ArrayList<Usuario>();
 
@@ -94,25 +88,19 @@ public class UsuarioDAO {
 
             while (rset.next()) {
 
-                Perfil perfil = new Perfil();
-
-                perfil.setId(rset.getInt("u.id_perfil"));
-                perfil.setNome(rset.getString("p.nome"));
-                perfil.setDescricao(rset.getString("p.descricao"));
-                perfil.setHierarquia(rset.getInt("p.hierarquia"));
-                perfil.setStatus(rset.getBoolean("p.status"));
+                Perfil perfil = PerfilDAO.listarPorId(rset.getInt("id_perfil"));
 
                 Usuario usuario = new Usuario();
 
-                usuario.setId(rset.getInt("u.id"));
-                usuario.setNome(rset.getString("u.nome"));
-                usuario.setTelefone(rset.getString("u.telefone"));
-                usuario.setLogin(rset.getString("u.login"));
-                usuario.setSenha(rset.getString("u.senha"));
-                usuario.setCpf(rset.getString("u.cpf"));
-                usuario.setEmail(rset.getString("u.email"));
+                usuario.setId(rset.getInt("id"));
+                usuario.setNome(rset.getString("nome"));
+                usuario.setTelefone(rset.getString("telefone"));
+                usuario.setLogin(rset.getString("login"));
+                usuario.setSenha(rset.getString("senha"));
+                usuario.setCpf(rset.getString("cpf"));
+                usuario.setEmail(rset.getString("email"));
                 usuario.setPerfil(perfil);
-                usuario.setStatus(rset.getBoolean("u.status"));
+                usuario.setStatus(rset.getBoolean("status"));
 
                 usuarios.add(usuario);
 
@@ -135,7 +123,7 @@ public class UsuarioDAO {
                 e.printStackTrace();
             }
         }
-
+        
         return usuarios;
     }
 
@@ -150,31 +138,22 @@ public class UsuarioDAO {
          */
         String sql = ""
                 + " SELECT"
-                + " u.id,"
-                + " u.nome,"
-                + " u.telefone,"
-                + " u.login,"
-                + " u.senha,"
-                + " u.cpf,"
-                + " u.email,"
-                + " u.id_perfil,"
-                + " u.status,"
-                + " p.nome,"
-                + " p.descricao,"
-                + " p.hierarquia,"
-                + " p.status"
+                + " id,"
+                + " nome,"
+                + " telefone,"
+                + " login,"
+                + " senha,"
+                + " cpf,"
+                + " email,"
+                + " id_perfil,"
+                + " status"
                 + " FROM"
-                + " usuario u INNER JOIN perfil p"
-                + " ON"
-                + " u.id_perfil = p.id"
-                + " WHERE"
-                + " u.id = ?";
+                + " usuario WHERE id = ?";
 
         Connection conn = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
 
-        Perfil perfil = new Perfil();
         Usuario usuario = new Usuario();
 
         try {
@@ -189,21 +168,17 @@ public class UsuarioDAO {
 
             if (rset.next()) {
 
-                perfil.setId(rset.getInt("u.id_perfil"));
-                perfil.setNome(rset.getString("p.nome"));
-                perfil.setDescricao(rset.getString("p.descricao"));
-                perfil.setHierarquia(rset.getInt("p.hierarquia"));
-                perfil.setStatus(rset.getBoolean("p.status"));
-
-                usuario.setId(rset.getInt("u.id"));
-                usuario.setNome(rset.getString("u.nome"));
-                usuario.setTelefone(rset.getString("u.telefone"));
-                usuario.setLogin(rset.getString("u.login"));
-                usuario.setSenha(rset.getString("u.senha"));
-                usuario.setCpf(rset.getString("u.cpf"));
-                usuario.setEmail(rset.getString("u.email"));
+                Perfil perfil = PerfilDAO.listarPorId(rset.getInt("id_perfil"));    
+              
+                usuario.setId(rset.getInt("id"));
+                usuario.setNome(rset.getString("nome"));
+                usuario.setTelefone(rset.getString("telefone"));
+                usuario.setLogin(rset.getString("login"));
+                usuario.setSenha(rset.getString("senha"));
+                usuario.setCpf(rset.getString("cpf"));
+                usuario.setEmail(rset.getString("email"));
                 usuario.setPerfil(perfil);
-                usuario.setStatus(rset.getBoolean("u.status"));
+                usuario.setStatus(rset.getBoolean("status"));
 
             } else {
 

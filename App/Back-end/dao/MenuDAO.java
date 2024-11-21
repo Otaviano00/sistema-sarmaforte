@@ -258,4 +258,46 @@ public class MenuDAO {
         }
 
     }
+    
+    public static boolean excluir(Menu menu) {
+
+        String sql = ""
+                + " DELETE FROM menu"
+                + " WHERE"
+                + " id = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+            
+            pstm.setInt(1, menu.getId());
+
+            pstm.execute();
+
+            return true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return false;
+
+        } finally {
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 }
