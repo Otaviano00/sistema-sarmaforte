@@ -111,7 +111,7 @@
                                 <%
                                     }
                                 %>
-                                <button onclick="location.href = 'detalhes_produto?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
+                                <button onclick="location.href = 'detalhes_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
                                     <img src="images/icone_detalhes.svg" alt="Detalhes">
                                 </button>
                             </td>

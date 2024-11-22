@@ -1,6 +1,4 @@
 
-<%@page import="model.Perfil"%>
-<%@page import="dao.PerfilDAO"%>
 <%@page import="model.Menu"%>
 <%@page import="dao.MenuDAO"%>
 <%@page import="java.util.List"%>
@@ -53,15 +51,17 @@
         <form action="GerenciarPerfil" method="post">
             <input type="hidden" name="acao" value="1">
             <div class="campos">
-                <label for="nome" class="titulo_campo">Nome:</label>
-                <input type="text" name="nome" title="Apenas caracters alfabéticos!" required></div>
+                <label for="nome" class="titulo_campo">Nome: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <input type="text" name="nome" title="Apenas caracters alfabéticos!" required>
+            </div>
             
             <div class="campos">
                 <label for="descricao" class="titulo_campo">Descrição:</label>
-                <textarea name="descricao" rows="3" cols="30"></textarea></div>
+                <textarea name="descricao" rows="3" cols="30"></textarea>
+            </div>
             
             <div class="campos">
-                <label for="hierarquia" class="titulo_campo">Hierarquia:</label>
+                <label for="hierarquia" class="titulo_campo">Hierarquia: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
                     <div style="display: flex; justify-content: start; align-items: start; gap: 10px;">
                         <label for="alta"  class="botao_radio">Alta 
                             <input type="radio" name="hierarquia" id="alta" value="1">
@@ -72,7 +72,7 @@
                     </div>
             </div>
 
-            <div class="campos"><label class="titulo_campo">Menus de Acesso: </label></div>
+            <div class="campos"><label class="titulo_campo">Menus de Acesso: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label></div>
             <div class="tabela">
                 <table class="table table-striped" style="background-color: white;">
                     <thead>
@@ -101,7 +101,7 @@
             </div>
 
             <div style="display: flex; gap: 10px; margin: 20px; ">
-                <button class="botao_cancela"> Cancelar</button>
+                <button type="button" class="botao_cancela" onclick="location.href = 'perfis.jsp'"> Cancelar</button>
                 <input type="submit" value="Cadastrar Dados" class="botao_confirma">
             </div>
         </form>

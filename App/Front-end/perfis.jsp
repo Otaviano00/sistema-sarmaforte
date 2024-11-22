@@ -72,7 +72,7 @@
                             <td><%= i+1%></td>
                             <td><%= perfis.get(i).getNome()%></td>
                             <td><%= perfis.get(i).getDescricao() == null? "---" : perfis.get(i).getDescricao()%></td>
-                            <td><%= perfis.get(i).getHierarquia()%></td>                  
+                            <td><%= perfis.get(i).getHierarquia() == 2? "Baixa" : "Alta"%></td>                  
                             <% if (perfis.get(i).getId() == 1 || perfis.get(i).getId() == 5) {%>
                                 <td>
                                     <button class="botao_acao botao_ativo">

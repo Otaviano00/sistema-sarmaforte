@@ -32,11 +32,11 @@ public class GerenciarProduto extends HttpServlet {
             throws UnsupportedEncodingException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        int acao = Integer.parseInt(request.getParameter("acao"));
+        int valor = Integer.parseInt(request.getParameter("valor"));
 
         Produto produto = new Produto();
 
-        switch (acao) {
+        switch (valor) {
             case 1: // Create
                 try {
                     String nome = request.getParameter("nome");
@@ -47,9 +47,7 @@ public class GerenciarProduto extends HttpServlet {
                     double custo = Double.parseDouble(request.getParameter("custo"));
                     String imagem = request.getParameter("imagem");
                     String fornecedor = request.getParameter("fornecedor");
-                    int codigo = Integer.parseInt(request.getParameter("codigo"));
 
-                    produto.setCodigo(codigo);
                     produto.setNome(nome);
                     produto.setDescricao(descricao);
                     produto.setQuantidade(quantidade);
@@ -58,7 +56,6 @@ public class GerenciarProduto extends HttpServlet {
                     produto.setCusto(custo);
                     produto.setImagem(imagem);
                     produto.setFornecedor(fornecedor);
-                    produto.setStatus(true);
 
                     ProdutoDAO.cadastrar(produto);
 
@@ -87,11 +84,12 @@ public class GerenciarProduto extends HttpServlet {
                     String nome = request.getParameter("nome");
                     String descricao = request.getParameter("descricao");
                     int quantidade = Integer.parseInt(request.getParameter("quantidade"));
-                    int quantidadeCritica = Integer.parseInt(request.getParameter("quantidade_critica"));
+                    int quantidadeCritica = Integer.parseInt(request.getParameter("quantidadeCritica"));
                     double preco = Double.parseDouble(request.getParameter("preco"));
                     double custo = Double.parseDouble(request.getParameter("custo"));
                     String imagem = request.getParameter("imagem");
                     String fornecedor = request.getParameter("fornecedor");
+                    boolean status =  Boolean.parseBoolean(request.getParameter("status"));
 
                     produto.setCodigo(codigo);
                     produto.setNome(nome);
@@ -102,6 +100,7 @@ public class GerenciarProduto extends HttpServlet {
                     produto.setCusto(custo);
                     produto.setImagem(imagem);
                     produto.setFornecedor(fornecedor);
+                    produto.setStatus(status);
 
                     ProdutoDAO.alterar(produto);
 
@@ -118,7 +117,7 @@ public class GerenciarProduto extends HttpServlet {
                     PrintWriter out = response.getWriter();
                     out.print("<script>");
                     out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'editar_produto.jsp';");
+                    out.print("location.href = 'produtos.jsp';");
                     out.print("</script>");
                     out.close();
                 }

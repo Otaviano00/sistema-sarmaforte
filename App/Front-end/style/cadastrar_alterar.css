@@ -1,4 +1,6 @@
-
+* {
+    overflow: visible;
+}
 
 form {
     width: 70%;
@@ -27,7 +29,7 @@ form {
     color: #142E50;
 }
 
-.campos input[type="text"], textarea {
+.campos input, textarea {
     width: 99%;
     height: 2em;
     border: none;
@@ -36,7 +38,23 @@ form {
     font-size: 1.3em;
 }
 
-.campos input[type="text"]:hover, textarea:hover {
+.seletor{
+    width: 99%;
+    min-height: fit-content;
+    height: 30px;
+    border: none;
+    padding: 10px;
+    outline: none;
+    font-size: 1.3em;
+    overflow: scroll;
+}
+
+.seletor option {
+    height: 2em;
+    font-size: 1.3em;
+}
+
+.campos input:hover, textarea:hover {
     background-color: #006eff15;
 }
 
@@ -56,6 +74,10 @@ form {
     padding: 10px;
     color: #FFB729;
     border-radius: 5px;
+}
+
+.botao_radio input {
+    height: 1.3em;
 }
 
 .botao_radio:hover {

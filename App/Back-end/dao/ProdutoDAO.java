@@ -10,7 +10,7 @@ import model.Produto;
 public class ProdutoDAO {
 
     public static boolean cadastrar(Produto produto) {
-        String sql = "INSERT INTO produto (codigo, descricao, nome, quantidade, quantidadeCritica, imagem, fornecedor, preco, custo, status) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO produto (descricao, nome, quantidade, quantidadeCritica, imagem, fornecedor, preco, custo, status) VALUES (?,?,?,?,?,?,?,?,?)";
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -19,16 +19,15 @@ public class ProdutoDAO {
             conn = Conexao.criarConexaoMySQL();
             pstm = conn.prepareStatement(sql);
 
-            pstm.setInt(1, produto.getCodigo());
-            pstm.setString(2, produto.getDescricao());
-            pstm.setString(3, produto.getNome());
-            pstm.setInt(4, produto.getQuantidade());
-            pstm.setInt(5, produto.getQuantidadeCritica());
-            pstm.setString(6, produto.getImagem());
-            pstm.setString(7, produto.getFornecedor());
-            pstm.setDouble(8, produto.getPreco());
-            pstm.setDouble(9, produto.getCusto());
-            pstm.setBoolean(10, produto.isStatus());
+            pstm.setString(1, produto.getDescricao());
+            pstm.setString(2, produto.getNome());
+            pstm.setInt(3, produto.getQuantidade());
+            pstm.setInt(4, produto.getQuantidadeCritica());
+            pstm.setString(5, produto.getImagem());
+            pstm.setString(6, produto.getFornecedor());
+            pstm.setDouble(7, produto.getPreco());
+            pstm.setDouble(8, produto.getCusto());
+            pstm.setBoolean(9, true);
 
             pstm.execute();
             return true;
@@ -53,7 +52,7 @@ public class ProdutoDAO {
 
     public static List<Produto> listar() {
         String sql = "SELECT * FROM produto";
-        List<Produto> produtos = new ArrayList<>();
+        List<Produto> produtos = new ArrayList<Produto>();
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -149,8 +148,8 @@ public class ProdutoDAO {
     }
 
     public static boolean alterar(Produto produto) {
-        String sql = "UPDATE produto SET codigo = ?, descricao = ?, nome = ? quantidade = ?, quantidadeCritica = ?, imagem = ?, fornecedor = ?, preco = ?, custo = ?, status = ? WHERE codigo = ?";
-
+        String sql = "UPDATE produto SET descricao = ?, nome = ?, quantidade = ?, quantidadeCritica = ?, imagem = ?, fornecedor = ?, preco = ?, custo = ?, status = ? WHERE codigo = ?";
+   
         Connection conn = null;
         PreparedStatement pstm = null;
 
@@ -158,16 +157,16 @@ public class ProdutoDAO {
             conn = Conexao.criarConexaoMySQL();
             pstm = conn.prepareStatement(sql);
 
-            pstm.setInt(1, produto.getCodigo());
-            pstm.setString(2, produto.getDescricao());
-            pstm.setString(3, produto.getNome());
-            pstm.setInt(4, produto.getQuantidade());
-            pstm.setInt(5, produto.getQuantidadeCritica());
-            pstm.setString(6, produto.getImagem());
-            pstm.setString(7, produto.getFornecedor());
-            pstm.setDouble(8, produto.getPreco());
-            pstm.setDouble(9, produto.getCusto());
-            pstm.setBoolean(10, produto.isStatus());
+            pstm.setString(1, produto.getDescricao());
+            pstm.setString(2, produto.getNome());
+            pstm.setInt(3, produto.getQuantidade());
+            pstm.setInt(4, produto.getQuantidadeCritica());
+            pstm.setString(5, produto.getImagem());
+            pstm.setString(6, produto.getFornecedor());
+            pstm.setDouble(7, produto.getPreco());
+            pstm.setDouble(8, produto.getCusto());
+            pstm.setBoolean(9, produto.isStatus());
+            pstm.setInt(10, produto.getCodigo());
 
             pstm.execute();
             return true;
@@ -200,19 +199,19 @@ public class ProdutoDAO {
 
         Connection conn = null;
         PreparedStatement pstm = null;
-        
-        try{
-            
+
+        try {
+
             conn = Conexao.criarConexaoMySQL();
             pstm = (PreparedStatement) conn.prepareStatement(sql);
 
             pstm.setBoolean(1, true);
             pstm.setInt(2, produto.getCodigo());
-            
+
             pstm.execute();
-            
+
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
 
@@ -232,8 +231,9 @@ public class ProdutoDAO {
 
         }
     }
-    public static boolean desativar (Produto produto) {
-        
+
+    public static boolean desativar(Produto produto) {
+
         String sql = ""
                 + " UPDATE produto"
                 + " SET"
@@ -250,11 +250,11 @@ public class ProdutoDAO {
 
             pstm.setBoolean(1, false);
             pstm.setInt(2, produto.getCodigo());
-            
+
             pstm.execute();
-            
+
             return true;
-    }catch (Exception e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
 
@@ -275,4 +275,4 @@ public class ProdutoDAO {
         }
 
     }
- }
+}

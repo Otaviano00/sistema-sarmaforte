@@ -15,9 +15,12 @@ $(document).ready(function() {
           },
           loadingRecords: "Carregando...",
           processing: "Processando...",
+
           emptyTable: 'Sem registros nessa tabela'
       },
         "scrollX": true, // Ativa o scroll horizontal
         "loadingRecords": true
     });
 });
+
+  

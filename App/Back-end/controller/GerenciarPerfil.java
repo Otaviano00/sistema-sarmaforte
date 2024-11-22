@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import model.Menu;
 //import javax.servlet.ServletException;
 //import javax.servlet.http.HttpServlet;
 //import javax.servlet.http.HttpServletRequest;
@@ -95,6 +96,7 @@ public class GerenciarPerfil extends HttpServlet {
                     out.print("alert('" + mensagem + "');");
                     PerfilDAO.cadastrar(p);
                     
+                    // Vincula todos os perfis selecionados
                     List<Perfil> perfis = PerfilDAO.listar();
                     int idPerfil = perfis.get(perfis.size()-1).getId();    
                     
@@ -131,6 +133,7 @@ public class GerenciarPerfil extends HttpServlet {
                     String descricao = request.getParameter("descricao");
                     int hierarquia = Integer.parseInt(request.getParameter("hierarquia"));
                     boolean status = Boolean.parseBoolean(request.getParameter("status"));
+                    String[] menus = request.getParameterValues("menu");
 
                     // Primeiro eu pego os dados com base no id acima, usaremos isso para a validação
                     Perfil exis = PerfilDAO.listarPorId(id);
@@ -140,7 +143,14 @@ public class GerenciarPerfil extends HttpServlet {
                     p.setDescricao(descricao);
                     p.setHierarquia(hierarquia);
                     p.setStatus(status);
-
+                    List<Menu> m = PerfilDAO.listarMenus(id);
+                    
+                    
+                    for (Menu menu : m) {
+                        PerfilDAO.desvincular(id,menu.getId());
+                    }
+                    
+                    
                     // Agora comparo os dados do objeto extraidos do banco com os dados recebidos da outra página
                     // Inicio o laco de repetição e começa a validação
                     for (Perfil lala : PerfilDAO.listar()) {
@@ -180,6 +190,11 @@ public class GerenciarPerfil extends HttpServlet {
                         mensagem2 = "Não pode alterar esse perfil!";
                     } else {
                         PerfilDAO.alterar(p);
+                        
+                        // Vincula todos os perfis selecionados
+                        for (String idMenu : menus) {
+                            PerfilDAO.vincular(id, Integer.parseInt(idMenu) );
+                        }
                     }
                     out.print("alert('" + mensagem2 + "');");
                     out.print("location.href = 'perfis.jsp';");
