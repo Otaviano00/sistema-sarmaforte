@@ -6,6 +6,9 @@
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%@include file="sessao.jsp" %>
+<%@include file="infoAdmin.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +48,6 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
-        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -92,6 +94,7 @@
                             int quantidadeMenus = allMenus.size();
                             List<Menu> menus = PerfilDAO.listarMenus(idPerfil);
                             for (int i = 0; i < menus.size(); i++) {
+                                if (menus.get(i).isStatus()) {
                         %>
                             <tr>
                                 <td><%= i+1%></td>
@@ -102,6 +105,7 @@
                                 </td>
                             </tr>
                         <%
+                                }
                                 for (int j = 0; j < allMenus.size(); j++) {
                                     if (menus.get(i).getId() == allMenus.get(j).getId()) {
                                         allMenus.remove(j);
@@ -112,6 +116,7 @@
 
                         <%
                             for (int i = 0; i < allMenus.size(); i++) {
+                                if (allMenus.get(i).isStatus()) {
                         %>
                             <tr>
                                 <td><%= menus.size() + i+1%></td>
@@ -121,13 +126,16 @@
                                    <input type="checkbox" name="menu" value="<%= allMenus.get(i).getId()%>" disabled readonly>     
                                 </td>
                             </tr>
-                        <% }%>
+                        <% 
+                                }
+                            }
+                        %>
                     </tbody>
                 </table>
             </div>
 
             <div style="display: flex; gap: 10px; margin: 20px; ">
-                <button type="button" class="botao_cancela" onclick="location.href = 'perfis.jsp'"> Voltar</button>
+                <button type="button" class="botao_cancela" onclick="location.href = document.referrer;"> Voltar</button>
             </div>
         </form>
     </div>

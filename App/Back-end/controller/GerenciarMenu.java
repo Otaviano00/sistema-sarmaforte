@@ -5,13 +5,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-//import javax.servlet.ServletException;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
 import model.Menu;
 
 public class GerenciarMenu extends HttpServlet {
@@ -19,33 +16,77 @@ public class GerenciarMenu extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         gerenciarMenu(request, response);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         gerenciarMenu(request, response);
+    }
 
+    private static void exibirMensagem(PrintWriter out, String mensagem, String url) throws IOException {
+        out.print("<script>");
+        out.print("alert('" + mensagem + "');");
+        out.print("location.href = '" + url + "';");
+        out.print("</script>");
+        out.close();
+    }
+
+    private static boolean validarUnicidade(Menu menu, PrintWriter out, String redirectUrl) throws IOException {
+        // Verifica se o link ou a imagem já existem no banco
+        for (Menu m : MenuDAO.listar()) {
+            if (m.getId() != menu.getId()) {
+                if (menu.getLink().equals(m.getLink())) {
+                    exibirMensagem(out, "Link já existente!", redirectUrl);
+                    return true;
+                }
+                if (menu.getImagem().equals(m.getImagem())) {
+                    exibirMensagem(out, "Imagem já existente!", redirectUrl);
+                    return true;
+                }  
+            }
+        }
+        return false;
     }
 
     public static void gerenciarMenu(HttpServletRequest request, HttpServletResponse response)
             throws UnsupportedEncodingException, IOException {
-
+        HttpSession sessao = request.getSession();
         request.setCharacterEncoding("UTF-8");
-        int acao = Integer.parseInt(request.getParameter("acao"));
+        PrintWriter out = response.getWriter();
+        String mensagem = "";
 
+        Integer hierarquia = (Integer) sessao.getAttribute("hierarquia");
+        if (hierarquia == null) {
+            exibirMensagem(out, "Sessão expirada! Faça login novamente.", "login.jsp");
+            return;
+        }
+
+        int acao;
+        try {
+            acao = Integer.parseInt(request.getParameter("acao"));
+        } catch (NumberFormatException e) {
+            exibirMensagem(out, "Ação inválida!", "menus.jsp");
+            return;
+        }
+
+        if (hierarquia == 2) {
+            exibirMensagem(out, "Você não tem autorização para realizar essa ação!", "home.jsp");
+            return;
+        }
+        
         Menu me = new Menu();
 
         switch (acao) {
+            case 0:
+                // Caso de não autorização
+                mensagem = "Você não tem autorização para realizar essa ação!";
+                exibirMensagem(out, mensagem, "home.jsp");
+                break;
 
-            case 1:
-                // CADASTRAR MENU
+            case 1: // Cadastrar Menu
                 try {
-
                     String nome = request.getParameter("nome");
                     String link = request.getParameter("link");
                     String imagem = request.getParameter("imagem");
@@ -54,61 +95,24 @@ public class GerenciarMenu extends HttpServlet {
                     me.setLink(link);
                     me.setImagem("images/" + imagem);
 
-                    //Tratamento de dados
-                    for (Menu m : MenuDAO.listar()) {
-
-                        if (me.getLink().equals(m.getLink())) {
-
-                            String mensagem = "Link já existente!";
-                            PrintWriter out = response.getWriter();
-                            out.print("<script>");
-                            out.print("alert('" + mensagem + "');");
-                            out.print("location.href = 'cadastrar_menu.jsp';");
-                            out.print("</script>");
-                            out.close();
-                            break;
-
-                        }
-
-                        if (me.getImagem().equals(m.getImagem())) {
-
-                            String mensagem = "Imagem já existente!";
-                            PrintWriter out = response.getWriter();
-                            out.print("<script>");
-                            out.print("alert('" + mensagem + "');");
-                            out.print("location.href = 'cadastrar_menu.jsp';");
-                            out.print("</script>");
-                            out.close();
-                            break;
-
-                        }
-
+                    // Verificar unicidade de link e imagem
+                    if (validarUnicidade(me, out, "cadastrar_menu.jsp")) {
+                        return;
                     }
 
-                    String mensagem = "Deseja inserir esses dados?";
-                    String mensagem2 = "Cadastro bem sussedido!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    MenuDAO.cadastrar(me);
-                    out.print("alert('" + mensagem2 + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
+                    // Cadastro no banco
+                    if (MenuDAO.cadastrar(me)) {
+                        exibirMensagem(out, "Menu cadastrado com sucesso!", "menus.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao cadastrar o menu!", "cadastrar_menu.jsp");
+                    }
 
                 } catch (Exception e) {
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "menus.jsp");
                 }
-
                 break;
-            case 2:
-                // ALTERAR MENU
+
+            case 2: // Alterar Menu
                 try {
                     int idm = Integer.parseInt(request.getParameter("id"));
                     String nome = request.getParameter("nome");
@@ -118,15 +122,11 @@ public class GerenciarMenu extends HttpServlet {
 
                     Menu ma = MenuDAO.listarPorId(idm);
 
-                    // Se nenhuma imagem for escolhida, conservaremos o valor dela com a do banco
+                    // Se nenhuma imagem for escolhida, conservamos a imagem do banco
                     if (imagem.equals("")) {
-
                         imagem = ma.getImagem();
-
                     } else {
-
-                        imagem = "images/" + request.getParameter("imagem");
-
+                        imagem = "images/" + imagem;
                     }
 
                     me.setId(idm);
@@ -135,123 +135,77 @@ public class GerenciarMenu extends HttpServlet {
                     me.setImagem(imagem);
                     me.setStatus(status);
 
-                    for (Menu mme : MenuDAO.listar()) {
-
-                        if (mme.getId() != ma.getId()) {
-
-                            if (me.getLink().equals(mme.getLink())) {
-
-                                String mensagem = "Link já existente!";
-                                PrintWriter out = response.getWriter();
-                                out.print("<script>");
-                                out.print("alert('" + mensagem + "');");
-                                out.print("location.href = 'alterar_menu.jsp?id=" + ma.getId() + "';");
-                                out.print("</script>");
-                                out.close();
-
-                            }
-
-                            if (me.getImagem().equals(mme.getImagem())) {
-
-                                String mensagem = "Imagem já existente!";
-                                PrintWriter out = response.getWriter();
-                                out.print("<script>");
-                                out.print("alert('" + mensagem + "');");
-                                out.print("location.href = 'alterar_menu.jsp?id=" + ma.getId() + "';");
-                                out.print("</script>");
-                                out.close();
-
-                            }
-
-                        }
-
+                    // Verificar unicidade de link e imagem
+                    if (validarUnicidade(me, out, "alterar_menu.jsp?id=" + ma.getId())) {
+                        return;
                     }
 
-                    String mensagem = "Deseja inserir esses dados?";
-                    String mensagem2 = "Cadastro bem sussedido!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    MenuDAO.alterar(me);
-                    out.print("alert('" + mensagem2 + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
+                    // Atualizar no banco
+                    if (MenuDAO.alterar(me)) {
+                        exibirMensagem(out, "Menu alterado com sucesso!", "menus.jsp");
+                        } else {
+                        exibirMensagem(out, "Erro ao alterar o menu!", "menus.jsp");
+                    }
 
                 } catch (Exception e) {
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
-                }
-
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "menus.jsp");                }
                 break;
-            case 3: 
-                //ATIVAR
-                try {
 
+            case 3: // Ativar Menu
+                try {
                     int id = Integer.parseInt(request.getParameter("id"));
                     me.setId(id);
-                    MenuDAO.ativar(me);
-                    response.sendRedirect("menus.jsp");
+
+                    // Ativar o menu
+                    if (MenuDAO.ativar(me)) {
+                        response.sendRedirect("menus.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao ativar o menu!", "menus.jsp");
+                    }
 
                 } catch (Exception e) {
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "menus.jsp");
                 }
-
                 break;
-            case 4:
-                //DESATIVAR
-                try {
 
+            case 4: // Desativar Menu
+                try {
                     int id = Integer.parseInt(request.getParameter("id"));
                     me.setId(id);
-                    MenuDAO.desativar(me);
-                    response.sendRedirect("menus.jsp");
+
+                    // Desativar o menu
+                    if (MenuDAO.desativar(me)) {
+                        response.sendRedirect("menus.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao desativar o menu!", "menus.jsp");
+                    }
 
                 } catch (Exception e) {
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "menus.jsp");
                 }
-
                 break;
-            case 5: 
-                //EXCLUIR
-                try {
 
+            case 5: // Excluir Menu
+                try {
                     int id = Integer.parseInt(request.getParameter("id"));
                     me.setId(id);
-                    MenuDAO.excluir(me);
-                    response.sendRedirect("menus.jsp");
+
+                    // Excluir o menu
+                    if (MenuDAO.excluir(me)) {
+                        response.sendRedirect("menus.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao excluir o menu!", "menus.jsp");
+                    }
 
                 } catch (Exception e) {
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'menus.jsp';");
-                    out.print("</script>");
-                    out.close();
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "menus.jsp");
                 }
-
                 break;
 
+            default:
+                mensagem = "Ação inválida!";
+                exibirMensagem(out, mensagem, "menus.jsp");
+                break;
         }
-
     }
-
 }

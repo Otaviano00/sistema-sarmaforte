@@ -3,6 +3,8 @@
 <%@page import="dao.ProdutoDAO"%>
 <%@page import="java.util.List"%>
 
+<%@include file="sessao.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,13 +47,17 @@
         <h1 class="titulo">
             PRODUTOS
         </h1>
+        <%
+            if (hierarquia < 2) {
+        %>
         <button class="novo" onclick="location.href = ('cadastrar_produto.jsp')">
             <div style="display: flex; justify-content: center; align-items: center; margin: auto; gap: 10px;">
                 <span style="font-size: 2em;">+</span>
                 Novo Produto
             </div>
         </button>
-        <div class="tabela">
+        <%}%>
+        <div class="tabela <%= hierarquia == 2? "margin-top" : " " %>">
             <table class="table table-striped" style="background-color: white;">
                 <thead>
                     <tr>
@@ -105,15 +111,20 @@
                                     <button onclick="location.href = 'alterar_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Alterar dados do produto <%= produtos.get(i).getNome()%>">
                                         <img src="images/icone_alterar.svg" alt="Alterar">
                                     </button>
-                                    <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Excluir o produto <%= produtos.get(i).getNome()%>">
+                                <%}%>
+
+                                <button onclick="location.href = 'detalhes_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
+                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
+                                </button>
+                            
+                                <% if (hierarquia < 2) {%>
+                                    <button onclick="confirmarExclusao(event, 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=5')" class="botao_acao" title="Excluir o produto <%= produtos.get(i).getNome()%>">
                                         <img src="images/icone_excluir.svg" alt="Excluir">
                                     </button>
                                 <%
                                     }
                                 %>
-                                <button onclick="location.href = 'detalhes_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
-                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
-                                </button>
+                                
                             </td>
                         </tr>
                     <% }%>

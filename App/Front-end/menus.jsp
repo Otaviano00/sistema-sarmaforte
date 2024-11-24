@@ -3,6 +3,9 @@
 <%@page import="dao.MenuDAO"%>
 <%@page import="java.util.List"%>
 
+<%@include file="sessao.jsp" %>
+<%@include file="infoAdmin.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +40,6 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
-        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -104,7 +106,7 @@
                                 <%
                                     if (hierarquia == 0) {
                                 %>
-                                    <button onclick="location.href = 'GerenciarMenu?id=<%= menus.get(i).getId()%>&acao=5'" class="botao_acao" title="Excluir o menu <%= menus.get(i).getNome()%>">
+                                    <button onclick="confirmarExclusao(event, 'GerenciarMenu?id=<%= menus.get(i).getId()%>&acao=5')" class="botao_acao" title="Excluir o menu <%= menus.get(i).getNome()%>">
                                         <img src="images/icone_excluir.svg" alt="Excluir">
                                     </button>
                                 <%

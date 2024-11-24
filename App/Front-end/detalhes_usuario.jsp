@@ -1,10 +1,11 @@
-
+<%@page import="model.Usuario"%>
+<%@page import="dao.UsuarioDAO"%>
 <%@page import="model.Perfil"%>
 <%@page import="dao.PerfilDAO"%>
-<%@page import="model.Menu"%>
-<%@page import="dao.MenuDAO"%>
-<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%@include file="sessao.jsp" %>
+<%@include file="infoAdmin.jsp" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,18 +25,15 @@
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
     <script defer src="script/tabela.js"> </script>
+    <script defer src="script/cadastrar_alterar.js"></script>
 
     <link rel="stylesheet" href="style/main.css">
     <link rel="stylesheet" href="style/cadastrar_alterar.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
-    <title>Detalhes Perfil</title>
+    <title>Detalhes Usuário</title>
     
 </head>
 <body>
-    <% 
-        Integer idPerfil = Integer.parseInt(request.getParameter("id"));
-        Perfil perfil = PerfilDAO.listarPorId(idPerfil);
-    %>
     <header>
          <div class="logo">
             <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
@@ -45,92 +43,63 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
-        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
     </nav>
     <div class="flex">
+        <%
+            Usuario usuario = UsuarioDAO.listarPorId(Integer.parseInt(request.getParameter("id")));
+        %>
         <h1 class="titulo">
-            Detalhes Perfil
+            Detalhes Usuário
         </h1>
-        <form action="#">
+        <form action="#" method="post">
             <div class="campos">
-                <label for="nome" class="titulo_campo">Nome:</label>
-                <input type="text" name="nome" title="Apenas caracters alfabéticos!" value="<%= perfil.getNome()%>" disabled></div>
-            
-            <div class="campos">
-                <label for="descricao" class="titulo_campo">Descrição:</label>
-                <textarea name="descricao" rows="3" cols="30" disabled><%= perfil.getDescricao()%></textarea></div>
-            
-            <div class="campos">
-                <label for="hierarquia" class="titulo_campo">Hierarquia:</label>
-                    <div style="display: flex; justify-content: start; align-items: start; gap: 10px;">
-                        <label for="alta"  class="botao_radio">Alta 
-                            <input type="radio" name="hierarquia" id="alta" value="1" <%= perfil.getHierarquia() == 1? "checked" : " "%> disabled>
-                        </label>
-                        <label for="baixa" class="botao_radio">Baixa
-                            <input type="radio" name="hierarquia" id="baixa" value="2" <%= perfil.getHierarquia() == 2? "checked" : " "%> disabled>
-                        </label>
-                    </div>
+                <label for="nome" class="titulo_campo">Nome: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <input type="text" name="nome" title="Apenas caracters alfabéticos!" value="<%= usuario.getNome()%>" required disabled readonly>
             </div>
 
-            <div class="campos"><label class="titulo_campo">Menus de Acesso: </label></div>
-            <div class="tabela">
-                <table class="table table-striped" style="background-color: white;">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Imagem</th>
-                            <th>Nome</th>
-                            <th>Permissão</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%
-                            List<Menu> allMenus = MenuDAO.listar();
-                            int quantidadeMenus = allMenus.size();
-                            List<Menu> menus = PerfilDAO.listarMenus(idPerfil);
-                            for (int i = 0; i < menus.size(); i++) {
-                        %>
-                            <tr>
-                                <td><%= i+1%></td>
-                                <td><img src="<%= menus.get(i).getImagem()%>" alt="<%= menus.get(i).getNome()%>"></td>
-                                <td><%= menus.get(i).getNome()%></td>
-                                <td>
-                                <input type="checkbox" name="menu" value="<%= menus.get(i).getId()%>" checked disabled readonly>     
-                                </td>
-                            </tr>
-                        <%
-                                for (int j = 0; j < allMenus.size(); j++) {
-                                    if (menus.get(i).getId() == allMenus.get(j).getId()) {
-                                        allMenus.remove(j);
-                                    }
-                                }
-                            }
-                        %>
+            <div class="campos">
+                <label for="telefone" class="titulo_campo">Telefone: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <input type="text" name="telefone" title="Apenas caracteres númericos!" value="<%= usuario.getTelefone()%>" required disabled>
+            </div>
+            
+            <div class="campos">
+                <label for="login" class="titulo_campo">Login: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <input type="text" name="login" value="<%= usuario.getLogin()%>" required  disabled readonly>
+            </div>
 
-                        <%
-                            for (int i = 0; i < allMenus.size(); i++) {
-                        %>
-                            <tr>
-                                <td><%= menus.size() + i+1%></td>
-                                <td><img src="<%= allMenus.get(i).getImagem()%>" alt="<%= allMenus.get(i).getNome()%>"></td>
-                                <td><%= allMenus.get(i).getNome()%></td>
-                                <td>
-                                   <input type="checkbox" name="menu" value="<%= allMenus.get(i).getId()%>" disabled readonly>     
-                                </td>
-                            </tr>
+            <div class="campos">
+                <label for="senha" class="titulo_campo">Senha: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <input type="password" name="senha" value="<%= usuario.getSenha()%>" required  disabled readonly>
+            </div>
+
+            <div class="campos">
+                <label for="cpf" class="titulo_campo">CPF: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <input type="text" name="cpf" value="<%= usuario.getCpf()%>" required  disabled readonly>
+            </div>
+
+            <div class="campos">
+                <label for="email" class="titulo_campo">Email:</label>
+                <input type="email" name="email" value="<%= usuario.getEmail()%>"  disabled readonly>
+            </div>
+
+            <div class="campos" >
+                <label for="perfil" class="titulo_campo">Perfil: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
+                <select name="perfil" class="seletor"  disabled readonly>
+                    <% for (Perfil p : PerfilDAO.listar()) {%>
+                        <% if (!p.getNome().equals("Admin") && p.isStatus() != false) {%>
+                            <option value="<%= p.getId()%>" <%= p.getId() == usuario.getPerfil().getId()? "selected" : " "%>><%= p.getNome()%></option>
                         <% }%>
-                    </tbody>
-                </table>
+                    <% }%>
+                </select>
             </div>
 
             <div style="display: flex; gap: 10px; margin: 20px; ">
-                <button type="button" class="botao_cancela" onclick="location.href = 'perfis.jsp'"> Voltar</button>
+                <button type="button" class="botao_cancela" onclick="location.href = document.referrer;"> Voltar</button>
             </div>
         </form>
     </div>
-
 </body>
 </html>

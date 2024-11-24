@@ -24,7 +24,10 @@
         <servlet-name>GerenciarMenu</servlet-name>
         <servlet-class>controller.GerenciarMenu</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>GerenciarCliente</servlet-name>
+        <servlet-class>controller.GerenciarCliente</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProcessarLogin</servlet-name>
         <url-pattern>/ProcessarLogin</url-pattern>
@@ -49,7 +52,10 @@
         <servlet-name>GerenciarMenu</servlet-name>
         <url-pattern>/GerenciarMenu</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>GerenciarCliente</servlet-name>
+        <url-pattern>/GerenciarCliente</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

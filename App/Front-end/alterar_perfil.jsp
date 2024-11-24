@@ -6,6 +6,9 @@
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%@include file="sessao.jsp" %>
+<%@include file="infoAdmin.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +48,6 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
-        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -56,7 +58,6 @@
         </h1>
         <form action="GerenciarPerfil" method="post">
             <input type="hidden" name="id" value="<%= idPerfil%>">
-            <input type="hidden" name="status" value="<%= perfil.isStatus()%>">
             <input type="hidden" name="acao" value="2">
             <div class="campos">
                 <label for="nome" class="titulo_campo">Nome:</label>
@@ -78,6 +79,18 @@
                     </div>
             </div>
 
+            <div class="campos" style="gap: 5px;">
+                <label for="status" class="titulo_campo">Status: </label>
+                <div style="display: flex; justify-content: start; align-items: start; gap: 10px;">
+                    <label for="ativo"  class="botao_radio">Ativo
+                        <input type="radio" name="status" id="ativo" value="true" <%= perfil.isStatus()? "checked" : " "%> >
+                    </label>
+                    <label for="desativo" class="botao_radio">Desativo
+                        <input type="radio" name="status" id="desativo" value="false" <%= !perfil.isStatus()? "checked" : " "%>>
+                    </label>
+                </div>
+            </div>
+
             <div class="campos"><label class="titulo_campo">Menus de Acesso: </label></div>
             <div class="tabela">
                 <table class="table table-striped" style="background-color: white;">
@@ -95,6 +108,7 @@
                             int quantidadeMenus = allMenus.size();
                             List<Menu> menus = PerfilDAO.listarMenus(idPerfil);
                             for (int i = 0; i < menus.size(); i++) {
+                                if (menus.get(i).isStatus()) {
                         %>
                             <tr>
                                 <td><%= i+1%></td>
@@ -105,6 +119,7 @@
                                 </td>
                             </tr>
                         <%
+                                }
                                 for (int j = 0; j < allMenus.size(); j++) {
                                     if (menus.get(i).getId() == allMenus.get(j).getId()) {
                                         allMenus.remove(j);
@@ -115,6 +130,7 @@
 
                         <%
                             for (int i = 0; i < allMenus.size(); i++) {
+                                if (allMenus.get(i).isStatus()) {
                         %>
                             <tr>
                                 <td><%= menus.size() + i+1%></td>
@@ -124,13 +140,16 @@
                                    <input type="checkbox" name="menu" value="<%= allMenus.get(i).getId()%>">     
                                 </td>
                             </tr>
-                        <% }%>
+                        <% 
+                                }
+                            }
+                        %>
                     </tbody>
                 </table>
             </div>
 
             <div style="display: flex; gap: 10px; margin: 20px; ">
-                <button type="button" class="botao_cancela" onclick="location.href = 'perfis.jsp'"> Cancelar</button>
+                <button type="button" class="botao_cancela" onclick="location.href = document.referrer;"> Cancelar</button>
                 <input type="submit" value="Alterar Dados" class="botao_confirma">
             </div>
         </form>

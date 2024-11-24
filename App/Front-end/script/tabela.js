@@ -23,4 +23,13 @@ $(document).ready(function() {
     });
 });
 
-  
+function confirmarExclusao(event, url) {
+    const confirmar = confirm("Você tem certeza que deseja excluir esse registro?");
+    if (confirmar) {
+        // Redireciona para o link
+        window.location.href = url;
+    } else {
+        // Cancela o redirecionamento
+        event.preventDefault();
+    }
+}

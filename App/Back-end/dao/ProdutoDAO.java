@@ -275,4 +275,36 @@ public class ProdutoDAO {
         }
 
     }
+    
+    public static boolean excluir(int codigo) {
+        String sql = "DELETE FROM produto WHERE codigo = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+
+            pstm.setInt(1, codigo); 
+
+            pstm.execute();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

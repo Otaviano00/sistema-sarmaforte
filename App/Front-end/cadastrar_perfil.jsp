@@ -4,6 +4,9 @@
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%@include file="sessao.jsp" %>
+<%@include file="infoAdmin.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +42,6 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
-        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>
@@ -86,16 +88,22 @@
                     <tbody>
                         <%
                             List<Menu> menus = MenuDAO.listar();
-                            for (int i = 0; i < menus.size(); i++) {%>
-                            <tr>
-                                <td><%= i+1%></td>
-                                <td><img src="<%= menus.get(i).getImagem()%>" alt="<%= menus.get(i).getNome()%>"></td>
-                                <td><%= menus.get(i).getNome()%></td>
-                                <td>
-                                   <input type="checkbox" name="menu" value="<%= menus.get(i).getId()%>">     
-                                </td>
-                            </tr>
-                        <% }%>
+                            for (int i = 0; i < menus.size(); i++) {
+                                if (menus.get(i).isStatus()) {
+                        %>
+                                <tr>
+                                    <td><%= i+1%></td>
+                                    <td><img src="<%= menus.get(i).getImagem()%>" alt="<%= menus.get(i).getNome()%>"></td>
+                                    <td><%= menus.get(i).getNome()%></td>
+                                    <td>
+                                    <input type="checkbox" name="menu" value="<%= menus.get(i).getId()%>">     
+                                    </td>
+                                </tr>
+                            
+                        <%
+                                }
+                            }
+                        %>
                     </tbody>
                 </table>
             </div>

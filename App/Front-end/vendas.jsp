@@ -3,6 +3,8 @@
 <%@page import="dao.VendaDAO"%>
 <%@page import="java.util.List"%>
 
+<%@include file="sessao.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

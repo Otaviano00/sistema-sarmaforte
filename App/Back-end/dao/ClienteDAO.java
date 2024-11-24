@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
+import model.Orcamento;
 
 public class ClienteDAO {
 
@@ -183,6 +184,7 @@ public class ClienteDAO {
             pstm = conn.prepareStatement(sql);
             pstm.setInt(1, id);
             pstm.execute();
+
             return true;
 
         } catch (Exception e) {
@@ -201,5 +203,43 @@ public class ClienteDAO {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public static List<Orcamento> listarOrcamentos(int id) {
+        String sql = "SELECT * FROM orcamento WHERE id_cliente = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+        List<Orcamento> orcamentos = new ArrayList<>();
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+
+            pstm.setInt(1, id);
+
+            rset = pstm.executeQuery();
+            
+            while(rset.next()) {
+                Orcamento orcamento = OrcamentoDAO.listarPorId(rset.getInt("id"));
+                orcamentos.add(orcamento);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orcamentos;
     }
 }

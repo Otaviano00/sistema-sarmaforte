@@ -5,15 +5,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import model.Menu;
-//import javax.servlet.ServletException;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
 import model.Perfil;
 
 public class GerenciarPerfil extends HttpServlet {
@@ -21,279 +18,202 @@ public class GerenciarPerfil extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         gerenciarPerfil(request, response);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         gerenciarPerfil(request, response);
+    }
 
+    private static void exibirMensagem(PrintWriter out, String mensagem, String url) throws IOException {
+        out.print("<script>");
+        out.print("alert('" + mensagem + "');");
+        out.print("location.href = '" + url + "';");
+        out.print("</script>");
+        out.close();
+    }
+
+    private static boolean validarUnicidade(Perfil perfil, List<Perfil> perfis, PrintWriter out, String redirectUrl) throws IOException {
+        for (Perfil p : perfis) {
+            if (p.getId() != perfil.getId()) { // Ignorar o próprio perfil
+                if (perfil.getNome().equals(p.getNome())) {
+                    exibirMensagem(out, "Nome de perfil já existente!", redirectUrl);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void gerenciarPerfil(HttpServletRequest request, HttpServletResponse response)
             throws UnsupportedEncodingException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        HttpSession sessao = request.getSession();
+        PrintWriter out = response.getWriter();
+
+        Integer hierarquia = (Integer) sessao.getAttribute("hierarquia");
+        if (hierarquia == null) {
+            exibirMensagem(out, "Sessão expirada! Faça login novamente.", "login.jsp");
+            return;
+        }
+
         int acao = Integer.parseInt(request.getParameter("acao"));
         Perfil p = new Perfil();
 
+        if (hierarquia == 2) {
+            exibirMensagem(out, "Você não tem autorização para realizar essa ação!", "home.jsp");
+            return;
+        }
+
         switch (acao) {
 
-            case 1:
-
+            case 1: // Cadastro
                 try {
-
-                    // INSERIR DADOS
                     String nome = request.getParameter("nome");
                     String descricao = request.getParameter("descricao");
-                    int hierarquia = Integer.parseInt(request.getParameter("hierarquia"));
+                    int hierarquiaPerfil = Integer.parseInt(request.getParameter("hierarquia"));
                     String[] menus = request.getParameterValues("menu");
                     boolean status = true;
 
                     p.setNome(nome);
                     p.setDescricao(descricao);
-                    p.setHierarquia(hierarquia);
+                    p.setHierarquia(hierarquiaPerfil);
                     p.setStatus(status);
 
-                    /*
-                      Sei que oq eu fiz abaixo não é uma boa prática, já que envolve muito 
-                    processamento desnecessario, e na hora de escalar, vai ser uma dor de cabeça e,
-                    criar um método DAO que receba um nome e retorne um id correspondente
-                    é bem mais eficiente, mas isso não altera em nada o TCC, e nenhum de nós 
-                    estamos afim de tocar na DAO das classes. 
-                     */
-                    for (Perfil pe : PerfilDAO.listar()) {
+                    // Validação de unicidade
+                    if (validarUnicidade(p, PerfilDAO.listar(), out, "cadastrar_perfil.jsp")) {
+                        return;
+                    }
 
-                        if (pe.getNome().equals(p.getNome())) {
+                    // Registrar perfil no banco
+                    if (PerfilDAO.cadastrar(p)) {
+                        List<Perfil> perfis = PerfilDAO.listar();
+                        int idPerfil = perfis.get(perfis.size() - 1).getId();
 
-                            String mensagem = "Nome já existente!";
-                            PrintWriter out = response.getWriter();
-                            out.print("<script>");
-                            out.print("alert('" + mensagem + "');");
-                            out.print("location.href = 'cadastrar_perfil.jsp';");
-                            out.print("</script>");
-                            out.close();
-
-                            break;
-
+                        // Vincula os menus selecionados
+                        for (String idMenu : menus) {
+                            PerfilDAO.vincular(idPerfil, Integer.parseInt(idMenu));
                         }
 
-                    }
+                        exibirMensagem(out, "Cadastro realizado com sucesso!", "perfis.jsp");
 
-                    /*
-                      Não sei o que voce queria dizer quando disse "exibir uma janela com as informações de cadastro"
-                    o alert parece não aceitar o clássico '\n', vai saber, vou deixar para o vcs do Front-End.
-                     */
-                      
-                    String mensagem = "Deseja inserir esses dados?";
-                    String mensagem2 = "Cadastro bem sussedido!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    PerfilDAO.cadastrar(p);
-                    
-                    // Vincula todos os perfis selecionados
-                    List<Perfil> perfis = PerfilDAO.listar();
-                    int idPerfil = perfis.get(perfis.size()-1).getId();    
-                    
-                    for (String idMenu : menus) {
-                        PerfilDAO.vincular(idPerfil, Integer.parseInt(idMenu) );
+                    } else {
+                        exibirMensagem(out, "Erro ao cadastrar perfil!", "perfis.jsp");
                     }
-                    
-                    out.print("alert('" + mensagem2 + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
 
                 } catch (Exception e) {
-
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
-
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "perfis.jsp");
                 }
-
                 break;
 
-            case 2:
-
+            case 2: // Atualização
                 try {
-
-                    // ALTERAR DADOS
                     int id = Integer.parseInt(request.getParameter("id"));
                     String nome = request.getParameter("nome");
                     String descricao = request.getParameter("descricao");
-                    int hierarquia = Integer.parseInt(request.getParameter("hierarquia"));
-                    boolean status = Boolean.parseBoolean(request.getParameter("status"));
+                    int hierarquiaPerfil = Integer.parseInt(request.getParameter("hierarquia"));
+                    Boolean status = Boolean.parseBoolean(request.getParameter("status"));
                     String[] menus = request.getParameterValues("menu");
 
-                    // Primeiro eu pego os dados com base no id acima, usaremos isso para a validação
                     Perfil exis = PerfilDAO.listarPorId(id);
 
                     p.setId(id);
                     p.setNome(nome);
                     p.setDescricao(descricao);
-                    p.setHierarquia(hierarquia);
+                    p.setHierarquia(hierarquiaPerfil);
                     p.setStatus(status);
+
+                    // Validação de unicidade
+                    if (validarUnicidade(p, PerfilDAO.listar(), out, "alterar_perfil.jsp?id=" + exis.getId())) {
+                        return;
+                    }
+
+                    // Desvincula os menus anteriores e vincula os novos
                     List<Menu> m = PerfilDAO.listarMenus(id);
-                    
-                    
                     for (Menu menu : m) {
-                        PerfilDAO.desvincular(id,menu.getId());
-                    }
-                    
-                    
-                    // Agora comparo os dados do objeto extraidos do banco com os dados recebidos da outra página
-                    // Inicio o laco de repetição e começa a validação
-                    for (Perfil lala : PerfilDAO.listar()) {
-
-                        // Aqui eu só comparo os valores com os dados de outros campos
-                        if (lala.getId() != exis.getId()) {
-
-                            // aqui eu começo minha validação para ver se não se reptete valores que nao podem ser repetidos na tabela
-                            if (p.getNome().equals(lala.getNome())) {
-
-                                String mensagem = "Nome de perfil já existente!";
-                                PrintWriter out = response.getWriter();
-                                out.print("<script>");
-                                out.print("alert('" + mensagem + "');");
-                                out.print("location.href = 'alterar_perfil.jsp?id=" + exis.getId() + "';");
-                                out.print("</script>");
-                                out.close();
-                                break;
-
-                            }
-
-                        }
+                        PerfilDAO.desvincular(id, menu.getId());
                     }
 
+                    // Vincula os novos menus
+                    for (String idMenu : menus) {
+                        PerfilDAO.vincular(id, Integer.parseInt(idMenu));
+                    }
 
-                    /*
-                    Não sei o que voce queria dizer quando disse "exibir uma janela com as informações alteradas"
-                    o alert parece não aceitar o clássico '\n', vai saber, vou deixar para o vcs do Front-End.
-                     */
-                    String mensagem = "Deseja alterar esses dados?";
-                    String mensagem2 = "Dados alterados com susseco!";
-
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
+                    String mensagem = "Dados alterados com sucesso!";
                     if (p.getId() == 1 || p.getId() == 5) {
-                        mensagem2 = "Não pode alterar esse perfil!";
+                        mensagem = "Não pode alterar esse perfil!";
                     } else {
                         PerfilDAO.alterar(p);
-                        
-                        // Vincula todos os perfis selecionados
-                        for (String idMenu : menus) {
-                            PerfilDAO.vincular(id, Integer.parseInt(idMenu) );
-                        }
                     }
-                    out.print("alert('" + mensagem2 + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
+
+                    exibirMensagem(out, mensagem, "perfis.jsp");
 
                 } catch (Exception e) {
-
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
-
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "perfis.jsp");
                 }
-
                 break;
 
-            case 3:
-
+            case 3: // Ativar Perfil
                 try {
-
-                    // ATIVAR PERFIL
                     int id = Integer.parseInt(request.getParameter("id"));
                     p.setId(id);
-                    PerfilDAO.ativar(p);
-                    response.sendRedirect("perfis.jsp");
+                    if (PerfilDAO.ativar(p)) {
+                        response.sendRedirect("perfis.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao ativar perfil!", "perfis.jsp");
+                    }
 
                 } catch (Exception e) {
-
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
-
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "perfis.jsp");
                 }
-
                 break;
 
-            case 4:
-
+            case 4: // Desativar Perfil
                 try {
-                    // DESATIVAR PERFIL
                     int id = Integer.parseInt(request.getParameter("id"));
                     p.setId(id);
-                    PerfilDAO.desativar(p);
-                    response.sendRedirect("perfis.jsp");
+
+                    if (p.getId() == 1 || p.getId() == 5) {
+                        exibirMensagem(out, "Não pode desativar esse perfil!", "perfis.jsp");
+                    } else if (PerfilDAO.desativar(p)) {
+                        response.sendRedirect("perfis.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao desativar perfil!", "perfis.jsp");
+                    }
 
                 } catch (Exception e) {
-
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
-
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "perfis.jsp");
                 }
-
                 break;
-            case 5:
 
+            case 5: // Excluir Perfil (somente hierarquia 0)
+                if (hierarquia != 0) {
+                    exibirMensagem(out, "Você não tem autorização para excluir perfis!", "perfis.jsp");
+                    return;
+                }
                 try {
-                    // EXCLUIR
                     int id = Integer.parseInt(request.getParameter("id"));
-                    p.setId(id);
-                    PerfilDAO.excluir(p);
-                    response.sendRedirect("perfis.jsp");
+
+                    String mensagem = "Perfil excluído com sucesso!";
+                    if (p.getId() == 1 || p.getId() == 5) {
+                        mensagem = "Não pode excluir esse perfil!";
+                    } else if (PerfilDAO.excluir(id)) {
+                        exibirMensagem(out, mensagem, "perfis.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao excluir perfil!", "perfis.jsp");
+                    }
 
                 } catch (Exception e) {
-
-                    String mensagem = "Ocorreu um problema com o banco de dados!";
-                    PrintWriter out = response.getWriter();
-                    out.print("<script>");
-                    out.print("alert('" + mensagem + "');");
-                    out.print("location.href = 'perfis.jsp';");
-                    out.print("</script>");
-                    out.close();
-
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "perfis.jsp");
                 }
-
                 break;
-            default: 
-                String mensagem = "Ação não encontrada!";
-                PrintWriter out = response.getWriter();
-                out.print("<script>");
-                out.print("alert('" + mensagem + "');");
-                out.print("location.href = 'perfis.jsp';");
-                out.print("</script>");
-                out.close();
 
+            default:
+                exibirMensagem(out, "Ação não encontrada!", "perfis.jsp");
+                break;
         }
-
     }
-
 }

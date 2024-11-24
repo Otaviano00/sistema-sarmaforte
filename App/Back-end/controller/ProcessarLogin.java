@@ -23,6 +23,7 @@ public class ProcessarLogin extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String login = request.getParameter("login");
         String senha = request.getParameter("senha");
         
@@ -30,15 +31,21 @@ public class ProcessarLogin extends HttpServlet {
         
         try {
             Usuario usuario = UsuarioDAO.efetuarLogin(login, senha);
-            if (usuario != null) {
-                criarVariavelSessao(usuario, request, response);
-                response.sendRedirect("home.jsp");
-            } else {
+            if (usuario == null) {
                 exibirMensagem("Login ou senha inválidos. Tente Novamente.", response);
                 response.sendRedirect("login.html");
+            } else if (!usuario.isStatus()) {
+                exibirMensagem("O usuário está desativado.", response);
+                response.sendRedirect("login.html");
+            } else if (!usuario.getPerfil().isStatus()){
+                exibirMensagem("O cargo do usuário está desativado. Contate o administrador.", response);
+                response.sendRedirect("login.html");
+            } else {
+                criarVariavelSessao(usuario, request, response);
+                response.sendRedirect("home.jsp");
             }
         } catch (Exception e) {
-            exibirMensagem("Ocorreu um problema com o banco de dados." + e, response);
+            exibirMensagem("Ocorreu um problema com o banco de dados.", response);
             response.sendRedirect("login.html");
         }
         

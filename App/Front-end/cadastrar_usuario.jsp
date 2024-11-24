@@ -2,6 +2,9 @@
 <%@page import="dao.PerfilDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%@include file="sessao.jsp" %>
+<%@include file="infoAdmin.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +41,6 @@
             <img id="bloco2_logo" src="images/blocos_direita.svg" alt="">
         </div>
         <%@include file="infoLogin.jsp" %>
-        <%@include file="infoAdmin.jsp" %>
     </header>
     <nav>
         <%@include file="nav_list.jsp"%>

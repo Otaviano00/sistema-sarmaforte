@@ -175,6 +175,10 @@ button.novo:hover {
     cursor: pointer;
 }
 
+.margin-top {
+    margin-top: 5%;
+}
+
 .tabela {
     width: 80%;
     max-height: 80%;

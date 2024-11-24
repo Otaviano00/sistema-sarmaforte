@@ -50,24 +50,6 @@
     }
 </style>
 
-
-<%    
-    String nome = (String) session.getAttribute("nomeUsuario");
-    Integer idU = (Integer) session.getAttribute("idUsuario");
-    String cargo = (String) session.getAttribute("nomePerfil");
-    Integer hierarquia = (Integer) session.getAttribute("hierarquia");
-    
-    if (nome == null || cargo == null || idU == null || hierarquia == null) {
-        String mensagem = "Você não está logado no sistema.";
-        out.print("<script>");
-        out.print("alert('" + mensagem + "');");
-        out.print("location.href = 'login.html';");
-        out.print("</script>");
-    }
-
-    hierarquia = hierarquia == null? 0 : hierarquia;
-%>
-
 <div id="include">
     <a href="detalhes_usuario.jsp?id=<%= idU%>" class="info_usuario">
         <div id="nome_cargo">

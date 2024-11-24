@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import dao.ClienteDAO;
@@ -23,144 +19,207 @@ import model.Produto;
 public class GerenciarOrcamento extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
-        PrintWriter out = response.getWriter();
-        String acao = request.getParameter("acao");
-        
-        if (acao.equals("registrar")) {
-            Orcamento orcamento = new Orcamento();
-            orcamento.setDataCriacao(LocalDateTime.now());
-            orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
-            orcamento.setStatus("pendente");
-            orcamento.setCliente(ClienteDAO.listarPorId(5));
-            boolean ok = OrcamentoDAO.registrar(orcamento);
-            
-            List<Orcamento> orcamentos = OrcamentoDAO.listar();
-            String idOrcamento = String.valueOf(orcamentos.get(orcamentos.size()-1).getId());
- 
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao=registrar");
-            
-        } else if (acao.equals("mudarCliente")) {
-            String acaoOrcamento = request.getParameter("acaoOrcamento");
-            int idOrcamento = Integer.parseInt(request.getParameter("idOrcamento"));
-            int idCliente = Integer.parseInt(request.getParameter("idCliente"));
-
-            Orcamento orcamento = OrcamentoDAO.listarPorId(idOrcamento);
-            orcamento.getCliente().setId(idCliente);
-            OrcamentoDAO.alterar(orcamento);
-            
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento);
-            
-        } else if (acao.equals("adicionarItem")) {
-            String acaoOrcamento = request.getParameter("acao_orcamento");
-            
-            int idProduto = Integer.parseInt(request.getParameter("id_produto"));
-            Produto produto = ProdutoDAO.listarPorId(idProduto);
-            int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
-            Orcamento orcamento = OrcamentoDAO.listarPorId(idOrcamento);
-            int quantidade = Integer.parseInt(request.getParameter("quantidade_produto"));
-            double preco = ProdutoDAO.listarPorId(idProduto).getPreco();
-            LocalDateTime dataHora = LocalDateTime.now();
-            boolean statusVenda = false;
-
-            ItemOrcamento item = new ItemOrcamento();
-            
-            item.setProduto(produto);
-            item.setOrcamento(orcamento);
-            item.setQuantidade(quantidade);
-            item.setPreco(preco);
-            item.setStatusVenda(statusVenda);
-            item.setDataHora(dataHora);
-            
-            OrcamentoDAO.adicionarItem(item);
-           
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento +"");
-          
-        } else if (acao.equals("excluir")) {
-            
-            int idOrcamento = Integer.parseInt(request.getParameter("idOrcamento"));
-            
-            OrcamentoDAO.excluir(idOrcamento);
-            
-            response.sendRedirect("orcamentos.jsp");
-            
-        } else if (acao.equals("excluirItem")) {
-            String acaoOrcamento = request.getParameter("acaoOrcamento");
-            
-            int idItem = Integer.parseInt(request.getParameter("idItem"));
-            int idOrcamento = Integer.parseInt(request.getParameter("idOrcamento"));
-            
-            OrcamentoDAO.excluirItem(idItem);
-            
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento +"");
-            
-        } else if (acao.equals("alterarItem")) {
-            String acaoOrcamento = request.getParameter("acao_orcamento");
-            
-            int idProduto = Integer.parseInt(request.getParameter("id_produto"));
-            Produto produto = ProdutoDAO.listarPorId(idProduto);
-            int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
-            Orcamento orcamento = OrcamentoDAO.listarPorId(idOrcamento);
-            int quantidade = Integer.parseInt(request.getParameter("quantidade_produto"));
-            double preco = ProdutoDAO.listarPorId(idProduto).getPreco();
-            LocalDateTime dataHora = LocalDateTime.now();
-            boolean statusVenda = false;
-            int id = Integer.parseInt(request.getParameter("id_item"));
-
-            ItemOrcamento item = new ItemOrcamento();
-            
-            item.setProduto(produto);
-            item.setOrcamento(orcamento);
-            item.setQuantidade(quantidade);
-            item.setPreco(preco);
-            item.setStatusVenda(statusVenda);
-            item.setDataHora(dataHora);
-            item.setId(id);
-            
-            ItemOrcamentoDAO.alterar(item);
-            
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento +"");
-        }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        gerenciarOrcamento(request, response);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {     
-        PrintWriter out = response.getWriter();
-        String acao = request.getParameter("acao");
-        
-        if (acao.equals("adicionarInformacao")) {
-            String acaoOrcamento = request.getParameter("acaoOrcamento");
-            int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
-            String informacao = request.getParameter("informacao");
-            
-            out.print("<script>");
-            out.print("alert('Informação: "+ informacao +"')");
-            out.print("</script>");
-            
-            Orcamento orcamento = OrcamentoDAO.listarPorId(idOrcamento);
-            orcamento.setInformacao(informacao);
-                    
-            OrcamentoDAO.alterar(orcamento);
-            
-            response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento + "&acao="+ acaoOrcamento +"");
-        }
-        
+            throws ServletException, IOException {
+        gerenciarOrcamento(request, response);
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
-    private static void exibirMensagem(String mensagem, HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
+    private static void exibirMensagem(PrintWriter out, String mensagem, String url) throws IOException {
         out.print("<script>");
         out.print("alert('" + mensagem + "');");
-        out.print("location.href = 'orcamentos.jsp';");
+        out.print("location.href = '" + url + "';");
         out.print("</script>");
         out.close();
     }
-    
+
+    public static void gerenciarOrcamento(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        int acao;
+        try {
+            acao = Integer.parseInt(request.getParameter("acao"));
+        } catch (NumberFormatException e) {
+            exibirMensagem(out, "Ação inválida!", "orcamentos.jsp");
+            return;
+        }
+
+        Orcamento orcamento = new Orcamento();
+
+        switch (acao) {
+            case 1: // Registrar
+                try {
+                    orcamento.setDataCriacao(LocalDateTime.now());
+                    orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
+                    orcamento.setStatus("pendente");
+                    orcamento.setCliente(ClienteDAO.listarPorId(5));
+
+                    // Registrar no banco
+                    if (OrcamentoDAO.registrar(orcamento)) {
+                        List<Orcamento> orcamentos = OrcamentoDAO.listar();
+                        int idOrcamento = orcamentos.get(orcamentos.size() - 1).getId();
+                        response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento);
+                    } else {
+                        exibirMensagem(out, "Erro ao registrar orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            case 2: // Alterar
+                try {
+                    int idOrcamento = Integer.parseInt(request.getParameter("id"));
+                    orcamento = OrcamentoDAO.listarPorId(idOrcamento);
+
+                    // Verificação de orçamento
+                    if (orcamento == null) {
+                        exibirMensagem(out, "Orçamento não encontrado!", "orcamentos.jsp");
+                        return;
+                    }
+
+                    // Alterar no banco
+                    if (OrcamentoDAO.alterar(orcamento)) {
+                        response.sendRedirect("alterar_orcamento.jsp?id=" + idOrcamento);
+                    } else {
+                        exibirMensagem(out, "Erro ao alterar orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            case 3: // Excluir
+                try {
+                    int idOrcamento = Integer.parseInt(request.getParameter("id"));
+
+                    // Excluir no banco
+                    if (OrcamentoDAO.excluir(idOrcamento)) {
+                        exibirMensagem(out, "Orçamento excluído com sucesso!", "orcamentos.jsp");
+                    } else {
+                        exibirMensagem(out, "Erro ao excluir orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            case 4: // Atualizar Informação
+                try {
+                    int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
+                    int idCliente = Integer.parseInt(request.getParameter("seletor_cliente"));
+                    String informacao = request.getParameter("informacao");
+
+                    orcamento = OrcamentoDAO.listarPorId(idOrcamento);
+
+                    if (orcamento == null) {
+                        exibirMensagem(out, "Orçamento não encontrado!", "orcamentos.jsp");
+                        return;
+                    }
+
+                    orcamento.setInformacao(informacao);
+                    orcamento.setCliente(ClienteDAO.listarPorId(idCliente));
+
+                    // Alterar no banco
+                    if (OrcamentoDAO.alterar(orcamento)) {
+                        out.print("<script>");
+                        out.print("location.href = document.referrer;");
+                        out.print("</script>");
+                        out.close();
+                    } else {
+                        exibirMensagem(out, "Erro ao atualizar informações do orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            case 5: // Adicionar Item
+                try {
+                    int idProduto = Integer.parseInt(request.getParameter("id_produto"));
+                    int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
+                    int quantidade = Integer.parseInt(request.getParameter("quantidade_produto"));
+
+                    ItemOrcamento item = new ItemOrcamento();
+                    item.setProduto(ProdutoDAO.listarPorId(idProduto));
+                    item.setOrcamento(OrcamentoDAO.listarPorId(idOrcamento));
+                    item.setQuantidade(quantidade);
+                    item.setPreco(item.getProduto().getPreco());
+                    item.setStatusVenda(false);
+                    item.setDataHora(LocalDateTime.now());
+
+                    // Adicionar item no orçamento
+                    if (OrcamentoDAO.adicionarItem(item)) {
+                        out.print("<script>");
+                        out.print("location.href = document.referrer;");
+                        out.print("</script>");
+                        out.close();
+                    } else {
+                        exibirMensagem(out, "Erro ao adicionar item no orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            case 6: // Alterar Item
+                try {
+                    int idItem = Integer.parseInt(request.getParameter("id_item"));
+                    int idProduto = Integer.parseInt(request.getParameter("id_produto"));
+                    int quantidade = Integer.parseInt(request.getParameter("quantidade_produto"));
+                    int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
+
+                    ItemOrcamento item = new ItemOrcamento();
+                    item.setId(idItem);
+                    item.setProduto(ProdutoDAO.listarPorId(idProduto));
+                    item.setOrcamento(OrcamentoDAO.listarPorId(idOrcamento));
+                    item.setQuantidade(quantidade);
+                    item.setPreco(item.getProduto().getPreco());
+                    item.setStatusVenda(false);
+                    item.setDataHora(LocalDateTime.now());
+
+                    // Alterar item no orçamento
+                    if (ItemOrcamentoDAO.alterar(item)) {
+                        out.print("<script>");
+                        out.print("location.href = document.referrer;");
+                        out.print("</script>");
+                        out.close();
+                    } else {
+                        exibirMensagem(out, "Erro ao alterar item do orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            case 7: // Excluir Item
+                try {
+                    int idItem = Integer.parseInt(request.getParameter("idItem"));
+
+                    // Excluir item do orçamento
+                    if (OrcamentoDAO.excluirItem(idItem)) {
+                        out.print("<script>");
+                        out.print("location.href = document.referrer;");
+                        out.print("</script>");
+                        out.close();
+                    } else {
+                        exibirMensagem(out, "Erro ao excluir item do orçamento!", "orcamentos.jsp");
+                    }
+                } catch (Exception e) {
+                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
+                }
+                break;
+
+            default:
+                exibirMensagem(out, "Ação inválida!", "orcamentos.jsp");
+                break;
+        }
+    }
 }

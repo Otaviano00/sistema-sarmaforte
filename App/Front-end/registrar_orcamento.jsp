@@ -8,6 +8,9 @@
 <%@page import="model.Orcamento"%>
 <%@page import="dao.OrcamentoDAO"%>
 <%@page import="model.ItemOrcamento"%>
+<%@page import="utilities.Util" %>
+
+<%@include file="sessao.jsp" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,15 +32,15 @@
         <script defer src="script/tabela.js"> </script>
 
         <link rel="stylesheet" href="style/main.css">
+        <link rel="stylesheet" href="style/cadastrar_alterar.css">
         <link rel="stylesheet" href="style/orcamento.css">
         <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
 
-        <title>Home</title>
+        <title>Registrar Orçamento</title>
     </head>
     <body>
         <%
             int id = Integer.parseInt(request.getParameter("id"));
-            String acaoOrcamento = request.getParameter("acao");
             Orcamento orcamento = OrcamentoDAO.listarPorId(id);
         %>
         <header>
@@ -66,87 +69,98 @@
                     </option>
                     <% }%>
                 </select>
-                <button id="adicionarItem()" onclick="adicionarItem()">
+                <button onclick="adicionarItem()">
                     ADICIONAR ITEM
                 </button>
             </section>
-            <div style="display: flex; justify-content: left; align-items: flex-start; width: calc(97% - 20px); margin: 10px; margin-left: -40px; box-sizing: border-box; ">
+            <div class="conjunto">
                 <section id="dados_orcamento" class="bloco">
-                    <input type="hidden" id="id_orcamento" value="<%= id%>">
-                    <input type="hidden" id="acao_orcamento" value="<%= acaoOrcamento%>">
-
-                    <section id="dados_cliente">
+                    <h2>Dados do cliente</h2>
+                    <form method="post" action="GerenciarOrcamento" id="dados_cliente" style="margin-top: -20px;">
+                        <input type="hidden" name="id_orcamento" id="id_orcamento" value="<%= id%>">
                         <input type="hidden" id="id_cliente" value="<%= orcamento.getCliente().getId()%>">
-                        <select id="seletor_cliente" name="seletor_cliente" class="seletor" required>
-                            <%
-                                List<Cliente> clientes = ClienteDAO.listar();
-                                for (Cliente cliente : clientes) {
-                                    
-                                 if (cliente.getId() == orcamento.getCliente().getId()) {
-                            %>
-                                <option value="<%= cliente.getId()%>" selected>
-                                    <%= cliente.getNome()%>
-                                </option>
-                            <%
-                                    } else {
-                            %>
-                                <option value="<%= cliente.getId()%>">
-                                    <%= cliente.getNome()%>
-                                </option>
-                            <%
-                                    }
-                                }%>
-                        </select>
-                        
-                        <a href="#" onclick="mudarCliente()">
-                            MUDAR CLIENTE
-                        </a>
-                        <a href="cadastrar_cliente.jsp?acao=voltar">
-                            CADASTRAR NOVO CLIENTE
-                        </a>
+                        <input type="hidden" name="acao" value="4">
 
+
+                        <div style="display: flex; flex-direction: row; width: 100%; min-width: 100%;">
+                            <div class="campos">
+                                <select id="seletor_cliente" name="seletor_cliente" class="seletor" required>
+                                    <%
+                                        List<Cliente> clientes = ClienteDAO.listar();
+                                        for (Cliente cliente : clientes) {
+                                
+                                         if (cliente.getId() == orcamento.getCliente().getId()) {
+                                    %>
+                                        <option value="<%= cliente.getId()%>" selected>
+                                            <%= cliente.getNome()%>
+                                        </option>
+                                    <%
+                                            } else {
+                                    %>
+                                        <option value="<%= cliente.getId()%>">
+                                            <%= cliente.getNome()%>
+                                        </option>
+                                    <%
+                                            }
+                                        }
+                                    %>
+                                </select>
+                            </div>
+                            
+                            <button type="button" onclick="location.href='cadastrar_cliente.jsp'" title="Cadastrar Novo Cliente" style="font-size: 1.5em;">
+                                Novo
+                            </button>
+                        </div>
                         <br>                     
-                        <div class="campo_cliente">
+                        <div class="campo_cliente campos">
                             <label>Nome:</label>
-                            <p><%= orcamento.getCliente().getNome() != null? orcamento.getCliente().getNome() : "---"%></p>
+                            <input type="text" value="<%= orcamento.getCliente().getNome()%>" disabled readonly>
                         </div>
-                        <div class="campo_cliente">
+                        <div class="campo_cliente campos">
                             <label>Telefone:</label>
-                            <p><%= orcamento.getCliente().getTelefone() != null? orcamento.getCliente().getTelefone() : "---"%></p>
+                            <input type="text" value="<%= orcamento.getCliente().getTelefone()%>" disabled readonly>
                         </div>
-                        <div class="campo_cliente">
+                        <div class="campo_cliente campos">
                             <label>CPF:</label>
-                            <p><%= orcamento.getCliente().getCpf() != null? orcamento.getCliente().getCpf() : "---"%></p>
+                            <input type="text" value="<%= orcamento.getCliente().getCpf() != null? orcamento.getCliente().getCpf() : "---"%>" disabled readonly>
                         </div>
-                        <div class="campo_cliente">
+                        <div class="campo_cliente campos">
                             <label>Endereço:</label>
-                            <p><%= orcamento.getCliente().getEndereco() != null? orcamento.getCliente().getEndereco() : "---"%></p>
+                            <input type="text" value="<%= orcamento.getCliente().getEndereco() != null? orcamento.getCliente().getEndereco() : "---"%>" disabled readonly>
                         </div>
-                    </section>
-                        <form action="GerenciarOrcamento" method="POST">
-                            <input type="hidden" name="acao" value="adicionarInformacao">
-                            <input type="hidden" name="acaoOrcamento" value="<%= acaoOrcamento%>">
-                            <input type="hidden" name="id_orcamento" value="<%= id%>">
-                            <textarea name="informacao" id="" style="width: 100%; max-width: 100%; min-width: 100%; height: 150px; max-height: 150px; min-height: 150px;"><%= orcamento.getInformacao() == null? " " : orcamento.getInformacao().trim()%></textarea>
-                            <input type="submit" value="Adicionar Informação">
-                        </form>
-                    <section id="dados_vendedor">
-                    </section>
+                        <br>
+                        <div class="campos">
+                            <label for="informacao"> Informações:</label>
+                            <textarea name="informacao" id="informacao"><%= orcamento.getInformacao() == null? "" : orcamento.getInformacao().trim()%></textarea>
+                        </div>
+                        <button style="font-size: 1.4em;">
+                            Atualizar Informações
+                        </button>
+                    </form>
                 </section>
                 <section id="listar_itens" class="tabela bloco">
+                    <h2>Itens do Orçamento</h2>
                     <dialog>
                         <form action="GerenciarOrcamento" method="get">
-                            <input type="hidden" name="acao" id="acao_item" value="adicionarItem">
-                            <input type="hidden" name="acao_orcamento" value="<%= acaoOrcamento%>">
+                            <input type="hidden" name="acao" id="acao_item" value="5">
                             
                             <input type="hidden" name="id_produto" id="produto_id">
                             <input type="hidden" name="id_orcamento" value="<%= id%>">
                             <input type="hidden" name="id_item" id="id_item" value="0">
 
-                            <input type="text" name="nome_produto" id="nome_produto" readonly disabled>
-                            <input type="number" name="preco_produto" id="preco_produto" readonly disabled> 
-                            <input type="number" name="quantidade_produto" id="quantidade_produto" required>
-                            <input type="submit" value="Confirmar">
+                            <div class="campos">
+                                <label for="nome_produto" class="titulo_campo">Produto: </label>
+                                <input type="text" name="nome_produto" id="nome_produto" readonly disabled>
+                            </div>
+                            <div class="campos">
+                                <label for="preco_produto" class="titulo_campo">Preço (R$): </label>
+                                <input type="number" step="0.01" name="preco_produto" id="preco_produto" readonly disabled>
+                            </div>
+                            <div class="campos">
+                                <label for="quantidade_produto" class="titulo_campo"></label>
+                                <input type="number" name="quantidade_produto" id="quantidade_produto" required>
+                            </div>
+                            <input type="submit" value="Confirmar" onclick="closeModal()">
                         </form>
                         <button onclick="closeModal()">
                             Fechar
@@ -156,12 +170,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Opções</th>
                                 <th>Código</th>
+                                <th>Data</th>
                                 <th>Nome</th>
                                 <th>Quantidade</th>
                                 <th>Preço Unitário</th>
                                 <th>Valor</th>
+                                <th>Opções</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -173,21 +188,20 @@
                                     double precoTotal = itens.get(i).getPreco() * itens.get(i).getQuantidade();
 
                                     total += precoTotal;
+
+                                    String data = Util.converteData(itens.get(i).getDataHora().toLocalDate());
+                                    String hora = Util.converteHora(itens.get(i).getDataHora());
+                                    String dataHora = data + " - " + hora;
                             %>
                                 <tr>
                                     <td>
                                         <%= i+1%>
                                     </td>
                                     <td>
-                                        <button onclick="alterarItem(parseInt(<%= i%>), parseInt(<%= itens.get(i).getId()%>))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
-                                            <img src="images/icone_alterar.svg" alt="Alterar">
-                                        </button>
-                                        <button onclick="location.href = 'GerenciarOrcamento?acao=excluirItem&idOrcamento=<%= itens.get(i).getOrcamento().getId()%>&idItem=<%= itens.get(i).getId()%>&acaoOrcamento=<%= acaoOrcamento%>'" class="botao_acao" title="Excluir <%= itens.get(i).getProduto().getNome()%>">
-                                            <img src="images/icone_excluir.svg" alt="Excluir">
-                                        </button>
+                                        <%= itens.get(i).getProduto().getCodigo()%>
                                     </td>
                                     <td>
-                                        <%= itens.get(i).getProduto().getCodigo()%>
+                                        <%= dataHora%>
                                     </td>
                                     <td>
                                         <%= itens.get(i).getProduto().getNome()%>
@@ -201,6 +215,14 @@
                                     <td>
                                         <%= String.format("%,.2f", precoTotal)%>
                                     </td>
+                                    <td>
+                                        <button onclick="alterarItem(parseInt('<%= i%>'), parseInt('<%= itens.get(i).getId()%>'))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
+                                            <img src="images/icone_alterar.svg" alt="Alterar">
+                                        </button>
+                                        <button onclick="location.href = 'GerenciarOrcamento?acao=7&idOrcamento=<%= itens.get(i).getOrcamento().getId()%>&idItem=<%= itens.get(i).getId()%>'" class="botao_acao" title="Excluir <%= itens.get(i).getProduto().getNome()%>">
+                                            <img src="images/icone_excluir.svg" alt="Excluir">
+                                        </button>
+                                    </td>
                                 </tr>
                             <%
                                 }
@@ -208,7 +230,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="5" >
+                                <td colspan="6" >
                                     TOTAL
                                 </td>
                                 <td colspan="2">
@@ -221,50 +243,20 @@
                 </section>
             </div> 
 
-            <%
-                if (acaoOrcamento.equals("registrar")) {
-            %>
-
-                <section id="finalizar" class="bloco">
-                    <button onclick="location.href = 'registrar_venda.jsp'">
-                        Realizar Venda
-                    </button>
-                    <button onclick="location.href = 'orcamentos.jsp'">
-                        Guardar Orçamento
-                    </button>
-                    <button onclick="location.href = 'orcamentos.jsp'">
-                        Imprimir Orçamento
-                    </button>
-                    <span>aaa</span>
-                    <button onclick="cancelarOrcamento(parseInt(<%= id%>))">
-                        Cancelar
-                    </button>
-                </section>
-            <%
-                } else if (acaoOrcamento.equals("alterar")) {
-            %>
-                <section id="finalizar" class="bloco">
-                    <button>
-                        Realizar Venda
-                    </button>
-                    <button>
-                        Imprimir Orçamento
-                    </button>
-                    <button onclick="location.href = 'orcamentos.jsp'">
-                        Voltar
-                    </button>
-                </section>
-            <%
-                } else {
-            %>
             <section id="finalizar" class="bloco">
-                <button onclick="location.href = 'orcamentos.jsp'">
-                    Voltar
+                <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=<%= id%>&acao=3')" style="position: absolute; left: 0;" >
+                    Cancelar
                 </button>
+                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
+                    Imprimir Orçamento
+                </button>
+                <button class="botao_confirma" onclick="location.href = 'orcamentos.jsp'">
+                    Guardar Orçamento
+                </button>
+                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp'">
+                    Realizar Venda
+                </button>    
             </section>
-            <%
-                }
-            %>
         </div>
     </body>
 </html>

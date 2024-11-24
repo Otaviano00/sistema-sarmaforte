@@ -260,7 +260,7 @@ public class PerfilDAO {
 
     }
     
-     public static boolean excluir(Perfil perfil) {
+     public static boolean excluir(int id) {
 
         String sqlUpdate = "UPDATE usuario SET id_perfil = 5 WHERE id_perfil = ?"; 
          
@@ -277,8 +277,8 @@ public class PerfilDAO {
             pstm = (PreparedStatement) conn.prepareStatement(sql);
 
             
-            pstmUpdate.setInt(1, perfil.getId());
-            pstm.setInt(1, perfil.getId());
+            pstmUpdate.setInt(1, id);
+            pstm.setInt(1, id);
 
             pstmUpdate.execute();
             pstm.execute();

@@ -20,10 +20,13 @@ body {
 }
 
 form {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
+    margin: 0;
+    height: fit-content;
 }
 
 dialog::backdrop {
@@ -90,4 +93,103 @@ tfoot td {
 
 .tabela {
     width: 100% ;
+}
+
+.conjunto {
+    display: flex;
+    flex-direction: row; 
+    justify-content: left; 
+    align-items: flex-start; 
+    width: calc(97% - 20px); 
+    margin: 10px; 
+    margin-left: -40px; 
+    box-sizing: border-box;
+}
+
+#informacao {
+    width: 100%;
+    max-width: 100%; 
+    min-width: 100%; 
+    height: 150px; 
+    max-height: 150px; 
+    min-height: 150px;
+}
+
+.dados_cliente {
+    display: flex;
+    justify-content: left;
+    align-items: start;
+}
+
+.campos {
+    width: 100%;
+    margin: 3px;
+}
+
+.campos textarea {
+    border: 1px #142E50 solid;
+    border-bottom: 3px solid #142E50;
+}
+
+form button {
+    height: 30px;
+    margin-left: 5px;
+    padding: 0 10px 3px 10px;
+    border-radius: 10px;
+    background-color: #142E50;
+    color: #FFB729;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2em;
+    min-height: fit-content;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #366cb4;
+    cursor: pointer;
+}
+
+#finalizar {
+    display: flex;
+    justify-content: right;
+    align-items: end;
+}
+
+#finalizar button {
+    margin: 0 10px;
+}
+
+#botao_imprime {
+    background-color: #868686;
+}
+
+#botao_venda {
+    background-color: #008610;
+}
+
+#botao_imprime:hover {
+    background-color: #b8b7b7;
+    color: #ffffff;
+}
+
+#botao_venda:hover {
+    background-color: #01aa15;
+}
+
+.bloco h2 {
+    position: relative; /* Posiciona o texto fora do fluxo normal */
+    top: -20px; /* Ajusta a posição vertical */
+    left: 80px; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Centraliza exatamente no meio */
+    background: #0149a6; /* Fundo branco para cobrir a borda */
+    padding: 0 10px; /* Espaçamento interno ao redor do texto */
+    font-size: 16px;
+    color: #ffe9bd; /* Cor do texto */
+    max-width: fit-content;
+    font-weight: bolder;
+    border-radius: 10px;
+    padding: 5px;
+
 }
