@@ -33,7 +33,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `telefone_UNIQUE` (`telefone`),
   UNIQUE KEY `cpf_UNIQUE` (`cpf`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'Kauã Otaviano','61991376539',NULL,NULL),(4,'Pedro Teixeira','61992529505',NULL,NULL),(5,'---','---',NULL,NULL);
+INSERT INTO `cliente` VALUES (1,'Kauã Otaviano','61991376539',NULL,NULL),(5,'---','---',NULL,NULL);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +67,7 @@ CREATE TABLE `item_orcamento` (
   KEY `fk_item_orcamento_produto1_idx` (`id_produto`),
   CONSTRAINT `fk_item_orcamento_orcamento1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_item_orcamento_produto1` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`codigo`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `item_orcamento` (
 
 LOCK TABLES `item_orcamento` WRITE;
 /*!40000 ALTER TABLE `item_orcamento` DISABLE KEYS */;
-INSERT INTO `item_orcamento` VALUES (45,2,4.90,'2024-11-24 03:33:29',0,20,20),(55,5,159.90,'2024-11-23 11:02:19',0,55,3),(60,23,10.00,'2024-11-23 11:14:45',0,53,28),(61,6,6.90,'2024-11-23 17:32:14',0,55,7),(67,2,795.00,'2024-11-23 18:28:33',0,53,9),(72,7,6.90,'2024-11-24 03:36:23',0,64,2);
+INSERT INTO `item_orcamento` VALUES (60,23,10.00,'2024-11-24 23:10:03',1,53,28),(67,2,795.00,'2024-11-24 23:53:51',1,53,9),(85,2,159.90,'2024-11-25 01:21:33',0,77,3);
 /*!40000 ALTER TABLE `item_orcamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,7 +105,7 @@ CREATE TABLE `menu` (
 
 LOCK TABLES `menu` WRITE;
 /*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-INSERT INTO `menu` VALUES (4,'VENDAS','vendas.jsp','images/icone_vendas.svg',1),(5,'PRODUTOS','produtos.jsp','images/icone_produto.svg',1),(6,'CLIENTES','clientes.jsp','images/icone_cliente.svg',1),(12,'ORÇAMENTOS','orcamentos.jsp','images/icone_orcamento.svg',1),(16,'USUÁRIOS','usuarios.jsp','images/icone_usuario.svg',1),(17,'PERFIS','perfis.jsp','images/icone_perfil.svg',1),(18,'MENUS','menus.jsp','images/icone_menu.svg',1),(19,'RELATÓRIOS','relatorios.jsp','images/icone_relatorio.svg',1);
+INSERT INTO `menu` VALUES (4,'VENDAS','vendas.jsp','images/icone_vendas.svg',1),(5,'PRODUTOS','produtos.jsp','images/icone_produto.svg',1),(6,'CLIENTES','clientes.jsp','images/icone_cliente.svg',1),(12,'ORÇAMENTOS','orcamentos.jsp','images/icone_orcamento.svg',1),(16,'USUÁRIOS','usuarios.jsp','images/icone_usuario.svg',1),(17,'PERFIS','perfis.jsp','images/icone_perfil.svg',1),(18,'MENUS','menus.jsp','images/icone_menu.svg',1),(19,'RELATÓRIOS','relatorios.jsp','images/icone_relatorio.svg',0);
 /*!40000 ALTER TABLE `menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,13 +120,13 @@ CREATE TABLE `orcamento` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dataCriacao` datetime NOT NULL,
   `dataValidade` datetime NOT NULL,
-  `status` varchar(20) NOT NULL DEFAULT 'pendente',
+  `status` varchar(20) DEFAULT 'aberto',
   `informacoes` text DEFAULT NULL,
   `id_cliente` int(11) DEFAULT 5,
   PRIMARY KEY (`id`),
   KEY `fk_orcamento_cliente1_idx` (`id_cliente`),
   CONSTRAINT `fk_orcamento_cliente1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE `orcamento` (
 
 LOCK TABLES `orcamento` WRITE;
 /*!40000 ALTER TABLE `orcamento` DISABLE KEYS */;
-INSERT INTO `orcamento` VALUES (20,'2024-11-17 17:22:49','2024-12-02 17:22:49','pendente','Alguma coisa',1),(40,'2024-11-20 23:34:37','2024-12-05 23:34:37','pendente',' 2222',4),(53,'2024-11-23 01:41:24','2024-12-08 01:41:24','pendente',NULL,5),(55,'2024-11-23 11:02:03','2024-12-08 11:02:03','pendente','21312',4),(64,'2024-11-24 03:36:15','2024-12-09 03:36:15','pendente','123123',1);
+INSERT INTO `orcamento` VALUES (53,'2024-11-23 01:41:24','2024-12-08 01:41:24','Concluído',NULL,5),(77,'2024-11-25 00:20:04','2024-12-10 00:20:04','aberto','Pagamento adiantado',1);
 /*!40000 ALTER TABLE `orcamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -163,7 +163,7 @@ CREATE TABLE `perfil` (
 
 LOCK TABLES `perfil` WRITE;
 /*!40000 ALTER TABLE `perfil` DISABLE KEYS */;
-INSERT INTO `perfil` VALUES (1,'Admin','Responsável por todo o sistema',0,1),(5,'Padrao','Perfil Padrão',2,1),(17,'Vendedor','Vende os itens da loja',1,1);
+INSERT INTO `perfil` VALUES (1,'Admin','Responsável por todo o sistema',0,1),(5,'Padrao','Perfil Padrão',2,1),(17,'Vendedor','Vende os itens da loja',2,1);
 /*!40000 ALTER TABLE `perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,7 +183,7 @@ CREATE TABLE `perfil_menu` (
   KEY `fk_perfil_menu_menu1_idx` (`id_menu`),
   CONSTRAINT `fk_perfil_menu_menu1` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_perfil_menu_perfil1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=207 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +192,7 @@ CREATE TABLE `perfil_menu` (
 
 LOCK TABLES `perfil_menu` WRITE;
 /*!40000 ALTER TABLE `perfil_menu` DISABLE KEYS */;
-INSERT INTO `perfil_menu` VALUES (118,1,5),(119,1,4),(120,1,6),(121,1,12),(122,1,16),(123,1,17),(124,1,18),(125,1,19),(190,17,4),(191,17,5),(192,17,6),(193,17,12);
+INSERT INTO `perfil_menu` VALUES (118,1,5),(119,1,4),(120,1,6),(121,1,12),(122,1,16),(123,1,17),(124,1,18),(125,1,19),(233,17,4),(234,17,5),(235,17,6),(236,17,12);
 /*!40000 ALTER TABLE `perfil_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,7 +292,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Administrador','--','admin','1','-','-',1,1),(10,'Kauã Otaviano','61991376539','kot','1','08242953155','kototaviano@gmail.com',0,5),(11,'Kalel Otaviano','61991376534','kalel','1','08242957137','kalel@gmail.com',1,17);
+INSERT INTO `usuario` VALUES (1,'Administrador','--','admin','1','-','-',1,1),(10,'Kauã Otaviano','61991376539','kot','1','08242953155','kototaviano@gmail.com',1,17);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,7 +317,7 @@ CREATE TABLE `venda` (
   KEY `fk_venda_orcamento1_idx` (`id_orcamento`),
   CONSTRAINT `fk_venda_orcamento1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamento` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_venda_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,6 +326,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
+INSERT INTO `venda` VALUES (6,'2024-11-24 23:53:51',0.00,'Débito',1820.00,1,53);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,4 +347,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-24  4:04:41
+-- Dump completed on 2024-11-25  1:23:34
