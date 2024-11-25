@@ -1,4 +1,8 @@
-﻿﻿<style>
+﻿﻿<%@page import="model.Menu"%>
+<%@page import="dao.PerfilDAO"%>
+<%@page import="java.util.List"%>
+
+<style>
     /*Menu de gerencia*/
 
     #menu {
@@ -121,6 +125,7 @@
 </div>
 
 <%
+    List<Menu> navMenu = PerfilDAO.listarMenus(idP);
     if (hierarquia < 2) {
 %>
     <div id="gerencia" style="min-width: fit-content; width: 10%; padding-right: 20px;">
@@ -132,33 +137,37 @@
             </a>
         </div>
         <div id="menu">
-            <div class="botao_menu" onclick="location.href = 'usuarios.jsp'">
-                <a href="usuarios.jsp"><img src="images/icone_usuario.svg" alt=""><span>USUÁRIOS</span></a>
-            </div>
-            <div class="botao_menu" onclick="location.href = 'perfis.jsp'">
-                <a href="perfis.jsp"><img src="images/icone_perfil.svg" alt=""><span>PERFIS</span></a>
-            </div>
-            <div class="botao_menu" onclick="location.href = 'menus.jsp'">
-                <a href="#"><img src="images/icone_menu.svg" alt=""><span>MENUS</span></a>
-            </div>
-            <div class="botao_menu" onclick="location.href = 'relatorios.jsp'">
-                <a href="#"><img src="images/icone_relatorio.svg" alt=""><span>RELATÓRIOS</span></a>
-            </div>
+            <%
+                for (int i = 0; i < navMenu.size(); i++) {
+                    Menu btnMenu = navMenu.get(i);
+                    if ((btnMenu.getLink().equals("usuarios.jsp") || btnMenu.getLink().equals("perfis.jsp") || btnMenu.getLink().equals("menus.jsp") || btnMenu.getLink().equals("relatorios.jsp")) && btnMenu.isStatus()) {
+            %>
+                    <div class="botao_menu" onclick="location.href = '<%= btnMenu.getLink()%>'">
+                        <a href="#"><img src="<%= btnMenu.getImagem()%>" alt="<%= btnMenu.getNome()%>"><span><%= btnMenu.getNome()%></span></a>
+                    </div>
+            <%
+                    }
+
+                }
+            %>
         </div>
     </div>
 <% } %>
-<div class="botao" onclick="location.href = 'orcamentos.jsp'">
-    <a href="orcamentos.jsp"><img src="images/icone_orcamento.svg" alt=""><span>ORÇAMENTOS</span></a>
-</div>
-<div class="botao" onclick="location.href = 'vendas.jsp'">
-    <a href="vendas.jsp"><img src="images/icone_vendas.svg" alt="" style="position: relative; top: -3px;"><span>VENDAS</span></a>
-</div>
-<div class="botao" onclick="location.href = 'produtos.jsp'">
-    <a href="produtos.jsp"><img src="images/icone_produto.svg" alt=""><span>PRODUTOS</span></a>
-</div>
-<div class="botao" onclick="location.href = 'clientes.jsp'">
-    <a href="clientes.jsp"><img src="images/icone_cliente.svg" alt=""><span>CLIENTES</span></a>
-</div>
+
+<%
+    for (int i = 0; i < navMenu.size(); i++) {
+        Menu btnMenu = navMenu.get(i);
+        if ((!btnMenu.getLink().equals("usuarios.jsp") && !btnMenu.getLink().equals("perfis.jsp") && !btnMenu.getLink().equals("menus.jsp") && !btnMenu.getLink().equals("relatorios.jsp")) && btnMenu.isStatus()) {
+%>
+        <div class="botao" onclick="location.href = '<%= btnMenu.getLink()%>'">
+            <a href="#"><img src="<%= btnMenu.getImagem()%>" alt="<%= btnMenu.getNome()%>"><span><%= btnMenu.getNome()%></span></a>
+        </div>
+<%
+        }
+
+    }
+%>
+
 <div class="pesquisa" style="overflow: visible;">
     <img src="images/icone_pesquisa.svg" alt="lupa">
     <input type="text" name="pesquisa" placeholder="Pesquisar">

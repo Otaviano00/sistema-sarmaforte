@@ -37,6 +37,7 @@ function adicionarItem() {
   document.querySelector('#nome_produto').value = nome;
   document.querySelector('#preco_produto').value = preco;
   document.querySelector('#produto_id').value = valor;
+  document.querySelector("#quantidade_produto").value = null;
 
   modal.showModal();
 }
@@ -46,10 +47,12 @@ function alterarItem(index, idItem) {
   const linha = table.rows[index].cells;
 
   var acao = "6";
-  var idProduto = parseInt(linha[2].textContent);
+  var idProduto = parseInt(linha[1].textContent);
   var nome = linha[3].textContent.trim();
   var quantidade = parseInt(linha[4].textContent);
-  var preco = parseFloat(linha[5].textContent);
+  var preco = parseFloat(linha[5].textContent.replace('.', '').replace(',', '.'));
+
+  console.log(preco);
 
   document.querySelector("#acao_item").value = acao;
   document.querySelector('#id_item').value = idItem;

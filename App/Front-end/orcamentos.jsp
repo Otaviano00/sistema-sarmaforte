@@ -30,7 +30,7 @@
         <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
 
 
-        <title>Home</title>
+        <title>Orçamentos</title>
     </head>
     <body>
         <header>

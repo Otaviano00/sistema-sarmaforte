@@ -327,7 +327,7 @@ public class OrcamentoDAO {
             pstm.setInt(1, item.getQuantidade());
             pstm.setDouble(2, item.getPreco());
             pstm.setTimestamp(3, Timestamp.valueOf(item.getDataHora()));
-            pstm.setBoolean(4, item.getStatusVenda());
+            pstm.setBoolean(4, item.isStatusVenda());
             pstm.setInt(5, item.getOrcamento().getId());
             pstm.setInt(6, item.getProduto().getCodigo());
 

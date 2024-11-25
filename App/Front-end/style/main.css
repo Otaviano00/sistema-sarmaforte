@@ -38,9 +38,9 @@ header #samaforte {
 }
 
 #bloco2_logo {
-    width: 670px;
+    width: fit-content;
     height: 80px;
-    left: -170px;
+    left: -60px;
     position: relative;
 }
 
@@ -229,6 +229,14 @@ tfoot {
     background-color: #FF2D29;
     color: white;
     font-weight: bolder;
+}
+
+.dados {
+    flex: 0 0 20%; 
+    box-sizing: border-box; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9; 
 }
 
 /*Rodapé*/

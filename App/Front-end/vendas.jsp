@@ -2,6 +2,7 @@
 <%@page import="model.Venda"%>
 <%@page import="dao.VendaDAO"%>
 <%@page import="java.util.List"%>
+<%@page import="utilities.Util"%>
 
 <%@include file="sessao.jsp" %>
 
@@ -47,7 +48,7 @@
         <h1 class="titulo">
             VENDAS
         </h1>
-        <button class="novo" onclick="location.href = ('registrar_venda.jsp')">
+        <button class="novo" onclick="location.href = ('selecionar_venda.jsp')">
             <div style="display: flex; justify-content: center; align-items: center; margin: auto; gap: 10px;">
                 <span style="font-size: 2em;">+</span>
                 Novo Venda
@@ -62,31 +63,36 @@
                         <th>Vendedor</th>
                         <th>Data</th>
                         <th>Valor</th>
+                        <th>Forma Pagamento</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <%
                         List<Venda> vendas = VendaDAO.listar();
-                        for (int i = 0; i < vendas.size(); i++) {%>
+                        for (int i = vendas.size() - 1; i >= 0; i--) {%>
                         <tr>
-                            <td><%= i+1%></td>
+                            <td><%= vendas.size() - i%></td>
                             <td><%= vendas.get(i).getOrcamento().getCliente().getNome()%></td>
-                            <td><%= vendas.get(i).getUsuario().getNome()%></td> 
-                            <td><%= vendas.get(i).getData().toLocalDate()%></td>       
-                            <td><%= String.format("R$ %,.2f", vendas.get(i).getValor())%></td>  
+                            <td><%= vendas.get(i).getUsuario() == null? "EXCLUÍDO" : vendas.get(i).getUsuario().getNome()%></td> 
+                            <td><%= Util.converteData(vendas.get(i).getData().toLocalDate())%></td>       
+                            <td><%= String.format("R$ %,.2f", vendas.get(i).getValor())%></td> 
+                            <td><%= vendas.get(i).getFormaPagamento()%></td>  
                             <td>
-                                <% if (hierarquia < 2) {%>
-                                    <button onclick="location.href = 'alterar_venda.jsp?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Alterar dessa venda <%= i+1%>">
+                                <% if (hierarquia < 2 && !vendas.get(i).getOrcamento().getStatus().equals("Concluído")) {%>
+                                    <button onclick="location.href = 'alterar_venda.jsp?id=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Alterar dessa venda <%= i+1%>">
                                         <img src="images/icone_alterar.svg" alt="Alterar">
                                     </button>
-                                    <button onclick="location.href = 'GerenciarVenda?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Excluir venda <%= i+1%>">
+                                <% }%>
+                                <button onclick="location.href = 'detalhes_venda.jsp?id=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Detalhes da venda <%= i+1%>">
+                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
+                                </button>
+                                <% if (hierarquia == 0) {%>
+                                    <button onclick="confirmarExclusao(event, 'GerenciarVenda?id=<%= vendas.get(i).getId()%>&acao=3')" class="botao_acao" title="Excluir venda <%= i+1%>">
                                         <img src="images/icone_excluir.svg" alt="Excluir">
                                     </button>
                                 <% }%>
-                                <button onclick="location.href = 'detalhes_venda?idVenda=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Detalhes da venda <%= i+1%>">
-                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
-                                </button>
+
                             </td>
                         </tr>
                     <% }%>

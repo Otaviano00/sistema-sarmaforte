@@ -63,11 +63,15 @@
                     <%
                         List<Produto> produtos = ProdutoDAO.listar();
                         for (Produto produto : produtos) {
+                            if (produto.isStatus()) {
                     %>
                     <option value="<%= produto.getCodigo()%>" data-preco="<%= produto.getPreco()%>">
                         <%= produto.getNome()%>
                     </option>
-                    <% }%>
+                    <% 
+                            }
+                        }
+                    %>
                 </select>
                 <button onclick="adicionarItem()">
                     ADICIONAR ITEM
@@ -142,30 +146,31 @@
                 <section id="listar_itens" class="tabela bloco">
                     <h2>Itens do Orçamento</h2>
                     <dialog>
-                        <form action="GerenciarOrcamento" method="get">
-                            <input type="hidden" name="acao" id="acao_item" value="5">
+                        <div class="modal">
+                            <form action="GerenciarOrcamento" method="get">
+                                <input type="hidden" name="acao" id="acao_item" value="5">
                             
-                            <input type="hidden" name="id_produto" id="produto_id">
-                            <input type="hidden" name="id_orcamento" value="<%= id%>">
-                            <input type="hidden" name="id_item" id="id_item" value="0">
-
-                            <div class="campos">
-                                <label for="nome_produto" class="titulo_campo">Produto: </label>
-                                <input type="text" name="nome_produto" id="nome_produto" readonly disabled>
-                            </div>
-                            <div class="campos">
-                                <label for="preco_produto" class="titulo_campo">Preço (R$): </label>
-                                <input type="number" step="0.01" name="preco_produto" id="preco_produto" readonly disabled>
-                            </div>
-                            <div class="campos">
-                                <label for="quantidade_produto" class="titulo_campo"></label>
-                                <input type="number" name="quantidade_produto" id="quantidade_produto" required>
-                            </div>
-                            <input type="submit" value="Confirmar">
-                        </form>
-                        <button onclick="closeModal()">
-                            Fechar
-                        </button>
+                                <input type="hidden" name="id_produto" id="produto_id">
+                                <input type="hidden" name="id_orcamento" value="<%= id%>">
+                                <input type="hidden" name="id_item" id="id_item" value="0">
+                                <div class="campos">
+                                    <label for="nome_produto" class="titulo_campo">Produto: </label>
+                                    <input type="text" name="nome_produto" id="nome_produto" readonly disabled>
+                                </div>
+                                <div class="campos">
+                                    <label for="preco_produto" class="titulo_campo">Preço (R$): </label>      
+                                    <input type="number" name="preco_produto" step="0.01" id="preco_produto" required>       
+                                </div>
+                                <div class="campos">
+                                    <label for="quantidade_produto" class="titulo_campo">Quantidade:</label>
+                                    <input type="number" name="quantidade_produto" id="quantidade_produto" required>
+                                </div>
+                                <input type="submit" value="Confirmar" class="botao_confirma">
+                            </form>
+                            <button id="fechar" onclick="closeModal()" class="botao_fechar">           
+                                X
+                            </button>
+                        </div>
                     </dialog>
                     <table class="table table-striped" style="background-color: white;">
                         <thead>
@@ -177,6 +182,7 @@
                                 <th>Quantidade</th>
                                 <th>Preço Unitário</th>
                                 <th>Valor</th>
+                                <th>Status</th>
                                 <th>Opções</th>
                             </tr>
                         </thead>
@@ -217,6 +223,9 @@
                                         <%= String.format("%,.2f", precoTotal)%>
                                     </td>
                                     <td>
+                                        <%= itens.get(i).isStatusVenda()? "Vendido" : "Não Vendido"%>
+                                    </td>
+                                    <td>
                                         <button onclick="alterarItem(parseInt('<%= i%>'), parseInt('<%= itens.get(i).getId()%>'))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
                                             <img src="images/icone_alterar.svg" alt="Alterar">
                                         </button>
@@ -234,7 +243,7 @@
                                 <td colspan="6" >
                                     TOTAL
                                 </td>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <%= String.format("R$ %,.2f", total)%>
                                 </td>
                             </tr>
@@ -256,9 +265,9 @@
                 <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
                     Imprimir Orçamento
                 </button>
-                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp'">
+                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
                     Realizar Venda
-                </button>    
+                </button>     
             </section>
         </div>
     </body>

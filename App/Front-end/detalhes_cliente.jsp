@@ -64,8 +64,8 @@
             </div>
 
             <div class="campos">
-                <label for="cpf" class="titulo_campo">CPF: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="text" name="cpf" value="<%= cliente.getCpf()%>" required disabled readonly>
+                <label for="cpf" class="titulo_campo">CPF:</label>
+                <input type="text" name="cpf" maxlength="11" value="<%= cliente.getCpf()%>"  disabled readonly>
             </div>
 
             <div class="campos">

@@ -60,7 +60,7 @@ public class ItemOrcamento {
         this.dataHora = dataHora;
     }
 
-    public boolean getStatusVenda() {
+    public boolean isStatusVenda() {
         return statusVenda;
     }
 

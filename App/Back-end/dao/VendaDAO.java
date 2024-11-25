@@ -13,9 +13,9 @@ import model.Usuario;
 
 public class VendaDAO {
 
-    public static boolean resgistrar(Venda venda) {
+    public static boolean registrar(Venda venda) {
 
-        String sql = "INSERT INTO venda (data, valor, desconto, forma_pagamento, id_usuario, id_orcamento) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO venda (data, valor, desconto, forma_pagamento, id_usuario, id_orcamento) VALUES (?,?,?,?,?,?)";
 
         Connection conn = null;
         PreparedStatement pstm = null;

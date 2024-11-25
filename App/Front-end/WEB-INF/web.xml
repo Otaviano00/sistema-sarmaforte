@@ -28,6 +28,10 @@
         <servlet-name>GerenciarCliente</servlet-name>
         <servlet-class>controller.GerenciarCliente</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GerenciarVenda</servlet-name>
+        <servlet-class>controller.GerenciarVenda</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProcessarLogin</servlet-name>
         <url-pattern>/ProcessarLogin</url-pattern>
@@ -55,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>GerenciarCliente</servlet-name>
         <url-pattern>/GerenciarCliente</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarVenda</servlet-name>
+        <url-pattern>/GerenciarVenda</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -57,8 +57,8 @@
             </div>
 
             <div class="campos">
-                <label for="cpf" class="titulo_campo">CPF: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="text" name="cpf" required>
+                <label for="cpf" class="titulo_campo">CPF:</label>
+                <input type="text" name="cpf">
             </div>
 
             <div class="campos">

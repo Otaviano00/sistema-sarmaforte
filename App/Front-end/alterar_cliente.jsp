@@ -66,8 +66,8 @@
             </div>
             
             <div class="campos">
-                <label for="cpf" class="titulo_campo">CPF: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="text" name="cpf" value="<%= cliente.getCpf() %>" required>
+                <label for="cpf" class="titulo_campo">CPF:</label>
+                <input type="text" name="cpf" value="<%= cliente.getCpf() %>">
             </div>
 
             <div class="campos">
@@ -126,7 +126,7 @@
                                     <button type="button" onclick="location.href = 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=2'" class="botao_acao" title="Alterar o orçamento <%= i+1%>">
                                         <img src="images/icone_alterar.svg" alt="Alterar">
                                     </button>
-                                    <button type="button" onclick="location.href = 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=3'" class="botao_acao" title="Excluir o orçamento <%= i+1%>">
+                                    <button type="button" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=3')" class="botao_acao" title="Excluir o orçamento <%= i+1%>">
                                         <img src="images/icone_excluir.svg" alt="Excluir">
                                     </button>
                                 </td>

@@ -58,7 +58,7 @@ public class GerenciarOrcamento extends HttpServlet {
                 try {
                     orcamento.setDataCriacao(LocalDateTime.now());
                     orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
-                    orcamento.setStatus("pendente");
+                    orcamento.setStatus("aberto");
                     orcamento.setCliente(ClienteDAO.listarPorId(5));
 
                     // Registrar no banco
@@ -146,12 +146,13 @@ public class GerenciarOrcamento extends HttpServlet {
                     int idProduto = Integer.parseInt(request.getParameter("id_produto"));
                     int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
                     int quantidade = Integer.parseInt(request.getParameter("quantidade_produto"));
+                    double preco = Double.parseDouble(request.getParameter("preco_produto"));
 
                     ItemOrcamento item = new ItemOrcamento();
                     item.setProduto(ProdutoDAO.listarPorId(idProduto));
                     item.setOrcamento(OrcamentoDAO.listarPorId(idOrcamento));
                     item.setQuantidade(quantidade);
-                    item.setPreco(item.getProduto().getPreco());
+                    item.setPreco(preco);
                     item.setStatusVenda(false);
                     item.setDataHora(LocalDateTime.now());
 
@@ -175,13 +176,14 @@ public class GerenciarOrcamento extends HttpServlet {
                     int idProduto = Integer.parseInt(request.getParameter("id_produto"));
                     int quantidade = Integer.parseInt(request.getParameter("quantidade_produto"));
                     int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
+                    double preco = Double.parseDouble(request.getParameter("preco_produto"));
 
                     ItemOrcamento item = new ItemOrcamento();
                     item.setId(idItem);
                     item.setProduto(ProdutoDAO.listarPorId(idProduto));
                     item.setOrcamento(OrcamentoDAO.listarPorId(idOrcamento));
                     item.setQuantidade(quantidade);
-                    item.setPreco(item.getProduto().getPreco());
+                    item.setPreco(preco);
                     item.setStatusVenda(false);
                     item.setDataHora(LocalDateTime.now());
 

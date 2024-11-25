@@ -1,10 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
-<%@page import="model.Produto"%>
-<%@page import="dao.ProdutoDAO"%>
-<%@page import="model.Cliente"%>
-<%@page import="dao.ClienteDAO"%>
 <%@page import="model.Orcamento"%>
 <%@page import="dao.OrcamentoDAO"%>
 <%@page import="model.ItemOrcamento"%>
@@ -36,7 +32,7 @@
         <link rel="stylesheet" href="style/orcamento.css">
         <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
 
-        <title>Alterar Orçamento</title>
+        <title>Detalhes Orçamento</title>
     </head>
     <body>
         <%
@@ -105,6 +101,7 @@
                                 <th>Quantidade</th>
                                 <th>Preço Unitário</th>
                                 <th>Valor</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -141,6 +138,9 @@
                                     <td>
                                         <%= String.format("%,.2f", precoTotal)%>
                                     </td>
+                                    <td>
+                                        <%= itens.get(i).isStatusVenda()? "Vendido" : "Não Vendido"%>
+                                    </td>
                                 </tr>
                             <%
                                 }
@@ -151,7 +151,7 @@
                                 <td colspan="5" >
                                     TOTAL
                                 </td>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <%= String.format("R$ %,.2f", total)%>
                                 </td>
                             </tr>
@@ -170,6 +170,9 @@
                 <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
                     Imprimir Orçamento
                 </button>  
+                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
+                    Realizar Venda
+                </button>   
             </section>
         </div>
     </body>

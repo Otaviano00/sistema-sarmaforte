@@ -33,3 +33,10 @@ function confirmarExclusao(event, url) {
         event.preventDefault();
     }
 }
+
+function confirmarVenda(event) {
+    const confirmar = confirm("Você tem certeza que deseja registrar a venda?");
+    if (!confirmar) {
+        event.preventDefault();
+    } 
+}

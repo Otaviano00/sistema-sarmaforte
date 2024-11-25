@@ -35,8 +35,41 @@ dialog::backdrop {
 
 dialog {
     margin: auto;
+    min-width: fit-content;
     width: 50%;
-    height: 30%;
+    min-height: 50px;
+    height: fit-content;
+    border-radius: 10px;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+}
+
+#fechar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #a20404;
+    border: 1px black solid;
+    font-weight: bolder;
+    font-size: 1.5em;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 0;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    text-align: center; 
+}
+
+#fechar:hover {
+    background-color: #cd0101 ;
 }
 
 .seletor {
@@ -46,15 +79,15 @@ dialog {
 }
 
 section#dados_orcamento {
-    flex: 0 0 20%; /* Ocupa exatamente 20% da largura do contêiner */
-    box-sizing: border-box; /* Inclui padding e border no cálculo do tamanho */
-    padding: 10px; /* Padding interno para espaçamento */
-    border: 1px solid #ccc; /* Opcional: borda para visualização */
-    background-color: #f9f9f9; /* Opcional: cor de fundo */
+    flex: 0 0 20%; 
+    box-sizing: border-box; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9; 
 }
 
 section#listar_itens {
-    flex: 0 0 80%; /* Ocupa exatamente 80% da largura do contêiner */
+    flex: 0 0 80%; 
     box-sizing: border-box;
     padding: 10px;
     border: 1px solid #ccc;
