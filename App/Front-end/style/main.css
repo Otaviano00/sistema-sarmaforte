@@ -231,14 +231,6 @@ tfoot {
     font-weight: bolder;
 }
 
-.dados {
-    flex: 0 0 20%; 
-    box-sizing: border-box; 
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9; 
-}
-
 /*Rodapé*/
 
 footer {

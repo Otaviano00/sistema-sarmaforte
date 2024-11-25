@@ -18,18 +18,17 @@ $(document).ready(function() {
 
           emptyTable: 'Sem registros nessa tabela'
       },
-        "scrollX": true, // Ativa o scroll horizontal
-        "loadingRecords": true
+        scrollX: true,
+        "loadingRecords": true,
+        responsive: true
     });
 });
 
 function confirmarExclusao(event, url) {
     const confirmar = confirm("Você tem certeza que deseja excluir esse registro?");
     if (confirmar) {
-        // Redireciona para o link
         window.location.href = url;
     } else {
-        // Cancela o redirecionamento
         event.preventDefault();
     }
 }

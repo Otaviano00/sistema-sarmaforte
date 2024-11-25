@@ -71,7 +71,7 @@ public class GerenciarVenda extends HttpServlet {
         switch (acao) {
             case 0: // Sem autorização
                 try {
-                    response.sendRedirect("registrar_venda.jsp");     
+                    response.sendRedirect("vendas.jsp");     
                 } catch (Exception e) {
                     exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "vendas.jsp");
                 }

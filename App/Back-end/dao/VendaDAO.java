@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 import model.Venda;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import model.ItemOrcamento;
 import model.Orcamento;
+import model.Produto;
 import model.Usuario;
 
 public class VendaDAO {
@@ -119,7 +120,7 @@ public class VendaDAO {
                 e.printStackTrace();
             }
         }
-
+        
         return vendas;
 
     }
@@ -274,7 +275,66 @@ public class VendaDAO {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+           
         }
+
+    }
+    
+    public static List<ItemOrcamento> listarTodosItensVendidos() {
+
+        String sql = "SELECT * FROM item_orcamento WHERE statusVenda = 1";
+
+        List<ItemOrcamento> itens = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+                Timestamp sqlDataHora = rset.getTimestamp("dataHora");
+
+                Orcamento orca = OrcamentoDAO.listarPorId(rset.getInt("id_orcamento"));
+
+                Produto pro = ProdutoDAO.listarPorId(rset.getInt("id_produto"));
+
+                ItemOrcamento item = new ItemOrcamento();
+
+                item.setId(rset.getInt("id"));
+                item.setQuantidade(rset.getInt("quantidade"));
+                item.setPreco(rset.getDouble("preco"));
+                item.setDataHora(sqlDataHora.toLocalDateTime());
+                item.setStatusVenda(rset.getBoolean("statusVenda"));
+                item.setOrcamento(orca);
+                item.setProduto(pro);
+
+                itens.add(item);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) {
+                    rset.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return itens;
 
     }
 

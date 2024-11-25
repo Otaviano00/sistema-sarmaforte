@@ -1,0 +1,124 @@
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.dados {
+    box-sizing: border-box; 
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 5px;
+    height: 100px;
+    min-height: fit-content;
+    width: 80%;
+    min-width: fit-content;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    gap: 10px;
+}
+
+.grafico {
+    min-width: fit-content;
+    width: 30%;
+    max-width: 30%;
+    min-height: fit-content;
+    height: fit-content;
+    max-height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.157);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.grafico .canvas {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.head {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    gap: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #142E50;
+    margin-top: 20px;
+}
+
+.head img {
+    width: 60px;
+}
+
+.head hr {
+    width: 100%;
+    border: none;
+    border-top: 2px solid black;
+}
+
+.head span {
+    min-width: fit-content;
+}
+
+.campo {
+    margin: 10px auto;
+}
+
+.tabela {
+    border-radius: 20px;
+    height: fit-content;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-direction: column;
+    min-width: fit-content;
+    padding-bottom: 30px;
+}
+
+.infos {
+    min-width: 25%;
+    max-width: 25%;
+    min-height: 90%;
+    max-height: 90%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info_orcamento {
+    background-color: #e2e2e2;
+    padding: 10px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.165);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    width: 50%;
+    min-width: fit-content;
+    font-weight: bolder;
+    color: #142E50;
+    font-size: 1.3em;
+}
+
+.infor_orcamento #text {
+    min-height: 100%;
+    text-align: center;
+}
+
+.info_orcamento span {
+    margin-left: 5px;
+    font-size: 2em;
+    font-weight: bolder;
+}

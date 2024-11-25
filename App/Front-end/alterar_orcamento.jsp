@@ -226,12 +226,14 @@
                                         <%= itens.get(i).isStatusVenda()? "Vendido" : "Não Vendido"%>
                                     </td>
                                     <td>
-                                        <button onclick="alterarItem(parseInt('<%= i%>'), parseInt('<%= itens.get(i).getId()%>'))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
-                                            <img src="images/icone_alterar.svg" alt="Alterar">
-                                        </button>
-                                        <button onclick="location.href = 'GerenciarOrcamento?acao=7&idOrcamento=<%= itens.get(i).getOrcamento().getId()%>&idItem=<%= itens.get(i).getId()%>'" class="botao_acao" title="Excluir <%= itens.get(i).getProduto().getNome()%>">
-                                            <img src="images/icone_excluir.svg" alt="Excluir">
-                                        </button>
+                                        <% if (!itens.get(i).isStatusVenda()) {%>
+                                            <button onclick="alterarItem(parseInt('<%= i%>'), parseInt('<%= itens.get(i).getId()%>'))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
+                                                <img src="images/icone_alterar.svg" alt="Alterar">
+                                            </button>
+                                            <button onclick="location.href = 'GerenciarOrcamento?acao=7&idOrcamento=<%= itens.get(i).getOrcamento().getId()%>&idItem=<%= itens.get(i).getId()%>'" class="botao_acao" title="Excluir <%= itens.get(i).getProduto().getNome()%>">
+                                                <img src="images/icone_excluir.svg" alt="Excluir">
+                                            </button>
+                                        <%}%>
                                     </td>
                                 </tr>
                             <%
@@ -265,9 +267,11 @@
                 <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
                     Imprimir Orçamento
                 </button>
-                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
-                    Realizar Venda
-                </button>     
+                <% if (!orcamento.getStatus().equals("Concluído")) {%>
+                    <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
+                        Realizar Venda
+                    </button>
+                <%}%>     
             </section>
         </div>
     </body>

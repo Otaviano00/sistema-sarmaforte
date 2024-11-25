@@ -9,14 +9,14 @@ body {
 }
 
 .bloco{
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid black;
-    border-radius: 5px;
-    background-color: #f0eeee;
-    height: 100%;
-    min-height: 100%;
-    width: 97.5%;
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: #f0eeee;
+        height: 100%;
+        min-height: 100%;
+        width: 97.5%;
 }
 
 form {

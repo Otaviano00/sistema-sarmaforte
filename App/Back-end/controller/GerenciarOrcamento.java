@@ -58,7 +58,7 @@ public class GerenciarOrcamento extends HttpServlet {
                 try {
                     orcamento.setDataCriacao(LocalDateTime.now());
                     orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
-                    orcamento.setStatus("aberto");
+                    orcamento.setStatus("Aberto");
                     orcamento.setCliente(ClienteDAO.listarPorId(5));
 
                     // Registrar no banco

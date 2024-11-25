@@ -53,6 +53,7 @@
             <%@include file="nav_list.jsp"%>
         </nav>
         <div class="flex">
+            <br>
             <section id="dados_orcamento" class="bloco" style="min-width: 97.5%;"> 
                 <h2>Dados do orçamento</h2>
                 <form id="dados_cliente" style="margin-top: -30px;">
@@ -86,6 +87,7 @@
                     </div>
                 </form>
             </section>
+            <br>
             <section id="listar_itens" class="bloco">
                 <h2>Itens do Orçamento</h2>
                 <div class="tabela" style="width: 98.5%; justify-content: center;">

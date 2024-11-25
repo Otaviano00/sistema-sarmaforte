@@ -3,6 +3,8 @@
 <%@page import="java.util.List"%>
 <%@page import="model.Orcamento"%>
 <%@page import="dao.OrcamentoDAO"%>
+<%@page import="model.Venda"%>
+<%@page import="dao.VendaDAO"%>
 <%@page import="utilities.Util" %>
 
 <%@include file="sessao.jsp" %>
@@ -114,8 +116,17 @@
                                 </td>
                                 
                                 <td>
-                                    <% if (orcamentos.get(i).getStatus().equals("Pendente")) {%>
-                                    <button class="botao_acao" onclick="location.href = 'alterar_venda.jsp?id=<%= orcamentos.get(i).getId()%>'" title="Selecionar o orçamento <%= orcamentos.get(i).getId()%>">
+                                    <% if (orcamentos.get(i).getStatus().equals("Pendente")) {
+                                            List<Venda> vendas = VendaDAO.listar();
+                                            int id = 0;
+                                            for (Venda venda : vendas) {
+                                                if (venda.getOrcamento().getId() == orcamentos.get(i).getId()) {
+                                                    id = venda.getId();
+                                                }
+                                            }
+
+                                    %>
+                                    <button class="botao_acao" onclick="location.href = 'alterar_venda.jsp?id=<%= id%>'" title="Selecionar o orçamento <%= orcamentos.get(i).getId()%>">
                                         <img src="images/icone_selecionar.svg" alt="Selecionar">
                                     </button>
                                     <%

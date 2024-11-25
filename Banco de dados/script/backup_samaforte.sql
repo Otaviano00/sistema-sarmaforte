@@ -67,7 +67,7 @@ CREATE TABLE `item_orcamento` (
   KEY `fk_item_orcamento_produto1_idx` (`id_produto`),
   CONSTRAINT `fk_item_orcamento_orcamento1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_item_orcamento_produto1` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`codigo`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `item_orcamento` (
 
 LOCK TABLES `item_orcamento` WRITE;
 /*!40000 ALTER TABLE `item_orcamento` DISABLE KEYS */;
-INSERT INTO `item_orcamento` VALUES (60,23,10.00,'2024-11-24 23:10:03',1,53,28),(67,2,795.00,'2024-11-24 23:53:51',1,53,9),(85,2,159.90,'2024-11-25 01:21:33',0,77,3);
+INSERT INTO `item_orcamento` VALUES (60,23,10.00,'2024-11-24 23:10:03',1,53,28),(67,2,795.00,'2024-11-24 23:53:51',1,53,9),(85,1,159.90,'2024-11-25 14:57:23',1,77,3),(86,10,4.90,'2024-11-25 13:48:33',1,77,25),(90,7,279.90,'2024-11-25 17:55:54',1,80,49),(91,100,0.99,'2024-11-25 17:33:06',1,80,848);
 /*!40000 ALTER TABLE `item_orcamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,13 +120,13 @@ CREATE TABLE `orcamento` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dataCriacao` datetime NOT NULL,
   `dataValidade` datetime NOT NULL,
-  `status` varchar(20) DEFAULT 'aberto',
+  `status` varchar(20) DEFAULT 'Aberto',
   `informacoes` text DEFAULT NULL,
   `id_cliente` int(11) DEFAULT 5,
   PRIMARY KEY (`id`),
   KEY `fk_orcamento_cliente1_idx` (`id_cliente`),
   CONSTRAINT `fk_orcamento_cliente1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE `orcamento` (
 
 LOCK TABLES `orcamento` WRITE;
 /*!40000 ALTER TABLE `orcamento` DISABLE KEYS */;
-INSERT INTO `orcamento` VALUES (53,'2024-11-23 01:41:24','2024-12-08 01:41:24','Concluído',NULL,5),(77,'2024-11-25 00:20:04','2024-12-10 00:20:04','aberto','Pagamento adiantado',1);
+INSERT INTO `orcamento` VALUES (53,'2024-11-23 01:41:24','2024-12-08 01:41:24','Concluído',NULL,5),(77,'2024-11-25 00:20:04','2024-12-10 00:20:04','Concluído','Pagamento adiantado',1),(80,'2024-11-25 16:10:57','2024-12-10 16:10:57','Concluído','',1);
 /*!40000 ALTER TABLE `orcamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +283,7 @@ CREATE TABLE `usuario` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `fk_usuario_perfil1_idx` (`id_perfil`),
   CONSTRAINT `fk_usuario_perfil1` FOREIGN KEY (`id_perfil`) REFERENCES `perfil` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +292,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Administrador','--','admin','1','-','-',1,1),(10,'Kauã Otaviano','61991376539','kot','1','08242953155','kototaviano@gmail.com',1,17);
+INSERT INTO `usuario` VALUES (1,'Administrador','--','admin','1','-','-',1,1),(10,'Kauã Otaviano','61991376539','kot','1','08242953155','kototaviano@gmail.com',1,17),(15,'Pedro Teixeira','61992529505','ptex','1','584','',1,17);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,7 +317,7 @@ CREATE TABLE `venda` (
   KEY `fk_venda_orcamento1_idx` (`id_orcamento`),
   CONSTRAINT `fk_venda_orcamento1` FOREIGN KEY (`id_orcamento`) REFERENCES `orcamento` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_venda_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +326,7 @@ CREATE TABLE `venda` (
 
 LOCK TABLES `venda` WRITE;
 /*!40000 ALTER TABLE `venda` DISABLE KEYS */;
-INSERT INTO `venda` VALUES (6,'2024-11-24 23:53:51',0.00,'Débito',1820.00,1,53);
+INSERT INTO `venda` VALUES (6,'2024-11-24 23:53:51',0.00,'Débito',1820.00,1,53),(8,'2024-11-25 14:57:23',10.00,'Débito',198.90,1,77),(10,'2024-11-25 17:55:54',15.00,'Débito',2043.30,1,80);
 /*!40000 ALTER TABLE `venda` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,4 +347,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-25  1:23:34
+-- Dump completed on 2024-11-25 18:46:35

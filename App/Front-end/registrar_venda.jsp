@@ -9,6 +9,23 @@
 
 <%@include file="sessao.jsp" %>
 
+<%
+    Integer id = 0;
+    Orcamento orcamento = null;
+    try {
+         id = Integer.parseInt(request.getParameter("id"));
+         orcamento = OrcamentoDAO.listarPorId(id);
+    } catch (Exception e) {
+        String mensagem = "Erro do orçamento";
+        String url = "vendas.jsp";
+        out.print("<script>");
+        out.print("alert('" + mensagem + "');");
+        out.print("location.href = '" + url + "';");
+        out.print("</script>");
+        out.close();
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -37,10 +54,6 @@
         <title>Registrar Venda</title>
     </head>
     <body>
-        <%
-            Integer id = Integer.parseInt(request.getParameter("id"));
-            Orcamento orcamento = OrcamentoDAO.listarPorId(id);
-        %>
         <header>
              <div class="logo">
                 <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
@@ -169,7 +182,7 @@
                                         </td>
                                         <td>
                                             <label for="produto-checkbox<%= itens.get(i).getId()%>" class="botao_radio" style="max-width: fit-content; cursor: pointer;">
-                                                <input type="checkbox" name="produto-checkbox" style="width: 20px; height: 20px; cursor: pointer;" value="<%= itens.get(i).getId()%>" id="produto-checkbox<%= itens.get(i).getId()%>" class="produto-checkbox" data-preco="<%= precoTotal%>" onchange="atualizarTotal()" <%= itens.get(i).isStatusVenda()? "checked" : "" %>>
+                                                <input type="checkbox" name="produto-checkbox" style="width: 20px; height: 20px; cursor: pointer;" value="<%= itens.get(i).getId()%>" id="produto-checkbox<%= itens.get(i).getId()%>" class="produto-checkbox" data-preco="<%= precoTotal%>" onchange="atualizarTotal()" checked>
                                                 Vender
                                             </label>
                                         </td>

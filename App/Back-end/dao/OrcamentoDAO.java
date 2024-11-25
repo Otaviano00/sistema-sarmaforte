@@ -12,6 +12,7 @@ import model.Cliente;
 import model.ItemOrcamento;
 import model.Orcamento;
 import model.Produto;
+import utilities.Util;
 
 public class OrcamentoDAO {
 
@@ -224,6 +225,91 @@ public class OrcamentoDAO {
         }
 
         return orcamento;
+
+    }
+    
+    public static List<Orcamento> listarPorStatus(String status) {
+
+        status = status.toLowerCase();
+        status = Util.capitalize(status);
+        
+        String sql = ""
+                + " SELECT"
+                + " id,"
+                + " dataCriacao,"
+                + " dataValidade,"
+                + " status,"
+                + " informacoes,"
+                + " id_cliente"
+                + " FROM"
+                + " orcamento"
+                + " WHERE"
+                + " status = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+        
+        List<Orcamento> orcamentos = new ArrayList<>();
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+
+            pstm.setString(1, status);
+            pstm.execute();
+
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+
+                try {
+                    Orcamento orcamento = new Orcamento();
+
+                    Timestamp sqlCriacao = rset.getTimestamp("dataCriacao");
+                    Timestamp sqlValidade = rset.getTimestamp("dataValidade");
+
+                    Cliente cliente = ClienteDAO.listarPorId(rset.getInt("id_cliente"));
+                    
+                    orcamento.setId(rset.getInt("id"));
+                    orcamento.setDataCriacao(sqlCriacao.toLocalDateTime());
+                    orcamento.setDataValidade(sqlValidade.toLocalDateTime());
+                    orcamento.setStatus(rset.getString("status"));
+                    orcamento.setInformacao(rset.getString("informacoes"));
+                    orcamento.setCliente(cliente);
+                    
+                    orcamentos.add(orcamento);
+
+                } catch (Exception e) {
+
+                    return null;
+
+                }
+
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (rset != null) {
+                    rset.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+
+        return orcamentos;
 
     }
 
