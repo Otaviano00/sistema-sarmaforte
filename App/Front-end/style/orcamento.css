@@ -36,8 +36,8 @@ dialog::backdrop {
 dialog {
     margin: auto;
     min-width: fit-content;
-    width: 50%;
-    min-height: 50px;
+    width: 30%;
+    min-height: 50%;
     height: fit-content;
     border-radius: 10px;
 }

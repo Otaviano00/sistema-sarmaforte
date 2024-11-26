@@ -25,6 +25,7 @@ function atualizarTotal() {
         style: 'currency',
         currency: 'BRL'
     }).format(total);
+    
     valorTotalTd.textContent = precoFormatado; 
 
     document.querySelector('#valor').value = total;

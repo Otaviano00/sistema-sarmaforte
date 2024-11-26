@@ -168,7 +168,7 @@
     }
 %>
 
-<div class="pesquisa" style="overflow: visible;">
+<!-- <div class="pesquisa" style="overflow: visible;">
     <img src="images/icone_pesquisa.svg" alt="lupa">
     <input type="text" name="pesquisa" placeholder="Pesquisar">
-</div>
+</div> -->

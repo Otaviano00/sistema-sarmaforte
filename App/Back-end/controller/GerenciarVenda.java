@@ -101,15 +101,6 @@ public class GerenciarVenda extends HttpServlet {
                                     i.setStatusVenda(true);
                                     i.setDataHora(LocalDateTime.now());
                                     ItemOrcamentoDAO.alterar(i);
-                                    Produto p = ProdutoDAO.listarPorId(i.getProduto().getCodigo());
-                                    
-                                    if (p.getQuantidade() == 0 || p.getQuantidade() - i.getQuantidade() < 0) {
-                                        p.setQuantidade(0);
-                                    } else {
-                                        p.setQuantidade(p.getQuantidade() - i.getQuantidade());
-                                    }
-                                    
-                                    ProdutoDAO.alterar(p);
                                 }
                             }
                         }
@@ -118,7 +109,7 @@ public class GerenciarVenda extends HttpServlet {
                         o.setStatus("Pendente");
                         
                         int veri = 0;
-                        for (ItemOrcamento i : itensOrcamento) {
+                        for (ItemOrcamento i : OrcamentoDAO.listarItensOrcamento(idOrcamento)) {
                             if (!i.isStatusVenda()) {
                                 veri = 1;
                             }
@@ -162,15 +153,6 @@ public class GerenciarVenda extends HttpServlet {
                                     i.setStatusVenda(true);
                                     i.setDataHora(LocalDateTime.now());
                                     ItemOrcamentoDAO.alterar(i);
-                                    Produto p = ProdutoDAO.listarPorId(i.getProduto().getCodigo());
-                                    
-                                    if (p.getQuantidade() == 0 || p.getQuantidade() - i.getQuantidade() < 0) {
-                                        p.setQuantidade(0);
-                                    } else {
-                                        p.setQuantidade(p.getQuantidade() - i.getQuantidade());
-                                    }
-                                    
-                                    ProdutoDAO.alterar(p);
                                 }
                             }
                         }
