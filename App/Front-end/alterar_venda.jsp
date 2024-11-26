@@ -103,12 +103,17 @@
                                 <input type="text" value="<%= Util.converteData(venda.getData().toLocalDate())%>" disabled readonly>
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Desconto (R$): </label>
+                                <label> Desconto (R$):</label>
                                 <input type="number" step="0.01" name="desconto" id="desconto" value="<%= venda.getDesconto()%>" onchange="atualizarDesconto()">
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
-                                <input type="text" name="forma_pagamento" value="<%= venda.getFormaPagamento()%>" required>
+                                <label for="forma_pagamento"> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
+                                <select name="forma_pagamento" class="seletor" required>
+                                    <option value="Débito" <%= venda.getFormaPagamento().equals("Débito")? "selected" : " " %>>Débito</option>
+                                    <option value="Crédito" <%= venda.getFormaPagamento().equals("Crédito")? "selected" : " " %>>Crédito</option>
+                                    <option value="Dinheiro" <%= venda.getFormaPagamento().equals("Dinheiro")? "selected" : " " %>>Dinheiro</option>
+                                    <option value="Pix" <%= venda.getFormaPagamento().equals("Pix")? "selected" : " " %>>Pix</option>
+                                </select>
                             </div>
                         </div>
                         <div class="campos">

@@ -2,6 +2,7 @@ package controller;
 
 import dao.ItemOrcamentoDAO;
 import dao.OrcamentoDAO;
+import dao.ProdutoDAO;
 import dao.UsuarioDAO;
 import dao.VendaDAO;
 import jakarta.servlet.ServletException;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import model.ItemOrcamento;
 import model.Orcamento;
+import model.Produto;
 import model.Venda;
 
 public class GerenciarVenda extends HttpServlet {
@@ -99,6 +101,15 @@ public class GerenciarVenda extends HttpServlet {
                                     i.setStatusVenda(true);
                                     i.setDataHora(LocalDateTime.now());
                                     ItemOrcamentoDAO.alterar(i);
+                                    Produto p = ProdutoDAO.listarPorId(i.getProduto().getCodigo());
+                                    
+                                    if (p.getQuantidade() == 0 || p.getQuantidade() - i.getQuantidade() < 0) {
+                                        p.setQuantidade(0);
+                                    } else {
+                                        p.setQuantidade(p.getQuantidade() - i.getQuantidade());
+                                    }
+                                    
+                                    ProdutoDAO.alterar(p);
                                 }
                             }
                         }
@@ -151,6 +162,15 @@ public class GerenciarVenda extends HttpServlet {
                                     i.setStatusVenda(true);
                                     i.setDataHora(LocalDateTime.now());
                                     ItemOrcamentoDAO.alterar(i);
+                                    Produto p = ProdutoDAO.listarPorId(i.getProduto().getCodigo());
+                                    
+                                    if (p.getQuantidade() == 0 || p.getQuantidade() - i.getQuantidade() < 0) {
+                                        p.setQuantidade(0);
+                                    } else {
+                                        p.setQuantidade(p.getQuantidade() - i.getQuantidade());
+                                    }
+                                    
+                                    ProdutoDAO.alterar(p);
                                 }
                             }
                         }
@@ -191,7 +211,6 @@ public class GerenciarVenda extends HttpServlet {
 
                     venda = VendaDAO.listarPorId(id);
       
-                    // Excluir a venda no banco
                     if (VendaDAO.excluir(id)) {
                         OrcamentoDAO.excluir(venda.getOrcamento().getId());
                         exibirMensagem(out, "Venda excluída com sucesso!", "vendas.jsp");

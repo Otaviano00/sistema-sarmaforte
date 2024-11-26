@@ -103,11 +103,11 @@
                                 <input type="text" value="<%= Util.converteData(venda.getData().toLocalDate())%>" disabled readonly>
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Desconto (R$): </label>
+                                <label> Desconto (R$):</label>
                                 <input type="number" step="0.01" name="desconto" id="desconto" value="<%= venda.getDesconto()%>" disabled readonly>
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
+                                <label for="forma_pagamento"> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
                                 <input type="text" name="forma_pagamento" value="<%= venda.getFormaPagamento()%>" required disabled readonly>
                             </div>
                         </div>

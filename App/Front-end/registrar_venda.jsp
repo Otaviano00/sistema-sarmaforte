@@ -112,12 +112,17 @@
                                 <input type="text" value="<%= Util.converteData(LocalDate.now())%>" disabled readonly>
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Desconto (R$): </label>
+                                <label> Desconto (R$):</label>
                                 <input type="number" step="0.01" name="desconto" id="desconto" value="0" onchange="atualizarDesconto()">
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
-                                <input type="text" name="forma_pagamento" value="Débito" required>
+                                <label for="forma_pagamento"> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
+                                <select name="forma_pagamento" class="seletor" required>
+                                    <option value="Débito" selected>Débito</option>
+                                    <option value="Crédito">Crédito</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                    <option value="Pix">Pix</option>
+                                </select>
                             </div>
                         </div>
                         <div class="campos">

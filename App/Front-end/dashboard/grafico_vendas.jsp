@@ -60,10 +60,18 @@
         nomes.add(item.nome);
     }
     
+    int size = 0;
+    
+    if (ids.size() > 5) {
+        size = 5;
+    } else {
+        size = ids.size();
+    }
+    
     String labels = "[";
     
-    for (int i = 0; i < ids.size(); i++) {
-        if (i != ids.size() - 1) {
+    for (int i = 0; i < size; i++) {
+        if (i != size - 1) {
             labels = labels + "'" + ids.get(i) + " - " + nomes.get(i).split(" ")[0] +"', ";
         } else {
             labels = labels + "'" + ids.get(i) + " - " + nomes.get(i).split(" ")[0] +"']";
@@ -73,8 +81,8 @@
     
     String data = "[";
 
-    for (int i = 0; i < ids.size(); i++) {    
-        if (i != ids.size() - 1) {
+    for (int i = 0; i < size; i++) {    
+        if (i != size - 1) {
             data = data + quantidades.get(i) + ", ";
         } else {
             data = data + quantidades.get(i) + "]";

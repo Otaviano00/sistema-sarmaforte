@@ -32,10 +32,11 @@ function atualizarTotal() {
 
 function atualizarDesconto() {
     desconto = parseFloat(document.getElementById("desconto").value) || 0;
-    console.log(desconto);
     atualizarTotal();
 }
 
 $(document).ready(function() {
     atualizarTotal();
 });
+
+$('.seletor').select2();
