@@ -1,10 +1,8 @@
 $(document).ready(function() {
     $('.table').DataTable({
         dom: 't',
-        scrollX: true,
-        "loadingRecords": true,
         responsive: true, 
-        autoWidth: false
+        autoWidth: true
      });
  });
 

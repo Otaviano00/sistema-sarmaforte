@@ -9,6 +9,45 @@ body {
     font-family: "Karla";
 }
 
+@media print {
+    #dados_orcamento {
+        font-size: 10px;
+    }
+
+    tbody {
+        font-size: 0.8em;
+    }
+
+    nav {
+        display:  none;
+    }
+    nav * {
+        display: none;
+    }
+
+    header {
+        display: none;
+    }
+
+    header * {
+        display: none;
+    }
+
+    #finalizar {
+        display: none;
+
+    }
+
+    #finalizar * {
+        display: none;
+    }
+
+    #logo {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
 /*Cabeça da página*/
 
 header {

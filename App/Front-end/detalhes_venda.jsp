@@ -202,9 +202,9 @@
                             Voltar
                         </button>
                     </div>
-                    <button type="button" class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
+                    <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
                         Imprimir Orçamento
-                    </button>
+                    </button>  
                 </section>
             </form>
         </div>

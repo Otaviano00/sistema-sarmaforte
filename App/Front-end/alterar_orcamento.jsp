@@ -264,9 +264,9 @@
                         Excluir
                     </button>
                 </div>
-                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
+                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
                     Imprimir Orçamento
-                </button>
+                </button>  
                 <% if (!orcamento.getStatus().equals("Concluído")) {%>
                     <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
                         Realizar Venda

@@ -88,9 +88,8 @@
                 </form>
             </section>
             <br>
-            <section id="listar_itens" class="bloco">
-                <h2>Itens do Orçamento</h2>
-                <div class="tabela" style="width: 98.5%; justify-content: center;">
+                <div class="tabela bloco" style="width: 95%; justify-content: center;">
+                    <h2 style="margin-bottom: -40px;">Itens do Orçamento</h2>
                     <table class="table table-striped" style="background-color: white;">
                         <thead>
                             <p></p>
@@ -150,18 +149,16 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="5" >
+                                <td colspan="6" >
                                     TOTAL
                                 </td>
-                                <td colspan="3">
+                                <td colspan="2">
                                     <%= String.format("R$ %,.2f", total)%>
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-                
-            </section>
 
             <section id="finalizar" class="bloco" >
                 <div style="position: absolute; left: 0;">
@@ -169,7 +166,7 @@
                         Voltar
                     </button>
                 </div>
-                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
+                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
                     Imprimir Orçamento
                 </button>  
                 <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">

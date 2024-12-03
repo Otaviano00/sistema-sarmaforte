@@ -111,16 +111,19 @@
                                 
                                 <td>
                                     <% if (!(orcamentos.get(i).getStatus().equals("Concluído") && hierarquia != 0)) {%>
-                                        <button onclick="location.href = 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=2'" class="botao_acao" title="Alterar do orçamento <%= i+1%>">
+                                        <button onclick="location.href = 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=2'" class="botao_acao" title="Alterar do orçamento <%= orcamentos.size()-i%>">
                                             <img src="images/icone_alterar.svg" alt="Alterar">
                                         </button>
                                     <%}%>
-                                    <button onclick="location.href = 'detalhes_orcamento.jsp?id=<%= orcamentos.get(i).getId()%>'" class="botao_acao" title="Detalhes do orçamento <%= i+1%>">
+                                    <button onclick="location.href = 'detalhes_orcamento.jsp?id=<%= orcamentos.get(i).getId()%>'" class="botao_acao" title="Detalhes do orçamento <%= orcamentos.size()-i%>">
                                         <img src="images/icone_detalhes.svg" alt="Detalhes">
                                     </button>
-                                    <button onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=3')" class="botao_acao" title="Excluir o orçamento <%= i+1%>">
+                                    <button onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=<%= orcamentos.get(i).getId()%>&acao=3')" class="botao_acao" title="Excluir o orçamento <%= orcamentos.size()-i%>">
                                         <img src="images/icone_excluir.svg" alt="Excluir">
                                     </button>
+                                    <button class="botao_acao" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= orcamentos.get(i).getId()%>'" title="Imprimir o orçamento <%= orcamentos.size()-i%>">
+                                        <img src="images/icone_imprimir.svg" alt="">
+                                    </button>  
                                 </td>
                             </tr>
                         <%

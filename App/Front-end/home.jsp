@@ -133,7 +133,7 @@
                         <span style="color: #12a123;"><%= OrcamentoDAO.listarPorStatus("Concluído").size()  + " "%></span>CONCLUÍDOS
                     </div>
                 </div>
-                <div class="tabela">
+                <div class="tabela" style="min-height: fit-content;">
                     <div class="campo">
                         <label class="titulo_campo">ÚLTIMOS ORÇAMENTOS</label>
                     </div>
@@ -167,7 +167,7 @@
                             <%
                                 List<Orcamento> orcamentos = OrcamentoDAO.listar();
         
-                                for (int i = orcamentos.size()-1; i >= 0; i--) {
+                                for (int i = orcamentos.size()-1; i >= orcamentos.size() - 5; i--) {
                             %>
                                 <tr>
                                     <td>

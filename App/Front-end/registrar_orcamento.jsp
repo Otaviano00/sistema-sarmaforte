@@ -254,9 +254,9 @@
                 <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=<%= id%>&acao=3')" style="position: absolute; left: 0;" >
                     Cancelar
                 </button>
-                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'orcamentos.jsp'">
+                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
                     Imprimir Orçamento
-                </button>
+                </button> 
                 <button class="botao_confirma" onclick="location.href = 'orcamentos.jsp'">
                     Guardar Orçamento
                 </button>
