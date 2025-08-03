@@ -1,0 +1,234 @@
+* {
+    overflow: visible;
+}
+
+
+body {
+    height: 100%;
+    font-family: "Karla";
+}
+
+.bloco{
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: #f0eeee;
+        height: 100%;
+        min-height: 100%;
+        width: 97.5%;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: center;
+    margin: 0;
+    height: fit-content;
+}
+
+dialog::backdrop {
+    background-color: rgb(0 0 0 /.5);
+}
+
+dialog {
+    margin: auto;
+    min-width: fit-content;
+    width: 30%;
+    min-height: 50%;
+    height: fit-content;
+    border-radius: 10px;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    padding-top: 7%;    
+    margin: auto;
+}
+
+#fechar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #a20404;
+    border: 1px black solid;
+    font-weight: bolder;
+    font-size: 1.5em;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 0;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    text-align: center; 
+}
+
+#fechar:hover {
+    background-color: #cd0101 ;
+}
+
+.seletor {
+    width: 100%;
+    border-radius: 10px;
+    overflow: visible;
+}
+
+section#dados_orcamento {
+    flex: 0 0 20%; 
+    box-sizing: border-box; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9; 
+}
+
+section#listar_itens {
+    flex: 0 0 80%; 
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+tfoot td {
+    text-align: center;
+}
+
+#buscar_item {
+    display: flex;
+    justify-content: right;
+    align-items: end;
+    font-size: 1.4em;
+}
+
+option {
+    font-size: 2em;
+}
+
+#buscar_item button {
+    width: 10%;
+    height: 30px;
+    margin-left: 5px;
+    border-radius: 10px;
+    background-color: #142E50;
+    color: #FFB729;
+    font-weight: bold;
+}
+
+#buscar_item button:hover {
+    background-color: #366cb4;
+    cursor: pointer;
+}
+
+#finalizar {
+    position: relative;
+    bottom: 0;
+}
+
+.tabela {
+    width: 100% ;
+}
+
+.conjunto {
+    display: flex;
+    flex-direction: row; 
+    justify-content: left; 
+    align-items: flex-start; 
+    width: calc(97% - 20px); 
+    margin: 10px; 
+    margin-left: -40px; 
+    box-sizing: border-box;
+}
+
+#informacao {
+    width: 100%;
+    max-width: 100%; 
+    min-width: 100%; 
+    height: 150px; 
+    max-height: 150px; 
+    min-height: 150px;
+}
+
+.dados_cliente {
+    display: flex;
+    justify-content: left;
+    align-items: start;
+}
+
+.campos {
+    width: 100%;
+    margin: 3px;
+}
+
+.campos textarea {
+    border: 1px #142E50 solid;
+    border-bottom: 3px solid #142E50;
+}
+
+form button {
+    height: 30px;
+    margin-left: 5px;
+    padding: 0 10px 3px 10px;
+    border-radius: 10px;
+    background-color: #142E50;
+    color: #FFB729;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2em;
+    min-height: fit-content;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #366cb4;
+    cursor: pointer;
+}
+
+#finalizar {
+    display: flex;
+    justify-content: right;
+    align-items: end;
+}
+
+#finalizar button {
+    margin: 0 10px;
+}
+
+#botao_imprime {
+    background-color: #868686;
+}
+
+#botao_venda {
+    background-color: #008610;
+}
+
+#botao_imprime:hover {
+    background-color: #b8b7b7;
+    color: #ffffff;
+}
+
+#botao_venda:hover {
+    background-color: #01aa15;
+}
+
+.bloco h2 {
+    position: relative; /* Posiciona o texto fora do fluxo normal */
+    top: -20px; /* Ajusta a posição vertical */
+    left: 80px; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Centraliza exatamente no meio */
+    background: #0149a6; /* Fundo branco para cobrir a borda */
+    padding: 0 10px; /* Espaçamento interno ao redor do texto */
+    font-size: 16px;
+    color: #ffe9bd; /* Cor do texto */
+    max-width: fit-content;
+    font-weight: bolder;
+    border-radius: 10px;
+    padding: 5px;
+
+}
