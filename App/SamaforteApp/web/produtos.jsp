@@ -56,7 +56,9 @@
                 Novo Produto
             </div>
         </button>
-        <%}%>
+        <%
+            } 
+        %>
         
         <div class="filtro"> 
             <div class="item-filtro">
@@ -113,7 +115,8 @@
                 <tbody>
                     <%
                         List<Produto> produtos = ProdutoDAO.listar();
-                        for (int i = 0; i < produtos.size(); i++) {%>
+                        for (int i = 0; i < produtos.size(); i++) {
+                    %>
                         <tr>
                             <td><%= i+1%></td>
                             <td><%= produtos.get(i).getCodigo()%></td>
@@ -150,7 +153,9 @@
                                     <button onclick="location.href = 'alterar_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Alterar dados do produto <%= produtos.get(i).getNome()%>">
                                         <img src="images/icone_alterar.svg" alt="Alterar">
                                     </button>
-                                <%}%>
+                                <%
+                                    }
+                                %>
 
                                 <button onclick="location.href = 'detalhes_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
                                     <img src="images/icone_detalhes.svg" alt="Detalhes">
@@ -166,7 +171,9 @@
                                 
                             </td>
                         </tr>
-                    <% }%>
+                    <% 
+                        }
+                    %>
                 </tbody>
             </table>
         </div>

@@ -23,7 +23,7 @@ $(document).ready(function() {
     
     const input_filter = document.getElementById("input-filter");
     const input_type = document.getElementById("input-type");
-    const search = document.getElementById("dt-search-0")
+    let search = document.getElementById("dt-search-0");
 
     const dados = table.rows().data();
 
@@ -75,8 +75,35 @@ $(document).ready(function() {
         table.column(coluna).search(regex, true, false).draw();
     });
 
+    search = document.getElementById("dt-search-0");
+    search.addEventListener('change', function(event) {
+        const searchValue = search.value.trim();
 
+        let buttons = document.getElementsByClassName('botao_acao');
 
+        Array.from(buttons).forEach(button => {
+            let currentOnclick = button.getAttribute('onclick');
+
+            if (currentOnclick && searchValue) {
+                let modifiedOnclick;
+
+                if (currentOnclick.includes('&buscar=')) {
+                    // Se já tem o &buscar= no onclick, substitui o valor dele
+                    modifiedOnclick = currentOnclick.replace(/(&buscar=)[^&']*/, `$1${searchValue}`);
+                } else {
+                    // Se não tem &buscar=, adiciona no final da URL
+                    modifiedOnclick = currentOnclick.replace(/('.*?)(')/g, `$1&buscar=${searchValue}$2`);
+                }
+
+                button.setAttribute('onclick', modifiedOnclick);
+            } else if (currentOnclick && !searchValue) {
+                // Se não há valor de busca, remove o parâmetro &buscar= se existir
+                const modifiedOnclick = currentOnclick.replace(/(&buscar=)[^&']*&?/, '');
+                button.setAttribute('onclick', modifiedOnclick);
+            }
+        });
+
+    });
 
 });
 
