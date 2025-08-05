@@ -12,6 +12,8 @@ import java.io.UnsupportedEncodingException;
 import model.Produto;
 
 public class GerenciarProduto extends HttpServlet {
+    
+    private static String buscar;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,7 +30,7 @@ public class GerenciarProduto extends HttpServlet {
     private static void exibirMensagem(PrintWriter out, String mensagem, String url) throws IOException {
         out.print("<script>");
         out.print("alert('" + mensagem + "');");
-        out.print("location.href = '" + url + "';");
+        out.print("location.href = '" + url + buscar + "';");
         out.print("</script>");
         out.close();
     }
@@ -42,6 +44,8 @@ public class GerenciarProduto extends HttpServlet {
         Integer hierarquia = (Integer) sessao.getAttribute("hierarquia");
         Produto produto = new Produto();
 
+        buscar = "?buscar=" + (String) request.getParameter("buscar");
+        
         // Verificar se a sessão expirou
         if (hierarquia == null) {
             exibirMensagem(out, "Sessão expirada! Faça login novamente.", "login.jsp");

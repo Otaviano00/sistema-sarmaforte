@@ -97,7 +97,7 @@
             </div>
 
             <div style="display: flex; gap: 10px; margin: 20px;">
-                <button type="button" class="botao_cancela" onclick="location.href = 'produtos.jsp'"> Cancelar</button>
+                <button type="button" class="botao_cancela" onclick="location.href = 'produtos.jsp?buscar=<%= (String) request.getParameter("buscar")%>'"> Cancelar</button>
                 <input type="submit" value="Alterar Produto" class="botao_confirma">
             </div>
         </form>
