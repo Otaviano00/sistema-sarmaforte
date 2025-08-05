@@ -23,9 +23,11 @@ $(document).ready(function() {
         order: [[0, 'asc']],
         orderFixed: [[0, 'asc']],
         initComplete: function(settings, json) {
-            const { filtroAtual } = getFiltrosSalvos();
-            let search = document.getElementById("dt-search-0");
-            search.value = filtroAtual.buscar;
+            if (paginaPermiteFiltros()) {
+                const { filtrosGerais, tipoFiltro } = getFiltrosSalvos();
+                let search = document.getElementById('dt-search-0');
+                search.value = filtrosGerais[tipoFiltro].buscar;
+            } 
         }
     });
 
@@ -37,11 +39,25 @@ $(document).ready(function() {
         } else if (url.includes('produto')) {
             return 'produtos';
         }
-        return 'produtos'; // default
+        return null; // Retorna null para outras páginas
+    }
+
+    // Verificar se a página atual deve ter filtros
+    function paginaPermiteFiltros() {
+        const tipoFiltro = getTipoFiltro();
+        return tipoFiltro === 'clientes' || tipoFiltro === 'produtos';
     }
 
     // Função para obter filtros salvos
     function getFiltrosSalvos() {
+        if (!paginaPermiteFiltros()) {
+            return {
+                filtrosGerais: {},
+                tipoFiltro: null,
+                filtroAtual: { buscar: '', coluna: 2, tipo: 0, pagina: 0 }
+            };
+        }
+
         const filtrosGerais = JSON.parse(sessionStorage.getItem('filtros') || '{}');
         const tipoFiltro = getTipoFiltro();
         
@@ -59,6 +75,10 @@ $(document).ready(function() {
 
     // Função para salvar filtros
     function salvarFiltros(buscar, coluna, tipo, pagina) {
+        if (!paginaPermiteFiltros()) {
+            return; // Não salva filtros para outras páginas
+        }
+
         const { filtrosGerais, tipoFiltro } = getFiltrosSalvos();
         
         filtrosGerais[tipoFiltro] = {
@@ -71,13 +91,15 @@ $(document).ready(function() {
         sessionStorage.setItem('filtros', JSON.stringify(filtrosGerais));
     }
 
-    // Event listener para mudança de página
-    table.on('page.dt', function () {
-        const info = table.page.info();
-        const { filtroAtual } = getFiltrosSalvos();
-        
-        salvarFiltros(filtroAtual.buscar, filtroAtual.coluna, filtroAtual.tipo, info.page);
-    });
+    // Event listener para mudança de página (só para páginas permitidas)
+    if (paginaPermiteFiltros()) {
+        table.on('page.dt', function () {
+            const info = table.page.info();
+            const { filtroAtual } = getFiltrosSalvos();
+            
+            salvarFiltros(filtroAtual.buscar, filtroAtual.coluna, filtroAtual.tipo, info.page);
+        });
+    }
 
     const input_filter = document.getElementById("input-filter");
     const input_type = document.getElementById("input-type");
@@ -86,71 +108,98 @@ $(document).ready(function() {
     let tipo = 0;
     let coluna = 2;
 
-    // Aguardar um momento para garantir que a tabela foi inicializada
-    setTimeout(() => {
-        // Aplicar filtros salvos DEPOIS da tabela estar completamente pronta
-        const { filtroAtual } = getFiltrosSalvos();
-        if (filtroAtual.buscar || filtroAtual.coluna !== 2 || filtroAtual.tipo !== 0) {
-            search.value = filtroAtual.buscar;
-            coluna = filtroAtual.coluna;
-            tipo = filtroAtual.tipo;
-            
-            // Atualizar os selects com os valores salvos
-            if (input_filter) input_filter.value = coluna;
-            if (input_type) input_type.value = tipo;
-            
-            searchTable(filtroAtual.buscar, coluna, tipo, filtroAtual.pagina);
-            console.log("Chegou aqui né");
-        }
-    }, 5000); // Pequeno delay para garantir inicialização
+    // Aplicar filtros salvos apenas se for página permitida
+    if (paginaPermiteFiltros()) {
+        setTimeout(() => {
+            const { filtroAtual } = getFiltrosSalvos();
+            if (filtroAtual.buscar || filtroAtual.coluna !== 2 || filtroAtual.tipo !== 0) {
+                coluna = filtroAtual.coluna;
+                tipo = filtroAtual.tipo;
+                
+                // Atualizar os selects com os valores salvos
+                if (input_filter) input_filter.value = coluna;
+                if (input_type) input_type.value = tipo;
+                
+                // Aplicar filtros SEM chamar searchTable para evitar interferência
+                let raw = filtroAtual.buscar.trim();
+                let escaped = raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                let regex = '^' + escaped; 
+                
+                if (coluna == 5 || tipo == 1) {
+                    regex = escaped;
+                }
+
+                // Aplicar filtro e página
+                table.column(coluna).search(regex, true, false);
+                if (filtroAtual.pagina != null && filtroAtual.pagina >= 0) {
+                    table.page(parseInt(filtroAtual.pagina));
+                }
+                table.draw();
+                
+                // Definir valor do campo DEPOIS de aplicar filtros
+                search.value = filtroAtual.buscar;
+                
+                console.log("Filtros aplicados para:", getTipoFiltro());
+            }
+        }, 150);
+    }
   
-    input_filter.addEventListener('change', e => {
-        coluna = parseInt(e.target.value);
-        let temp = search.value;
+    // Event listeners apenas para páginas permitidas
+    if (paginaPermiteFiltros() && input_filter) {
+        input_filter.addEventListener('change', e => {
+            coluna = parseInt(e.target.value);
+            let temp = search.value;
 
-        table
-            .search('')
-            .columns().search('')
-            .order([])
-            .page('first')
-            .draw();
+            table
+                .search('')
+                .columns().search('')
+                .order([])
+                .page('first')
+                .draw();
 
-        searchTable(temp, coluna, tipo, -1);
-        
-        // Salvar nova coluna
-        salvarFiltros(temp, coluna, tipo, 0);
-        search.value = temp;
-    });
-    
-    input_type.addEventListener('change', e => {
-        tipo = parseInt(e.target.value);
-        let temp = search.value;
-        searchTable(temp, coluna, tipo, -1);
-        
-        // Salvar novo tipo
-        salvarFiltros(temp, coluna, tipo, 0);
-        search.value = temp;
-    });
-    
-    $('#dt-search-0').on('keyup', function () {
-        const { filtroAtual } = getFiltrosSalvos();
-        
-        table
-            .search('')
-            .columns().search('');
+            searchTable(temp, coluna, tipo, -1);
             
-        // Só vai para primeira página se não há página salva ou é busca diferente
-        if (!filtroAtual.pagina || filtroAtual.buscar !== this.value) {
-            table.page('first');
-        }
-        
-        table.draw();
-        
-        searchTable(this.value, coluna, tipo, -1);
+            // Salvar nova coluna
+            salvarFiltros(temp, coluna, tipo, 0);
+            search.value = temp;
+        });
+    }
+    
+    if (paginaPermiteFiltros() && input_type) {
+        input_type.addEventListener('change', e => {
+            tipo = parseInt(e.target.value);
+            let temp = search.value;
+            searchTable(temp, coluna, tipo, -1);
+            
+            // Salvar novo tipo
+            salvarFiltros(temp, coluna, tipo, 0);
+            search.value = temp;
+        });
+    }
+    
+    if (paginaPermiteFiltros()) {
+        $('#dt-search-0').on('keyup', function () {
+            const { filtroAtual } = getFiltrosSalvos();
+            let temp = search.value;
 
-        // Salvar nova busca
-        salvarFiltros(this.value, coluna, tipo, table.page());
-    });
+            table
+                .search('')
+                .columns().search('');
+                
+            // Só vai para primeira página se não há página salva ou é busca diferente
+            if (!filtroAtual.pagina || filtroAtual.buscar !== this.value) {
+                table.page('first');
+            }
+            
+            table.draw();
+            
+            searchTable(temp, coluna, tipo, -1);
+
+            // Salvar nova busca
+            salvarFiltros(temp, coluna, tipo, table.page());
+            search.value = temp;
+        });
+    }
 
 });
 
