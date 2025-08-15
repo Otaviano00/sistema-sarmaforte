@@ -146,10 +146,10 @@
                                     <%= itens.get(i).getQuantidade()%>
                                 </td>
                                 <td>
-                                    <%= String.format("%,.2f", itens.get(i).getPreco())%>
+                                    <%= String.format("%,.3f", itens.get(i).getPreco())%>
                                 </td>
                                 <td>
-                                    <%= String.format("%,.2f", precoTotal)%>
+                                    <%= String.format("%,.3f", precoTotal)%>
                                 </td>
                             </tr>
                         <%
@@ -162,7 +162,7 @@
                                 TOTAL
                             </td>
                             <td colspan="2" style="text-align: end;">
-                                <%= String.format("R$ %,.2f", total)%>
+                                <%= String.format("R$ %,.3f", total)%>
                             </td>
                         </tr>
                     </tfoot>

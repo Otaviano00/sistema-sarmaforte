@@ -104,7 +104,7 @@
                             </div>
                             <div class="campo_cliente campos">
                                 <label> Desconto (R$):</label>
-                                <input type="number" step="0.01" name="desconto" id="desconto" value="<%= venda.getDesconto()%>" onchange="atualizarDesconto()">
+                                <input type="number" step="0.001" name="desconto" id="desconto" value="<%= venda.getDesconto()%>" onchange="atualizarDesconto()">
                             </div>
                             <div class="campo_cliente campos">
                                 <label for="forma_pagamento"> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
@@ -170,10 +170,10 @@
                                             <%= itens.get(i).getQuantidade()%>
                                         </td>
                                         <td>
-                                            <%= String.format("%,.2f", itens.get(i).getPreco())%>
+                                            <%= String.format("%,.3f", itens.get(i).getPreco())%>
                                         </td>
                                         <td>
-                                            <%= String.format("%,.2f", precoTotal)%>
+                                            <%= String.format("%,.3f", precoTotal)%>
                                         </td>
                                         <td>
                                             <label for="produto-checkbox<%= itens.get(i).getId()%>" class="botao_radio" style="max-width: fit-content; cursor: pointer;">
@@ -192,7 +192,7 @@
                                         TOTAL
                                     </td>
                                     <td colspan="2" id="valorTotal">
-                                        <%= String.format("R$ %,.2f", 0f) %>
+                                        <%= String.format("R$ %,.3f", 0f) %>
                                     </td>
                                 </tr>
                             </tfoot>

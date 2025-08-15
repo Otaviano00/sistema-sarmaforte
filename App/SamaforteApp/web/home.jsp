@@ -96,7 +96,7 @@
                                         <td><%= vendas.get(i).getOrcamento().getCliente().getNome()%></td>
                                         <td><%= vendas.get(i).getUsuario() == null? "EXCLUÍDO" : vendas.get(i).getUsuario().getNome()%></td> 
                                         <td><%= Util.converteData(vendas.get(i).getData().toLocalDate())%></td>       
-                                        <td><%= String.format("R$ %,.2f", vendas.get(i).getValor())%></td> 
+                                        <td><%= String.format("R$ %,.3f", vendas.get(i).getValor())%></td> 
                                         <td><%= vendas.get(i).getFormaPagamento()%></td>  
                                         <td>
                                             <% if (hierarquia < 2 && !vendas.get(i).getOrcamento().getStatus().equals("Concluído")) {%>

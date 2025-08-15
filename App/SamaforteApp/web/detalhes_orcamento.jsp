@@ -134,10 +134,10 @@
                                         <%= itens.get(i).getQuantidade()%>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.2f", itens.get(i).getPreco())%>
+                                        <%= String.format("%,.3f", itens.get(i).getPreco())%>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.2f", precoTotal)%>
+                                        <%= String.format("%,.3f", precoTotal)%>
                                     </td>
                                     <td>
                                         <%= itens.get(i).isStatusVenda()? "Vendido" : "Não Vendido"%>
@@ -153,7 +153,7 @@
                                     TOTAL
                                 </td>
                                 <td colspan="2">
-                                    <%= String.format("R$ %,.2f", total)%>
+                                    <%= String.format("R$ %,.3f", total)%>
                                 </td>
                             </tr>
                         </tfoot>

@@ -71,12 +71,12 @@
 
             <div class="campos">
                 <label for="preco" class="titulo_campo">Preço (R$): <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="number" name="preco" step="0.01" min="0" value="<%= produto.getPreco() %>" required>
+                <input type="number" name="preco" step="0.001" min="0" value="<%= produto.getPreco() %>" required>
             </div>
 
             <div class="campos">
                 <label for="custo" class="titulo_campo">Custo (R$): <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="number" name="custo" step="0.01" min="0" value="<%= produto.getCusto() %>" required>
+                <input type="number" name="custo" step="0.001" min="0" value="<%= produto.getCusto() %>" required>
             </div>
 
             <div class="campos">

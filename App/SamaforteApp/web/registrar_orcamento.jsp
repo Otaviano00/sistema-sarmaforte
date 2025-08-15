@@ -67,7 +67,7 @@
                     %>
                     <option value="<%= produto.getCodigo()%>" data-preco="<%= produto.getPreco()%>">
                         <%
-                            String str = produto.getNome() + "     ----     R$ " + String.format("%,.2f", produto.getPreco());
+                            String str = produto.getNome() + "     ----     R$ " + String.format("%,.3f", produto.getPreco());
                         %>
                         <%= str %>
                     </option>
@@ -161,11 +161,11 @@
                                 </div>
                                 <div class="campos">
                                     <label for="preco_produto" class="titulo_campo">Preço (R$): </label>      
-                                    <input type="number" name="preco_produto" step="0.01" id="preco_produto" required>       
+                                    <input type="number" name="preco_produto" step="0.001" id="preco_produto" required>       
                                 </div>
                                 <div class="campos">
                                     <label for="quantidade_produto" class="titulo_campo">Quantidade:</label>
-                                    <input type="number" name="quantidade_produto" id="quantidade_produto" step="0.01" required>
+                                    <input type="number" name="quantidade_produto" id="quantidade_produto" step="0.001" required>
                                 </div>
                                 <input type="submit" value="Confirmar" class="botao_confirma">
                             </form>
@@ -216,13 +216,13 @@
                                         <%= itens.get(i).getProduto().getNome()%>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.2f", itens.get(i).getQuantidade())%>
+                                        <%= String.format("%,.3f", itens.get(i).getQuantidade())%>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.2f", itens.get(i).getPreco())%>
+                                        <%= String.format("%,.3f", itens.get(i).getPreco())%>
                                     </td>
                                     <td>
-                                        <%= String.format("%,.2f", precoTotal)%>
+                                        <%= String.format("%,.3f", precoTotal)%>
                                     </td>
                                     <td>
                                         <%= itens.get(i).isStatusVenda()? "VEndido" : "Não Vendido"%>
@@ -248,7 +248,7 @@
                                     TOTAL
                                 </td>
                                 <td colspan="3">
-                                    <%= String.format("R$ %,.2f", total)%>
+                                    <%= String.format("R$ %,.3f", total)%>
                                 </td>
                             </tr>
                         </tfoot>
