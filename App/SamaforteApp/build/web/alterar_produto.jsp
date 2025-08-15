@@ -71,12 +71,12 @@
 
             <div class="campos">
                 <label for="preco" class="titulo_campo">Preço (R$): <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="number" name="preco" step="0.01" min="0" value="<%= produto.getPreco() %>" required>
+                <input type="number" name="preco" step="0.001" min="0" value="<%= produto.getPreco() %>" required>
             </div>
 
             <div class="campos">
                 <label for="custo" class="titulo_campo">Custo (R$): <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
-                <input type="number" name="custo" step="0.01" min="0" value="<%= produto.getCusto() %>" required>
+                <input type="number" name="custo" step="0.001" min="0" value="<%= produto.getCusto() %>" required>
             </div>
 
             <div class="campos">
@@ -97,7 +97,7 @@
             </div>
 
             <div style="display: flex; gap: 10px; margin: 20px;">
-                <button type="button" class="botao_cancela" onclick="location.href = 'produtos.jsp'"> Cancelar</button>
+                <button type="button" class="botao_cancela" onclick="location.href = 'produtos.jsp?buscar=<%= (String) request.getParameter("buscar")%>'"> Cancelar</button>
                 <input type="submit" value="Alterar Produto" class="botao_confirma">
             </div>
         </form>

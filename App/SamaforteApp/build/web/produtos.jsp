@@ -123,7 +123,7 @@
                             <td><%= produtos.get(i).getNome()%></td> 
                             <td><%= produtos.get(i).getFornecedor()%></td>   
                             <td><%= produtos.get(i).getQuantidade()%></td>    
-                            <td><%= String.format("R$  %,.2f", produtos.get(i).getPreco())%></td>
+                            <td><%= String.format("R$  %,.3f", produtos.get(i).getPreco())%></td>
                             <td>
                                 <% if (hierarquia < 2) {%>
                                     <% if (produtos.get(i).isStatus() == true) {%>

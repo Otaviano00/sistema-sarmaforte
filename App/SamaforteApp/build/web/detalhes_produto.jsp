@@ -67,12 +67,12 @@
 
             <div class="campos">
                 <label for="preco" class="titulo_campo">Preço (R$):</label>
-                <input type="number" name="preco" step="0.01" min="0" value="<%= produto.getPreco() %>" readonly disabled>
+                <input type="number" name="preco" step="0.001" min="0" value="<%= produto.getPreco() %>" readonly disabled>
             </div>
 
             <div class="campos">
                 <label for="custo" class="titulo_campo">Custo (R$):</label>
-                <input type="number" name="custo" step="0.01" min="0" value="<%= produto.getCusto() %>" readonly disabled>
+                <input type="number" name="custo" step="0.001" min="0" value="<%= produto.getCusto() %>" readonly disabled>
             </div>
 
             <div class="campos">
