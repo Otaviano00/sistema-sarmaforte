@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <el-ignored>false</el-ignored>
+            <page-encoding>UTF-8</page-encoding>
+            <scripting-invalid>false</scripting-invalid>
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+        </jsp-property-group>
+    </jsp-config>
+
+    <context-param>
+        <param-name>org.apache.jasper.compiler.TldLocationsCache</param-name>
+        <param-value>WEB-INF</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>compilerSourceVM</param-name>
+        <param-value>1.8</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>compilerTargetVM</param-name>
+        <param-value>1.8</param-value>
+    </context-param>
+    
+    <servlet>
+        <servlet-name>ProcessarLogin</servlet-name>
+        <servlet-class>controller.ProcessarLogin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarOrcamento</servlet-name>
+        <servlet-class>controller.GerenciarOrcamento</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarPerfil</servlet-name>
+        <servlet-class>controller.GerenciarPerfil</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarUsuario</servlet-name>
+        <servlet-class>controller.GerenciarUsuario</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarProduto</servlet-name>
+        <servlet-class>controller.GerenciarProduto</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarMenu</servlet-name>
+        <servlet-class>controller.GerenciarMenu</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarCliente</servlet-name>
+        <servlet-class>controller.GerenciarCliente</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GerenciarVenda</servlet-name>
+        <servlet-class>controller.GerenciarVenda</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProcessarLogin</servlet-name>
+        <url-pattern>/ProcessarLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarOrcamento</servlet-name>
+        <url-pattern>/GerenciarOrcamento</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarPerfil</servlet-name>
+        <url-pattern>/GerenciarPerfil</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarUsuario</servlet-name>
+        <url-pattern>/GerenciarUsuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarProduto</servlet-name>
+        <url-pattern>/GerenciarProduto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarMenu</servlet-name>
+        <url-pattern>/GerenciarMenu</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarCliente</servlet-name>
+        <url-pattern>/GerenciarCliente</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarVenda</servlet-name>
+        <url-pattern>/GerenciarVenda</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+
+</web-app>

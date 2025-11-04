@@ -1,2 +1,7 @@
-*.bak
-/Código/Samaforte/target/
+.idea
+
+app/SamaforteApp/.idea
+app/SamaforteApp/build
+app/SamaforteApp/dist
+
+database/script/backup_samaforte.sql
