@@ -8,223 +8,223 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema db_samaforte
+-- Schema samaforte_db
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema db_samaforte
+-- Schema samaforte_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `db_samaforte` DEFAULT CHARACTER SET utf8 ;
-USE `db_samaforte` ;
+CREATE SCHEMA IF NOT EXISTS `samaforte_db` DEFAULT CHARACTER SET utf8 ;
+USE `samaforte_db` ;
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`perfil`
+-- Table `samaforte_db`.`perfil`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`perfil` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(10) NOT NULL,
-  `descricao` VARCHAR(255) NULL,
-  `hierarquia` TINYINT NOT NULL,
-  `status` TINYINT(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_samaforte`.`menu`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`menu` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(10) NOT NULL,
-  `link` VARCHAR(255) NOT NULL,
-  `imagem` VARCHAR(255) NOT NULL,
-  `status` TINYINT(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `link_UNIQUE` (`link` ASC) ,
-  UNIQUE INDEX `imagem_UNIQUE` (`imagem` ASC) )
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`perfil` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(10) NOT NULL,
+    `descricao` VARCHAR(255) NULL,
+    `hierarquia` TINYINT NOT NULL,
+    `status` TINYINT(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) )
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`perfil_menu`
+-- Table `samaforte_db`.`menu`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`perfil_menu` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `id_perfil` INT NOT NULL,
-  `id_menu` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_perfil_menu_perfil1_idx` (`id_perfil` ASC) ,
-  INDEX `fk_perfil_menu_menu1_idx` (`id_menu` ASC) ,
-  CONSTRAINT `fk_perfil_menu_perfil1`
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`menu` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(10) NOT NULL,
+    `link` VARCHAR(255) NOT NULL,
+    `imagem` VARCHAR(255) NOT NULL,
+    `status` TINYINT(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `link_UNIQUE` (`link` ASC) ,
+    UNIQUE INDEX `imagem_UNIQUE` (`imagem` ASC) )
+    ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `samaforte_db`.`perfil_menu`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`perfil_menu` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `id_perfil` INT NOT NULL,
+    `id_menu` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `fk_perfil_menu_perfil1_idx` (`id_perfil` ASC) ,
+    INDEX `fk_perfil_menu_menu1_idx` (`id_menu` ASC) ,
+    CONSTRAINT `fk_perfil_menu_perfil1`
     FOREIGN KEY (`id_perfil`)
-    REFERENCES `db_samaforte`.`perfil` (`id`)
+    REFERENCES `samaforte_db`.`perfil` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_perfil_menu_menu1`
+    CONSTRAINT `fk_perfil_menu_menu1`
     FOREIGN KEY (`id_menu`)
-    REFERENCES `db_samaforte`.`menu` (`id`)
+    REFERENCES `samaforte_db`.`menu` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`usuario`
+-- Table `samaforte_db`.`usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`usuario` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(50) NOT NULL,
-  `telefone` VARCHAR(12) NOT NULL,
-  `login` VARCHAR(6) NOT NULL,
-  `senha` VARCHAR(255) NOT NULL,
-  `cpf` VARCHAR(11) NOT NULL,
-  `email` VARCHAR(50) NULL,
-  `status` TINYINT(1) NOT NULL DEFAULT 1,
-  `id_perfil` INT NULL DEFAULT 5,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) ,
-  UNIQUE INDEX `login_UNIQUE` (`login` ASC) ,
-  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) ,
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
-  INDEX `fk_usuario_perfil1_idx` (`id_perfil` ASC) ,
-  CONSTRAINT `fk_usuario_perfil1`
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`usuario` (
+     `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(50) NOT NULL,
+    `telefone` VARCHAR(12) NOT NULL,
+    `login` VARCHAR(6) NOT NULL,
+    `senha` VARCHAR(255) NOT NULL,
+    `cpf` VARCHAR(11) NOT NULL,
+    `email` VARCHAR(50) NULL,
+    `status` TINYINT(1) NOT NULL DEFAULT 1,
+    `id_perfil` INT NULL DEFAULT 5,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) ,
+    UNIQUE INDEX `login_UNIQUE` (`login` ASC) ,
+    UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) ,
+    UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+    INDEX `fk_usuario_perfil1_idx` (`id_perfil` ASC) ,
+    CONSTRAINT `fk_usuario_perfil1`
     FOREIGN KEY (`id_perfil`)
-    REFERENCES `db_samaforte`.`perfil` (`id`)
+    REFERENCES `samaforte_db`.`perfil` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`relatorio`
+-- Table `samaforte_db`.`relatorio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`relatorio` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(50) NOT NULL,
-  `descricao` VARCHAR(255) NULL,
-  `dataCriacao` DATETIME NOT NULL,
-  `arquivo` VARCHAR(255) NOT NULL,
-  `id_usuario` INT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `dataCriacao_UNIQUE` (`dataCriacao` ASC) ,
-  UNIQUE INDEX `arquivo_UNIQUE` (`arquivo` ASC) ,
-  INDEX `fk_relatorio_usuario1_idx` (`id_usuario` ASC) ,
-  CONSTRAINT `fk_relatorio_usuario1`
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`relatorio` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(50) NOT NULL,
+    `descricao` VARCHAR(255) NULL,
+    `dataCriacao` DATETIME NOT NULL,
+    `arquivo` VARCHAR(255) NOT NULL,
+    `id_usuario` INT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `dataCriacao_UNIQUE` (`dataCriacao` ASC) ,
+    UNIQUE INDEX `arquivo_UNIQUE` (`arquivo` ASC) ,
+    INDEX `fk_relatorio_usuario1_idx` (`id_usuario` ASC) ,
+    CONSTRAINT `fk_relatorio_usuario1`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `db_samaforte`.`usuario` (`id`)
+    REFERENCES `samaforte_db`.`usuario` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`cliente`
+-- Table `samaforte_db`.`cliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`cliente` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(50) NOT NULL,
-  `telefone` VARCHAR(12) NOT NULL,
-  `cpf` VARCHAR(11) NULL,
-  `endereco` VARCHAR(255) NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) ,
-  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) )
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`cliente` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(50) NOT NULL,
+    `telefone` VARCHAR(12) NOT NULL,
+    `cpf` VARCHAR(11) NULL,
+    `endereco` VARCHAR(255) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) ,
+    UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) )
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`orcamento`
+-- Table `samaforte_db`.`orcamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`orcamento` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `dataCriacao` DATETIME NOT NULL,
-  `dataValidade` DATETIME NOT NULL,
-  `status` VARCHAR(20) NOT NULL DEFAULT 'pendente',
-  `informacoes` TEXT NULL,
-  `id_cliente` INT NULL DEFAULT 5,
-  PRIMARY KEY (`id`),
-  INDEX `fk_orcamento_cliente1_idx` (`id_cliente` ASC) ,
-  CONSTRAINT `fk_orcamento_cliente1`
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`orcamento` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `dataCriacao` DATETIME NOT NULL,
+    `dataValidade` DATETIME NOT NULL,
+    `status` VARCHAR(20) NOT NULL DEFAULT 'pendente',
+    `informacoes` TEXT NULL,
+    `id_cliente` INT NULL DEFAULT 5,
+    PRIMARY KEY (`id`),
+    INDEX `fk_orcamento_cliente1_idx` (`id_cliente` ASC) ,
+    CONSTRAINT `fk_orcamento_cliente1`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `db_samaforte`.`cliente` (`id`)
+    REFERENCES `samaforte_db`.`cliente` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`venda`
+-- Table `samaforte_db`.`venda`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`venda` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `data` DATETIME NOT NULL,
-  `desconto` DECIMAL(10,3) NULL DEFAULT 0,
-  `forma_pagamento` VARCHAR(45) NOT NULL,
-  `valor` DECIMAL(10,3) UNSIGNED NOT NULL,
-  `id_usuario` INT NULL,
-  `id_orcamento` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `data_UNIQUE` (`data` ASC) ,
-  INDEX `fk_venda_usuario_idx` (`id_usuario` ASC) ,
-  INDEX `fk_venda_orcamento1_idx` (`id_orcamento` ASC) ,
-  CONSTRAINT `fk_venda_usuario`
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`venda` (
+   `id` INT NOT NULL AUTO_INCREMENT,
+    `data` DATETIME NOT NULL,
+    `desconto` DECIMAL(10,3) NULL DEFAULT 0,
+    `forma_pagamento` VARCHAR(45) NOT NULL,
+    `valor` DECIMAL(10,3) UNSIGNED NOT NULL,
+    `id_usuario` INT NULL,
+    `id_orcamento` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `data_UNIQUE` (`data` ASC) ,
+    INDEX `fk_venda_usuario_idx` (`id_usuario` ASC) ,
+    INDEX `fk_venda_orcamento1_idx` (`id_orcamento` ASC) ,
+    CONSTRAINT `fk_venda_usuario`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `db_samaforte`.`usuario` (`id`)
+    REFERENCES `samaforte_db`.`usuario` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_venda_orcamento1`
+    CONSTRAINT `fk_venda_orcamento1`
     FOREIGN KEY (`id_orcamento`)
-    REFERENCES `db_samaforte`.`orcamento` (`id`)
+    REFERENCES `samaforte_db`.`orcamento` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`produto`
+-- Table `samaforte_db`.`produto`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`produto` (
-  `codigo` INT NOT NULL AUTO_INCREMENT,
-  `descricao` VARCHAR(255) NULL,
-  `nome` VARCHAR(50) NOT NULL,
-  `quantidade` INT UNSIGNED NOT NULL,
-  `quantidadeCritica` INT UNSIGNED NOT NULL,
-  `imagem` VARCHAR(255) NULL,
-  `fornecedor` VARCHAR(50) NOT NULL,
-  `preco` DECIMAL(10,3) UNSIGNED NOT NULL,
-  `custo` DECIMAL(10,3) UNSIGNED NULL,
-  `status` TINYINT(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`codigo`))
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`produto` (
+    `codigo` INT NOT NULL AUTO_INCREMENT,
+    `descricao` VARCHAR(255) NULL,
+    `nome` VARCHAR(50) NOT NULL,
+    `quantidade` INT UNSIGNED NOT NULL,
+    `quantidadeCritica` INT UNSIGNED NOT NULL,
+    `imagem` VARCHAR(255) NULL,
+    `fornecedor` VARCHAR(50) NOT NULL,
+    `preco` DECIMAL(10,3) UNSIGNED NOT NULL,
+    `custo` DECIMAL(10,3) UNSIGNED NULL,
+    `status` TINYINT(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`codigo`))
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_samaforte`.`item_orcamento`
+-- Table `samaforte_db`.`item_orcamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_samaforte`.`item_orcamento` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `quantidade` INT NOT NULL,
-  `preco` DECIMAL(10,3) UNSIGNED NOT NULL,
-  `dataHora` DATETIME NOT NULL,
-  `statusVenda` TINYINT(1) NOT NULL DEFAULT 0,
-  `id_orcamento` INT NOT NULL,
-  `id_produto` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `dataHora_UNIQUE` (`dataHora` ASC) ,
-  INDEX `fk_item_orcamento_orcamento1_idx` (`id_orcamento` ASC) ,
-  INDEX `fk_item_orcamento_produto1_idx` (`id_produto` ASC) ,
-  CONSTRAINT `fk_item_orcamento_orcamento1`
+CREATE TABLE IF NOT EXISTS `samaforte_db`.`item_orcamento` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `quantidade` INT NOT NULL,
+    `preco` DECIMAL(10,3) UNSIGNED NOT NULL,
+    `dataHora` DATETIME NOT NULL,
+    `statusVenda` TINYINT(1) NOT NULL DEFAULT 0,
+    `id_orcamento` INT NOT NULL,
+    `id_produto` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `dataHora_UNIQUE` (`dataHora` ASC) ,
+    INDEX `fk_item_orcamento_orcamento1_idx` (`id_orcamento` ASC) ,
+    INDEX `fk_item_orcamento_produto1_idx` (`id_produto` ASC) ,
+    CONSTRAINT `fk_item_orcamento_orcamento1`
     FOREIGN KEY (`id_orcamento`)
-    REFERENCES `db_samaforte`.`orcamento` (`id`)
+    REFERENCES `samaforte_db`.`orcamento` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_item_orcamento_produto1`
+    CONSTRAINT `fk_item_orcamento_produto1`
     FOREIGN KEY (`id_produto`)
-    REFERENCES `db_samaforte`.`produto` (`codigo`)
+    REFERENCES `samaforte_db`.`produto` (`codigo`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
