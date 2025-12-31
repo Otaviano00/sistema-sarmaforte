@@ -13,11 +13,11 @@ ant dist  -Dlibs.CopyLibs.classpath="${BASE_DIR}/ant-libs/org-netbeans-modules-j
 # Inicia o container de banco de dado
 docker run --name samaforte-db \
   -e MYSQL_ROOT_PASSWORD=root \
-  -e MYSQL_DATABASE=samaforte_db \
+  -e MYSQL_DATABASE=db_samaforte \
   -e MYSQL_USER=samaforte \
   -e MYSQL_PASSWORD=samaforte123 \
   -p 3306:3306 \
-  -v samaforte-mysql:/var/lib/mysql \
+  -v samaforte-mysql-2:/var/lib/mysql \
   -it -d \
   mysql:5.7
 

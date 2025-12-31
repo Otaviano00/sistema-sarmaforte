@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema samaforte_db
+-- Schema db_samaforte
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema samaforte_db
+-- Schema db_samaforte
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `samaforte_db` DEFAULT CHARACTER SET utf8 ;
-USE `samaforte_db` ;
+CREATE SCHEMA IF NOT EXISTS `db_samaforte` DEFAULT CHARACTER SET utf8 ;
+USE `db_samaforte` ;
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`perfil`
+-- Table `db_samaforte`.`perfil`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`perfil` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`perfil` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(10) NOT NULL,
     `descricao` VARCHAR(255) NULL,
@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`perfil` (
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`menu`
+-- Table `db_samaforte`.`menu`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`menu` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`menu` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(10) NOT NULL,
     `link` VARCHAR(255) NOT NULL,
@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`menu` (
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`perfil_menu`
+-- Table `db_samaforte`.`perfil_menu`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`perfil_menu` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`perfil_menu` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `id_perfil` INT NOT NULL,
     `id_menu` INT NOT NULL,
@@ -58,21 +58,21 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`perfil_menu` (
     INDEX `fk_perfil_menu_menu1_idx` (`id_menu` ASC) ,
     CONSTRAINT `fk_perfil_menu_perfil1`
     FOREIGN KEY (`id_perfil`)
-    REFERENCES `samaforte_db`.`perfil` (`id`)
+    REFERENCES `db_samaforte`.`perfil` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     CONSTRAINT `fk_perfil_menu_menu1`
     FOREIGN KEY (`id_menu`)
-    REFERENCES `samaforte_db`.`menu` (`id`)
+    REFERENCES `db_samaforte`.`menu` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`usuario`
+-- Table `db_samaforte`.`usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`usuario` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`usuario` (
      `id` INT NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(50) NOT NULL,
     `telefone` VARCHAR(12) NOT NULL,
@@ -90,16 +90,16 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`usuario` (
     INDEX `fk_usuario_perfil1_idx` (`id_perfil` ASC) ,
     CONSTRAINT `fk_usuario_perfil1`
     FOREIGN KEY (`id_perfil`)
-    REFERENCES `samaforte_db`.`perfil` (`id`)
+    REFERENCES `db_samaforte`.`perfil` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`relatorio`
+-- Table `db_samaforte`.`relatorio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`relatorio` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`relatorio` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(50) NOT NULL,
     `descricao` VARCHAR(255) NULL,
@@ -112,16 +112,16 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`relatorio` (
     INDEX `fk_relatorio_usuario1_idx` (`id_usuario` ASC) ,
     CONSTRAINT `fk_relatorio_usuario1`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `samaforte_db`.`usuario` (`id`)
+    REFERENCES `db_samaforte`.`usuario` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`cliente`
+-- Table `db_samaforte`.`cliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`cliente` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`cliente` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `nome` VARCHAR(50) NOT NULL,
     `telefone` VARCHAR(12) NOT NULL,
@@ -134,9 +134,9 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`cliente` (
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`orcamento`
+-- Table `db_samaforte`.`orcamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`orcamento` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`orcamento` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `dataCriacao` DATETIME NOT NULL,
     `dataValidade` DATETIME NOT NULL,
@@ -147,16 +147,16 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`orcamento` (
     INDEX `fk_orcamento_cliente1_idx` (`id_cliente` ASC) ,
     CONSTRAINT `fk_orcamento_cliente1`
     FOREIGN KEY (`id_cliente`)
-    REFERENCES `samaforte_db`.`cliente` (`id`)
+    REFERENCES `db_samaforte`.`cliente` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`venda`
+-- Table `db_samaforte`.`venda`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`venda` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`venda` (
    `id` INT NOT NULL AUTO_INCREMENT,
     `data` DATETIME NOT NULL,
     `desconto` DECIMAL(10,3) NULL DEFAULT 0,
@@ -170,21 +170,21 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`venda` (
     INDEX `fk_venda_orcamento1_idx` (`id_orcamento` ASC) ,
     CONSTRAINT `fk_venda_usuario`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `samaforte_db`.`usuario` (`id`)
+    REFERENCES `db_samaforte`.`usuario` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
     CONSTRAINT `fk_venda_orcamento1`
     FOREIGN KEY (`id_orcamento`)
-    REFERENCES `samaforte_db`.`orcamento` (`id`)
+    REFERENCES `db_samaforte`.`orcamento` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
     ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`produto`
+-- Table `db_samaforte`.`produto`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`produto` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`produto` (
     `codigo` INT NOT NULL AUTO_INCREMENT,
     `descricao` VARCHAR(255) NULL,
     `nome` VARCHAR(50) NOT NULL,
@@ -200,9 +200,9 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`produto` (
 
 
 -- -----------------------------------------------------
--- Table `samaforte_db`.`item_orcamento`
+-- Table `db_samaforte`.`item_orcamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `samaforte_db`.`item_orcamento` (
+CREATE TABLE IF NOT EXISTS `db_samaforte`.`item_orcamento` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `quantidade` INT NOT NULL,
     `preco` DECIMAL(10,3) UNSIGNED NOT NULL,
@@ -216,12 +216,12 @@ CREATE TABLE IF NOT EXISTS `samaforte_db`.`item_orcamento` (
     INDEX `fk_item_orcamento_produto1_idx` (`id_produto` ASC) ,
     CONSTRAINT `fk_item_orcamento_orcamento1`
     FOREIGN KEY (`id_orcamento`)
-    REFERENCES `samaforte_db`.`orcamento` (`id`)
+    REFERENCES `db_samaforte`.`orcamento` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     CONSTRAINT `fk_item_orcamento_produto1`
     FOREIGN KEY (`id_produto`)
-    REFERENCES `samaforte_db`.`produto` (`codigo`)
+    REFERENCES `db_samaforte`.`produto` (`codigo`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
     ENGINE = InnoDB;
