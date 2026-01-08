@@ -81,32 +81,34 @@ async function openModal(modalId, id, tipo) {
     switch (tipo) {
         case 'create':
             html = `
-                <h1 class="titulo">Novo Cliente</h1>
-                <form id="createForm">
-                    <div class="campos">
-                        <label for="nome" class="titulo_campo">Nome:</label>
-                        <input type="text" name="nome" required>
-                    </div>
-                    <div class="campos">
-                        <label for="telefone" class="titulo_campo">Telefone:</label>
-                        <input type="text" name="telefone" required>
-                    </div>
-                    <div class="campos">
-                        <label for="cpf" class="titulo_campo">CPF:</label>
-                        <input type="text" name="cpf">
-                    </div>
-                    <div class="campos">
-                        <label for="endereco" class="titulo_campo">Endereço:</label>
-                        <input type="text" name="endereco">
-                    </div>
-                    <div style="display: flex; gap: 10px; margin: 20px;">
-                        <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
-                        <button type="submit" class="botao_confirma">Cadastrar</button>
-                    </div>
-                </form>
+                <div class="form">
+                    <h1 class="titulo">Novo Cliente</h1>
+                    <form id="createForm">
+                        <div class="campos">
+                            <label for="nome" class="titulo_campo">Nome:</label>
+                            <input type="text" name="nome" required>
+                        </div>
+                        <div class="campos">
+                            <label for="telefone" class="titulo_campo">Telefone:</label>
+                            <input type="text" name="telefone" required>
+                        </div>
+                        <div class="campos">
+                            <label for="cpf" class="titulo_campo">CPF:</label>
+                            <input type="text" name="cpf">
+                        </div>
+                        <div class="campos">
+                            <label for="endereco" class="titulo_campo">Endereço:</label>
+                            <input type="text" name="endereco">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin: 20px;">
+                            <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
+                            <button type="submit" class="botao_confirma">Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
             `;
             contentDiv.innerHTML = html;
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
 
             document.getElementById('createForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
@@ -139,33 +141,37 @@ async function openModal(modalId, id, tipo) {
 
                 if (tipo === 'detalhes') {
                     html = `
-                        <h1 class="titulo">Detalhes Cliente</h1>
-                        <div class="campos"><label>Nome:</label> <input type="text" value="${cliente.nome}" disabled></div>
-                        <div class="campos"><label>Telefone:</label> <input type="text" value="${cliente.telefone}" disabled></div>
-                        <div class="campos"><label>CPF:</label> <input type="text" value="${cliente.cpf || ''}" disabled></div>
-                        <div class="campos"><label>Endereço:</label> <input type="text" value="${cliente.endereco || ''}" disabled></div>
-                        <div style="display: flex; gap: 10px; margin: 20px;">
-                            <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                        <div class="form">
+                            <h1 class="titulo">Detalhes Cliente</h1>
+                            <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" value="${cliente.nome}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Telefone:</label> <input type="text" value="${cliente.telefone}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">CPF:</label> <input type="text" value="${cliente.cpf || ''}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Endereço:</label> <input type="text" value="${cliente.endereco || ''}" disabled></div>
+                            <div style="display: flex; gap: 10px; margin: 20px;">
+                                <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                            </div>
                         </div>
                     `;
                 } else { // 'alterar'
                     html = `
-                        <h1 class="titulo">Alterar Cliente</h1>
-                        <form id="editForm">
-                            <input type="hidden" name="id" value="${cliente.id}">
-                            <div class="campos"><label>Nome:</label> <input type="text" name="nome" value="${cliente.nome}" required></div>
-                            <div class="campos"><label>Telefone:</label> <input type="text" name="telefone" value="${cliente.telefone}" required></div>
-                            <div class="campos"><label>CPF:</label> <input type="text" name="cpf" value="${cliente.cpf || ''}"></div>
-                            <div class="campos"><label>Endereço:</label> <input type="text" name="endereco" value="${cliente.endereco || ''}"></div>
-                            <div style="display: flex; gap: 10px; margin: 20px;">
-                                <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
-                                <button type="submit" class="botao_confirma">Salvar Alterações</button>
-                            </div>
-                        </form>
+                        <div class="form">
+                            <h1 class="titulo">Alterar Cliente</h1>
+                            <form id="editForm">
+                                <input type="hidden" name="id" value="${cliente.id}">
+                                <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" name="nome" value="${cliente.nome}" required></div>
+                                <div class="campos"><label class="titulo_campo">Telefone:</label> <input type="text" name="telefone" value="${cliente.telefone}" required></div>
+                                <div class="campos"><label class="titulo_campo">CPF:</label> <input type="text" name="cpf" value="${cliente.cpf || ''}"></div>
+                                <div class="campos"><label class="titulo_campo">Endereço:</label> <input type="text" name="endereco" value="${cliente.endereco || ''}"></div>
+                                <div style="display: flex; gap: 10px; margin: 20px;">
+                                    <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
+                                    <button type="submit" class="botao_confirma">Salvar Alterações</button>
+                                </div>
+                            </form>
+                        </div>
                     `;
                 }
                 contentDiv.innerHTML = html;
-                modal.style.display = 'block';
+                modal.style.display = 'flex';
 
                 if (tipo === 'alterar') {
                     document.getElementById('editForm').addEventListener('submit', async function (e) {

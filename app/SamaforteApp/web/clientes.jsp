@@ -23,6 +23,7 @@
 
     <link rel="stylesheet" href="style/main.css">
     <link rel="stylesheet" href="style/modal.css">
+    <link rel="stylesheet" href="style/cadastrar_alterar.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
     <title>Cliente</title>
     
