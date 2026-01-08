@@ -1,8 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.Cliente"%>
-<%@page import="dao.ClienteDAO"%>
-<%@page import="java.util.List"%>
-
 <%@include file="sessao.jsp" %>
 
 <!DOCTYPE html>
@@ -17,12 +13,13 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
-    
+
+    <script defer src="script/clientes.js"></script>
+
     <script defer src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
-    <script defer src="script/tabela.js"> </script>
 
     <link rel="stylesheet" href="style/main.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
@@ -92,7 +89,7 @@
         </div>
         
         <div class="tabela">
-            <table class="table table-striped" style="background-color: white;">
+            <table id="lista-clientes" class="table table-striped" style="background-color: white;">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -104,30 +101,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        List<Cliente> clientes = ClienteDAO.listar();
-                        for (int i = 0; i < clientes.size(); i++) {%>
-                        <tr>
-                            <td><%= i+1%></td>
-                            <td><%= clientes.get(i).getNome()%></td>
-                            <td><%= clientes.get(i).getTelefone()%></td> 
-                            <td><%= clientes.get(i).getEndereco() == null? "---" : clientes.get(i).getEndereco()%></td>       
-                            <td><%= clientes.get(i).getCpf() == null? "---" : clientes.get(i).getCpf()%></td>  
-                            <td>
-                               <button onclick="location.href = 'alterar_cliente.jsp?id=<%= clientes.get(i).getId()%>'" class="botao_acao" title="Alterar dados do cliente <%= clientes.get(i).getNome()%>">
-                                    <img src="images/icone_alterar.svg" alt="Alterar">
-                                </button>
-                                <button onclick="location.href = 'detalhes_cliente.jsp?id=<%= clientes.get(i).getId()%>'" class="botao_acao" title="Detalhes do cliente <%= clientes.get(i).getNome()%>">
-                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
-                                </button>
-                                <% if (clientes.get(i).getId() != 5) {%>
-                                    <button onclick="confirmarExclusao(event, 'GerenciarCliente?id=<%= clientes.get(i).getId()%>&acao=3')" class="botao_acao" title="Excluir o cliente <%= clientes.get(i).getNome()%>">
-                                        <img src="images/icone_excluir.svg" alt="Excluir">
-                                    </button> 
-                                <%}%>
-                            </td>
-                        </tr>
-                    <% }%>
+
                 </tbody>
             </table>
         </div>

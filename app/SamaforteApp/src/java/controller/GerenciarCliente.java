@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.Gson;
 import dao.ClienteDAO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import model.Cliente;
 
 public class GerenciarCliente extends HttpServlet {
@@ -56,14 +59,20 @@ public class GerenciarCliente extends HttpServlet {
     public static void gerenciarCliente(HttpServletRequest request, HttpServletResponse response)
             throws UnsupportedEncodingException, IOException {
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
+        String acaoParam = request.getParameter("acao");
         int acao;
         try {
-            acao = Integer.parseInt(request.getParameter("acao"));
+            acao = Integer.parseInt(acaoParam);
         } catch (NumberFormatException e) {
-            exibirMensagem(out, "Ação inválida!", "clientes.jsp");
-            return;
+             if (acaoParam == null || acaoParam.isEmpty()) {
+                acao = 4; // Default to list action
+            } else {
+                exibirMensagem(out, "Ação inválida!", "clientes.jsp");
+                return;
+            }
         }
 
         Cliente cliente = new Cliente();
@@ -76,11 +85,11 @@ public class GerenciarCliente extends HttpServlet {
                     cliente.setEndereco(request.getParameter("endereco"));
                     cliente.setCpf(request.getParameter("cpf"));
                     
-                    if (cliente.getCpf().trim().isEmpty()) {
+                    if (cliente.getCpf() != null && cliente.getCpf().trim().isEmpty()) {
                         cliente.setCpf(null);
                     }
                     
-                    if (cliente.getEndereco().trim().isEmpty()) {
+                    if (cliente.getEndereco() != null && cliente.getEndereco().trim().isEmpty()) {
                         cliente.setEndereco(null);
                     }
 
@@ -148,6 +157,36 @@ public class GerenciarCliente extends HttpServlet {
                     }
                 } catch (Exception e) {
                     exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "clientes.jsp");
+                }
+                break;
+            case 4: // Listar com paginação para DataTables
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                try {
+                    int start = Integer.parseInt(request.getParameter("start"));
+                    int length = Integer.parseInt(request.getParameter("length"));
+                    String searchValue = request.getParameter("search[value]");
+                    int draw = Integer.parseInt(request.getParameter("draw"));
+
+                    List<Cliente> clientes = ClienteDAO.listarPaginado(start, length, searchValue);
+                    int totalRecords = ClienteDAO.contarTodos();
+                    int filteredRecords = ClienteDAO.contarFiltrados(searchValue);
+
+                    Map<String, Object> jsonResponse = new HashMap<>();
+                    jsonResponse.put("draw", draw);
+                    jsonResponse.put("recordsTotal", totalRecords);
+                    jsonResponse.put("recordsFiltered", filteredRecords);
+                    jsonResponse.put("data", clientes);
+
+                    String json = new Gson().toJson(jsonResponse);
+                    out.print(json);
+                    out.flush();
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    out.print("{\"error\":\"Erro ao listar clientes: " + e.getMessage() + "\"}");
+                    out.flush();
+                } finally {
+                    out.close();
                 }
                 break;
 

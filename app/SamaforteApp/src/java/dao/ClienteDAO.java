@@ -1,7 +1,5 @@
 package dao;
 
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -241,5 +239,111 @@ public class ClienteDAO {
             }
         }
         return orcamentos;
+    }
+
+    public static List<Cliente> listarPaginado(int start, int length, String searchValue) {
+        String sql = "SELECT * FROM cliente WHERE nome LIKE ? OR telefone LIKE ? OR cpf LIKE ? OR endereco LIKE ? ORDER BY id LIMIT ? OFFSET ?";
+        List<Cliente> clientes = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            String searchPattern = "%" + searchValue + "%";
+            pstm.setString(1, searchPattern);
+            pstm.setString(2, searchPattern);
+            pstm.setString(3, searchPattern);
+            pstm.setString(4, searchPattern);
+            pstm.setInt(5, length);
+            pstm.setInt(6, start);
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setId(rset.getInt("id"));
+                cliente.setNome(rset.getString("nome"));
+                cliente.setTelefone(rset.getString("telefone"));
+                cliente.setCpf(rset.getString("cpf"));
+                cliente.setEndereco(rset.getString("endereco"));
+                clientes.add(cliente);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return clientes;
+    }
+
+    public static int contarTodos() {
+        String sql = "SELECT COUNT(id) FROM cliente";
+        int total = 0;
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
+    public static int contarFiltrados(String searchValue) {
+        String sql = "SELECT COUNT(id) FROM cliente WHERE nome LIKE ? OR telefone LIKE ? OR cpf LIKE ? OR endereco LIKE ?";
+        int total = 0;
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            String searchPattern = "%" + searchValue + "%";
+            pstm.setString(1, searchPattern);
+            pstm.setString(2, searchPattern);
+            pstm.setString(3, searchPattern);
+            pstm.setString(4, searchPattern);
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
     }
 }
