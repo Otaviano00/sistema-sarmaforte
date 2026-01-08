@@ -1,12 +1,16 @@
 const basePath = "GerenciarCliente";
 
 document.addEventListener('DOMContentLoaded', function () {
-    $('#lista-clientes').DataTable({
+    const table = $('#lista-clientes').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
             "url": `${basePath}`,
-            "type": "GET"
+            "type": "GET",
+            "data": function (d) {
+                d.filterColumn = $('#input-filter').val();
+                d.filterType = $('#input-type').val();
+            }
         },
         "columns": [
             { "data": "id" },
@@ -54,6 +58,22 @@ document.addEventListener('DOMContentLoaded', function () {
             "loadingRecords": "Carregando...",
             "processing": "Processando...",
             "emptyTable": "Sem registros nessa tabela"
+        },
+        "initComplete": function() {
+            const tableApi = this.api();
+            const searchInput = $('div.dataTables_filter input');
+            let debounceTimer;
+
+            $('#input-filter, #input-type').on('change', function() {
+                tableApi.ajax.reload();
+            });
+
+            searchInput.off('keyup.DT').on('keyup.DT', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function() {
+                    tableApi.ajax.reload();
+                }, 500);
+            });
         }
     });
 });

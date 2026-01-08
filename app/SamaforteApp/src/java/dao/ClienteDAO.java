@@ -257,24 +257,46 @@ public class ClienteDAO {
         return orcamentos;
     }
 
-    public static List<Cliente> listarPaginado(int start, int length, String searchValue) {
-        String sql = "SELECT * FROM cliente WHERE nome LIKE ? OR telefone LIKE ? OR cpf LIKE ? OR endereco LIKE ? ORDER BY id LIMIT ? OFFSET ?";
-        List<Cliente> clientes = new ArrayList<>();
+    public static List<Cliente> listarPaginado(int start, int length, String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM cliente");
+        List<Object> params = new ArrayList<>();
 
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            String[] columns = {"id", "nome", "telefone", "endereco", "cpf"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+                    sql.append(" WHERE ").append(column).append(" LIKE ?");
+
+                    if ("0".equals(filterType)) { // Começa com
+                        params.add(searchValue + "%");
+                    } else { // Inclui
+                        params.add("%" + searchValue + "%");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        sql.append(" ORDER BY id LIMIT ? OFFSET ?");
+        params.add(length);
+        params.add(start);
+
+        List<Cliente> clientes = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
 
         try {
             conn = Conexao.criarConexaoMySQL();
-            pstm = conn.prepareStatement(sql);
-            String searchPattern = "%" + searchValue + "%";
-            pstm.setString(1, searchPattern);
-            pstm.setString(2, searchPattern);
-            pstm.setString(3, searchPattern);
-            pstm.setString(4, searchPattern);
-            pstm.setInt(5, length);
-            pstm.setInt(6, start);
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
             rset = pstm.executeQuery();
 
             while (rset.next()) {
@@ -329,9 +351,29 @@ public class ClienteDAO {
         return total;
     }
 
-    public static int contarFiltrados(String searchValue) {
-        String sql = "SELECT COUNT(id) FROM cliente WHERE nome LIKE ? OR telefone LIKE ? OR cpf LIKE ? OR endereco LIKE ?";
+    public static int contarFiltrados(String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(id) FROM cliente");
+        List<Object> params = new ArrayList<>();
         int total = 0;
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            String[] columns = {"id", "nome", "telefone", "endereco", "cpf"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+                    sql.append(" WHERE ").append(column).append(" LIKE ?");
+
+                    if ("0".equals(filterType)) { // Começa com
+                        params.add(searchValue + "%");
+                    } else { // Inclui
+                        params.add("%" + searchValue + "%");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -339,12 +381,12 @@ public class ClienteDAO {
 
         try {
             conn = Conexao.criarConexaoMySQL();
-            pstm = conn.prepareStatement(sql);
-            String searchPattern = "%" + searchValue + "%";
-            pstm.setString(1, searchPattern);
-            pstm.setString(2, searchPattern);
-            pstm.setString(3, searchPattern);
-            pstm.setString(4, searchPattern);
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
             rset = pstm.executeQuery();
             if (rset.next()) {
                 total = rset.getInt(1);

@@ -61,10 +61,10 @@
                         <option value="0"> 
                             #
                         </option>
-                        <option  value="1"> 
+                        <option  value="1" selected>
                             Nome
                         </option>
-                        <option  value="2" selected> 
+                        <option  value="2">
                             Telefone
                         </option>
                         <option  value="3"> 

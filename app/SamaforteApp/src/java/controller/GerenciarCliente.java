@@ -40,12 +40,14 @@ public class GerenciarCliente extends HttpServlet {
                 // Listar clientes para DataTables
                 int start = Integer.parseInt(request.getParameter("start"));
                 int length = Integer.parseInt(request.getParameter("length"));
-                String searchValue = request.getParameter("search[value]");
+                String searchValue = request.getParameter("search[value]"); // Alterado de "search[value]"
                 int draw = Integer.parseInt(request.getParameter("draw"));
+                String filterColumn = request.getParameter("filterColumn");
+                String filterType = request.getParameter("filterType");
 
-                List<Cliente> clientes = ClienteDAO.listarPaginado(start, length, searchValue);
+                List<Cliente> clientes = ClienteDAO.listarPaginado(start, length, searchValue, filterColumn, filterType);
                 int totalRecords = ClienteDAO.contarTodos();
-                int filteredRecords = ClienteDAO.contarFiltrados(searchValue);
+                int filteredRecords = ClienteDAO.contarFiltrados(searchValue, filterColumn, filterType);
 
                 Map<String, Object> jsonResponse = new HashMap<>();
                 jsonResponse.put("draw", draw);
