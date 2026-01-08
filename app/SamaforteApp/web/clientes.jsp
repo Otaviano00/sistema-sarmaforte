@@ -22,6 +22,7 @@
 
 
     <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/modal.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
     <title>Cliente</title>
     
@@ -44,7 +45,7 @@
         <h1 class="titulo">
             CLIENTES
         </h1>
-        <button class="novo" onclick="location.href = ('cadastrar_cliente.jsp')">
+        <button class="novo" onclick="openModal('createModal', null, 'create')">
             <div style="display: flex; justify-content: center; align-items: center; margin: auto; gap: 10px;">
                 <span style="font-size: 2em;">+</span>
                 Novo Cliente
@@ -106,5 +107,30 @@
             </table>
         </div>
     </div>
+
+    <!-- Modal de Detalhes -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
+            <div id="detailsModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Alterar -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
+            <div id="editModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Criar -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('createModal')">&times;</span>
+            <div id="createModalContent"></div>
+        </div>
+    </div>
+
 </body>
 </html>

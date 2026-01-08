@@ -189,6 +189,27 @@ public class GerenciarCliente extends HttpServlet {
                     out.close();
                 }
                 break;
+            case 5: // Buscar por ID
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                try {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Cliente c = ClienteDAO.listarPorId(id);
+
+                    Map<String, Object> responseData = new HashMap<>();
+                    responseData.put("cliente", c);
+
+                    String jsonResponse = new Gson().toJson(responseData);
+                    out.print(jsonResponse);
+                    out.flush();
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    out.print("{\"error\":\"Erro ao buscar cliente: " + e.getMessage() + "\"}");
+                    out.flush();
+                } finally {
+                    out.close();
+                }
+                break;
 
             default:
                 exibirMensagem(out, "Ação inválida!", "clientes.jsp");
