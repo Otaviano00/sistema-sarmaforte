@@ -115,6 +115,13 @@ async function openModal(modalId, id, tipo) {
                 const formData = new FormData(this);
                 const cliente = Object.fromEntries(formData.entries());
 
+                if (cliente.cpf && cliente.cpf.trim() === '') {
+                    cliente.cpf = null;
+                }
+                if (cliente.endereco && cliente.endereco.trim() === '') {
+                    cliente.endereco = null;
+                }
+
                 try {
                     const response = await fetch(basePath, {
                         method: 'POST',
@@ -178,6 +185,13 @@ async function openModal(modalId, id, tipo) {
                         e.preventDefault();
                         const formData = new FormData(this);
                         const clienteData = Object.fromEntries(formData.entries());
+
+                        if (clienteData.cpf && clienteData.cpf.trim() === '') {
+                            clienteData.cpf = null;
+                        }
+                        if (clienteData.endereco && clienteData.endereco.trim() === '') {
+                            clienteData.endereco = null;
+                        }
 
                         try {
                             const putResponse = await fetch(basePath, {

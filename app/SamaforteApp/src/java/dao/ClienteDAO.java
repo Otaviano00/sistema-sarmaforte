@@ -22,8 +22,16 @@ public class ClienteDAO {
 
             pstm.setString(1, cliente.getNome());
             pstm.setString(2, cliente.getTelefone());
-            pstm.setString(3, cliente.getCpf());
-            pstm.setString(4, cliente.getEndereco());
+            if (cliente.getCpf() == null || cliente.getCpf().trim().isEmpty()) {
+                pstm.setNull(3, java.sql.Types.VARCHAR);
+            } else {
+                pstm.setString(3, cliente.getCpf());
+            }
+            if (cliente.getEndereco() == null || cliente.getEndereco().trim().isEmpty()) {
+                pstm.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                pstm.setString(4, cliente.getEndereco());
+            }
 
             pstm.execute();
             return true;
@@ -146,8 +154,16 @@ public class ClienteDAO {
 
             pstm.setString(1, cliente.getNome());
             pstm.setString(2, cliente.getTelefone());
-            pstm.setString(3, cliente.getCpf());
-            pstm.setString(4, cliente.getEndereco());
+            if (cliente.getCpf() == null || cliente.getCpf().trim().isEmpty()) {
+                pstm.setNull(3, java.sql.Types.VARCHAR);
+            } else {
+                pstm.setString(3, cliente.getCpf());
+            }
+            if (cliente.getEndereco() == null || cliente.getEndereco().trim().isEmpty()) {
+                pstm.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                pstm.setString(4, cliente.getEndereco());
+            }
             pstm.setInt(5, cliente.getId());
 
             pstm.execute();
