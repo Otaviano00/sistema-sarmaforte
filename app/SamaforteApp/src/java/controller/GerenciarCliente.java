@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,201 +18,139 @@ public class GerenciarCliente extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        gerenciarCliente(request, response);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
+
+        String idParam = request.getParameter("id");
+
+        try {
+            if (idParam != null) {
+                // Buscar cliente por ID
+                int id = Integer.parseInt(idParam);
+                Cliente cliente = ClienteDAO.listarPorId(id);
+                if (cliente != null) {
+                    out.print(gson.toJson(cliente));
+                } else {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    out.print("{\"error\":\"Cliente não encontrado\"}");
+                }
+            } else {
+                // Listar clientes para DataTables
+                int start = Integer.parseInt(request.getParameter("start"));
+                int length = Integer.parseInt(request.getParameter("length"));
+                String searchValue = request.getParameter("search[value]");
+                int draw = Integer.parseInt(request.getParameter("draw"));
+
+                List<Cliente> clientes = ClienteDAO.listarPaginado(start, length, searchValue);
+                int totalRecords = ClienteDAO.contarTodos();
+                int filteredRecords = ClienteDAO.contarFiltrados(searchValue);
+
+                Map<String, Object> jsonResponse = new HashMap<>();
+                jsonResponse.put("draw", draw);
+                jsonResponse.put("recordsTotal", totalRecords);
+                jsonResponse.put("recordsFiltered", filteredRecords);
+                jsonResponse.put("data", clientes);
+
+                out.print(gson.toJson(jsonResponse));
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        gerenciarCliente(request, response);
-    }
-
-    private static void exibirMensagem(PrintWriter out, String mensagem, String url) throws IOException {
-        out.print("<script>");
-        out.print("alert('" + mensagem + "');");
-        out.print("location.href = '" + url + "';");
-        out.print("</script>");
-        out.close();
-    }
-
-    private static boolean validarUnicidade(Cliente cliente, List<Cliente> clientes, PrintWriter out, String redirectUrl) throws IOException {
-        if (cliente.getCpf() == null) {
-            return false;
-        }
-        
-        for (Cliente cl : clientes) {
-            if (cl.getId() != cliente.getId()) { // Ignorar o cliente atual
-                if (cliente.getCpf().equals(cl.getCpf())) {
-                    exibirMensagem(out, "CPF já existente!", redirectUrl);
-                    return true;
-                }
-                if (cliente.getTelefone().equals(cl.getTelefone())) {
-                    exibirMensagem(out, "Telefone já existente!", redirectUrl);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static void gerenciarCliente(HttpServletRequest request, HttpServletResponse response)
-            throws UnsupportedEncodingException, IOException {
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
         PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
 
-        String acaoParam = request.getParameter("acao");
-        int acao;
         try {
-            acao = Integer.parseInt(acaoParam);
-        } catch (NumberFormatException e) {
-             if (acaoParam == null || acaoParam.isEmpty()) {
-                acao = 4; // Default to list action
+            Cliente cliente = gson.fromJson(request.getReader(), Cliente.class);
+
+            if (ClienteDAO.cadastrar(cliente)) {
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                out.print(gson.toJson(cliente));
             } else {
-                exibirMensagem(out, "Ação inválida!", "clientes.jsp");
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.print("{\"error\":\"Erro ao cadastrar cliente\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
+
+        try {
+            Cliente cliente = gson.fromJson(request.getReader(), Cliente.class);
+
+            if (cliente.getId() == 1) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                out.print("{\"error\":\"Ação não permitida para este cliente\"}");
                 return;
             }
-        }
 
-        Cliente cliente = new Cliente();
-
-        switch (acao) {
-            case 1: // Cadastro
-                try {
-                    cliente.setNome(request.getParameter("nome"));
-                    cliente.setTelefone(request.getParameter("telefone"));
-                    cliente.setEndereco(request.getParameter("endereco"));
-                    cliente.setCpf(request.getParameter("cpf"));
-                    
-                    if (cliente.getCpf() != null && cliente.getCpf().trim().isEmpty()) {
-                        cliente.setCpf(null);
-                    }
-                    
-                    if (cliente.getEndereco() != null && cliente.getEndereco().trim().isEmpty()) {
-                        cliente.setEndereco(null);
-                    }
-
-             
-                    // Verificação de unicidade
-                    if (validarUnicidade(cliente, ClienteDAO.listar(), out, "cadastrar_cliente.jsp")) {
-                        return;
-                    }
-  
-                    if (ClienteDAO.cadastrar(cliente)) {
-                        exibirMensagem(out, "Cliente cadastrado com sucesso!", "clientes.jsp");
-                    } else {
-                        exibirMensagem(out, "Erro ao cadastrar cliente!", "clientes.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "cadastrar_cliente.jsp");
-                }
-                break;
-
-            case 2: // Atualização
-                try {
-                    // Verificar se o id do cliente é 1
-                    int clienteId = Integer.parseInt(request.getParameter("id"));
-                    if (clienteId == 1) {
-                        exibirMensagem(out, "Ação não permitida para esse cliente!", "clientes.jsp");
-                        return; // Interrompe a execução se o id for 1
-                    }
-
-                    // Continue com o processo normal de atualização
-                    cliente.setId(clienteId);
-                    cliente.setNome(request.getParameter("nome"));
-                    cliente.setTelefone(request.getParameter("telefone"));
-                    cliente.setEndereco(request.getParameter("endereco"));
-                    cliente.setCpf(request.getParameter("cpf"));
-
-                    // Verificação de unicidade
-                    if (validarUnicidade(cliente, ClienteDAO.listar(), out, "alterar_cliente.jsp?id=" + cliente.getId())) {
-                        return;
-                    }
-
-                    if (ClienteDAO.alterar(cliente)) {
-                        exibirMensagem(out, "Cliente atualizado com sucesso!", "clientes.jsp");
-                    } else {
-                        exibirMensagem(out, "Erro ao atualizar cliente!", "clientes.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "clientes.jsp");
-                }
-                break;
-
-            case 3: // Exclusão
-                try {
-                    int clienteIdExcluir = Integer.parseInt(request.getParameter("id"));
-
-                    // Verificar se o id do cliente é 1
-                    if (clienteIdExcluir == 1) {
-                        exibirMensagem(out, "Ação não permitida para esse cliente!", "clientes.jsp");
-                        return; // Interrompe a execução se o id for 1
-                    }
-
-                    if (ClienteDAO.excluir(clienteIdExcluir)) {
-                        exibirMensagem(out, "Cliente excluído com sucesso!", "clientes.jsp");
-                    } else {
-                        exibirMensagem(out, "Erro ao excluir cliente!", "clientes.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "clientes.jsp");
-                }
-                break;
-            case 4: // Listar com paginação para DataTables
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                try {
-                    int start = Integer.parseInt(request.getParameter("start"));
-                    int length = Integer.parseInt(request.getParameter("length"));
-                    String searchValue = request.getParameter("search[value]");
-                    int draw = Integer.parseInt(request.getParameter("draw"));
-
-                    List<Cliente> clientes = ClienteDAO.listarPaginado(start, length, searchValue);
-                    int totalRecords = ClienteDAO.contarTodos();
-                    int filteredRecords = ClienteDAO.contarFiltrados(searchValue);
-
-                    Map<String, Object> jsonResponse = new HashMap<>();
-                    jsonResponse.put("draw", draw);
-                    jsonResponse.put("recordsTotal", totalRecords);
-                    jsonResponse.put("recordsFiltered", filteredRecords);
-                    jsonResponse.put("data", clientes);
-
-                    String json = new Gson().toJson(jsonResponse);
-                    out.print(json);
-                    out.flush();
-                } catch (Exception e) {
-                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    out.print("{\"error\":\"Erro ao listar clientes: " + e.getMessage() + "\"}");
-                    out.flush();
-                } finally {
-                    out.close();
-                }
-                break;
-            case 5: // Buscar por ID
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                try {
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    Cliente c = ClienteDAO.listarPorId(id);
-
-                    Map<String, Object> responseData = new HashMap<>();
-                    responseData.put("cliente", c);
-
-                    String jsonResponse = new Gson().toJson(responseData);
-                    out.print(jsonResponse);
-                    out.flush();
-                } catch (Exception e) {
-                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    out.print("{\"error\":\"Erro ao buscar cliente: " + e.getMessage() + "\"}");
-                    out.flush();
-                } finally {
-                    out.close();
-                }
-                break;
-
-            default:
-                exibirMensagem(out, "Ação inválida!", "clientes.jsp");
-                break;
+            if (ClienteDAO.alterar(cliente)) {
+                out.print(gson.toJson(cliente));
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.print("{\"error\":\"Erro ao atualizar cliente\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            if (id == 1) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                out.print("{\"error\":\"Ação não permitida para este cliente\"}");
+                return;
+            }
+
+            if (ClienteDAO.excluir(id)) {
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.print("{\"error\":\"Erro ao excluir cliente\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
 }

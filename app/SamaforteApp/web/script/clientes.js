@@ -1,13 +1,12 @@
+const basePath = "GerenciarCliente";
+
 document.addEventListener('DOMContentLoaded', function () {
     $('#lista-clientes').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "GerenciarCliente",
-            "type": "POST",
-            "data": function (d) {
-                d.acao = 4;
-            }
+            "url": `${basePath}`,
+            "type": "GET"
         },
         "columns": [
             { "data": "id" },
@@ -21,16 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 "searchable": false,
                 "render": function (data, type, row) {
                     let actions = `
-                        <button onclick="openModal('editModal', 'GerenciarCliente?acao=5&id=${row.id}', 'alterar')" class="botao_acao" title="Alterar dados do cliente ${row.nome}">
+                        <button onclick="openModal('editModal', ${row.id}, 'alterar')" class="botao_acao" title="Alterar dados do cliente ${row.nome}">
                             <img src="images/icone_alterar.svg" alt="Alterar">
                         </button>
-                        <button onclick="openModal('detailsModal', 'GerenciarCliente?acao=5&id=${row.id}', 'detalhes')" class="botao_acao" title="Detalhes do cliente ${row.nome}">
+                        <button onclick="openModal('detailsModal', ${row.id}, 'detalhes')" class="botao_acao" title="Detalhes do cliente ${row.nome}">
                             <img src="images/icone_detalhes.svg" alt="Detalhes">
                         </button>
                     `;
                     if (row.id !== 5) {
                         actions += `
-                            <button onclick="confirmarExclusao(event, 'GerenciarCliente?id=${row.id}&acao=3')" class="botao_acao" title="Excluir o cliente ${row.nome}">
+                            <button onclick="confirmarExclusao(event, ${row.id})" class="botao_acao" title="Excluir o cliente ${row.nome}">
                                 <img src="images/icone_excluir.svg" alt="Excluir">
                             </button>
                         `;
@@ -59,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function confirmarExclusao(event, url) {
+function confirmarExclusao(event, id) {
     if (confirm('Tem certeza que deseja excluir este cliente?')) {
-        fetch(url, { method: 'POST' })
+        fetch(`${basePath}?id=${id}`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
                     $('#lista-clientes').DataTable().ajax.reload();
@@ -73,18 +72,17 @@ function confirmarExclusao(event, url) {
     }
 }
 
-function openModal(modalId, url, tipo) {
+async function openModal(modalId, id, tipo) {
     const modal = document.getElementById(modalId);
-    let contentDiv;
+    const contentDivId = modalId.replace('Modal', 'ModalContent');
+    const contentDiv = document.getElementById(contentDivId);
     let html = '';
 
     switch (tipo) {
         case 'create':
-            contentDiv = document.getElementById('createModalContent');
             html = `
                 <h1 class="titulo">Novo Cliente</h1>
-                <form action="GerenciarCliente" method="post">
-                    <input type="hidden" name="acao" value="1">
+                <form id="createForm">
                     <div class="campos">
                         <label for="nome" class="titulo_campo">Nome:</label>
                         <input type="text" name="nome" required>
@@ -103,79 +101,98 @@ function openModal(modalId, url, tipo) {
                     </div>
                     <div style="display: flex; gap: 10px; margin: 20px;">
                         <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
-                        <input type="submit" value="Cadastrar" class="botao_confirma">
+                        <button type="submit" class="botao_confirma">Cadastrar</button>
                     </div>
                 </form>
             `;
             contentDiv.innerHTML = html;
             modal.style.display = 'block';
+
+            document.getElementById('createForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const cliente = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch(basePath, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(cliente)
+                    });
+                    if (response.ok) {
+                        closeModal('createModal');
+                        $('#lista-clientes').DataTable().ajax.reload();
+                    } else {
+                        alert('Erro ao cadastrar cliente.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao cadastrar cliente:', error);
+                }
+            });
             break;
 
         case 'detalhes':
         case 'alterar':
-            contentDiv = document.getElementById(modalId === 'detailsModal' ? 'detailsModalContent' : 'editModalContent');
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const cliente = data.cliente;
-                    if (tipo === 'detalhes') {
-                        html = `
-                            <h1 class="titulo">Detalhes Cliente</h1>
-                            <form action="#" method="post">
-                                <div class="campos">
-                                    <label for="nome" class="titulo_campo">Nome:</label>
-                                    <input type="text" value="${cliente.nome}" disabled readonly>
-                                </div>
-                                <div class="campos">
-                                    <label for="telefone" class="titulo_campo">Telefone:</label>
-                                    <input type="text" value="${cliente.telefone}" disabled readonly>
-                                </div>
-                                <div class="campos">
-                                    <label for="cpf" class="titulo_campo">CPF:</label>
-                                    <input type="text" value="${cliente.cpf || ''}" disabled readonly>
-                                </div>
-                                <div class="campos">
-                                    <label for="endereco" class="titulo_campo">Endereço:</label>
-                                    <input type="text" value="${cliente.endereco || ''}" disabled readonly>
-                                </div>
-                                <div style="display: flex; gap: 10px; margin: 20px;">
-                                    <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
-                                </div>
-                            </form>
-                        `;
-                    } else { // 'alterar'
-                        html = `
-                            <h1 class="titulo">Alterar Cliente</h1>
-                            <form action="GerenciarCliente" method="post">
-                                <input type="hidden" name="acao" value="2">
-                                <input type="hidden" name="id" value="${cliente.id}">
-                                <div class="campos">
-                                    <label for="nome" class="titulo_campo">Nome:</label>
-                                    <input type="text" name="nome" value="${cliente.nome}" required>
-                                </div>
-                                <div class="campos">
-                                    <label for="telefone" class="titulo_campo">Telefone:</label>
-                                    <input type="text" name="telefone" value="${cliente.telefone}" required>
-                                </div>
-                                <div class="campos">
-                                    <label for="cpf" class="titulo_campo">CPF:</label>
-                                    <input type="text" name="cpf" value="${cliente.cpf || ''}">
-                                </div>
-                                <div class="campos">
-                                    <label for="endereco" class="titulo_campo">Endereço:</label>
-                                    <input type="text" name="endereco" value="${cliente.endereco || ''}">
-                                </div>
-                                <div style="display: flex; gap: 10px; margin: 20px;">
-                                    <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
-                                    <input type="submit" value="Salvar Alterações" class="botao_confirma">
-                                </div>
-                            </form>
-                        `;
-                    }
-                    contentDiv.innerHTML = html;
-                    modal.style.display = 'block';
-                })
-                .catch(error => console.error('Erro ao carregar o conteúdo do modal:', error));
+            try {
+                const response = await fetch(`${basePath}?id=${id}`);
+                const cliente = await response.json();
+
+                if (tipo === 'detalhes') {
+                    html = `
+                        <h1 class="titulo">Detalhes Cliente</h1>
+                        <div class="campos"><label>Nome:</label> <input type="text" value="${cliente.nome}" disabled></div>
+                        <div class="campos"><label>Telefone:</label> <input type="text" value="${cliente.telefone}" disabled></div>
+                        <div class="campos"><label>CPF:</label> <input type="text" value="${cliente.cpf || ''}" disabled></div>
+                        <div class="campos"><label>Endereço:</label> <input type="text" value="${cliente.endereco || ''}" disabled></div>
+                        <div style="display: flex; gap: 10px; margin: 20px;">
+                            <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                        </div>
+                    `;
+                } else { // 'alterar'
+                    html = `
+                        <h1 class="titulo">Alterar Cliente</h1>
+                        <form id="editForm">
+                            <input type="hidden" name="id" value="${cliente.id}">
+                            <div class="campos"><label>Nome:</label> <input type="text" name="nome" value="${cliente.nome}" required></div>
+                            <div class="campos"><label>Telefone:</label> <input type="text" name="telefone" value="${cliente.telefone}" required></div>
+                            <div class="campos"><label>CPF:</label> <input type="text" name="cpf" value="${cliente.cpf || ''}"></div>
+                            <div class="campos"><label>Endereço:</label> <input type="text" name="endereco" value="${cliente.endereco || ''}"></div>
+                            <div style="display: flex; gap: 10px; margin: 20px;">
+                                <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
+                                <button type="submit" class="botao_confirma">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    `;
+                }
+                contentDiv.innerHTML = html;
+                modal.style.display = 'block';
+
+                if (tipo === 'alterar') {
+                    document.getElementById('editForm').addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        const formData = new FormData(this);
+                        const clienteData = Object.fromEntries(formData.entries());
+
+                        try {
+                            const putResponse = await fetch(basePath, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(clienteData)
+                            });
+                            if (putResponse.ok) {
+                                closeModal('editModal');
+                                $('#lista-clientes').DataTable().ajax.reload();
+                            } else {
+                                alert('Erro ao atualizar cliente.');
+                            }
+                        } catch (error) {
+                            console.error('Erro ao atualizar cliente:', error);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do cliente:', error);
+            }
             break;
     }
 }
