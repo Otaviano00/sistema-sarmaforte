@@ -1,7 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.Produto"%>
-<%@page import="dao.ProdutoDAO"%>
-<%@page import="java.util.List"%>
 
 <%@include file="sessao.jsp" %>
 
@@ -17,14 +14,16 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
-    
+
+    <script defer src="script/produtos.js"></script>
+
     <script defer src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
-    <script defer src="script/tabela.js"> </script>
-
     <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/modal.css">
+    <link rel="stylesheet" href="style/cadastrar_alterar.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
     <title>Produto</title>
     
@@ -50,7 +49,7 @@
         <%
             if (hierarquia < 2) {
         %>
-        <button class="novo" onclick="location.href = ('cadastrar_produto.jsp')">
+        <button class="novo" onclick="openModal('createModal', null, 'create')">
             <div style="display: flex; justify-content: center; align-items: center; margin: auto; gap: 10px;">
                 <span style="font-size: 2em;">+</span>
                 Novo Produto
@@ -98,8 +97,8 @@
                 </select>
             </div>
         </div>
-        <div class="tabela <%= hierarquia == 2? "margin-top" : " " %>">
-            <table class="table table-striped" style="background-color: white;">
+        <div class="tabela">
+            <table id="lista-produtos" class="table table-striped" style="background-color: white;">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -113,70 +112,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        List<Produto> produtos = ProdutoDAO.listar();
-                        for (int i = 0; i < produtos.size(); i++) {
-                    %>
-                        <tr>
-                            <td><%= i+1%></td>
-                            <td><%= produtos.get(i).getCodigo()%></td>
-                            <td><%= produtos.get(i).getNome()%></td> 
-                            <td><%= produtos.get(i).getFornecedor()%></td>   
-                            <td><%= produtos.get(i).getQuantidade()%></td>    
-                            <td><%= String.format("R$  %,.3f", produtos.get(i).getPreco())%></td>
-                            <td>
-                                <% if (hierarquia < 2) {%>
-                                    <% if (produtos.get(i).isStatus() == true) {%>
-                                        <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=4'" class="botao_acao botao_ativo" title="Clique para desativar o produto <%= produtos.get(i).getNome()%>">
-                                            Ativo
-                                        </button>
-                                        
-                                    <% } else {%>
-                                        <button onclick="location.href = 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=3'" class="botao_acao botao_desativo" title="Clique para ativar o produto <%= produtos.get(i).getNome()%>">
-                                            Desativo
-                                        </button>
-                                    <% }%>
-                                <%
-                                    } else {
-                                %>
-                                    <button class="botao_acao botao_ativo">
-                                        Ativo
-                                    </button>
-                                <%
-                                    }
-                                %>
-                            </td>  
-                            <td>
-                                <%
-                                    if (hierarquia < 2) {
-                                %>
-                                    <button onclick="location.href = 'alterar_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Alterar dados do produto <%= produtos.get(i).getNome()%>">
-                                        <img src="images/icone_alterar.svg" alt="Alterar">
-                                    </button>
-                                <%
-                                    }
-                                %>
 
-                                <button onclick="location.href = 'detalhes_produto.jsp?codigo=<%= produtos.get(i).getCodigo()%>'" class="botao_acao" title="Detalhes sobre o produto <%= produtos.get(i).getNome()%>">
-                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
-                                </button>
-                            
-                                <% if (hierarquia < 2) {%>
-                                    <button onclick="confirmarExclusao(event, 'GerenciarProduto?codigo=<%= produtos.get(i).getCodigo()%>&acao=5')" class="botao_acao" title="Excluir o produto <%= produtos.get(i).getNome()%>">
-                                        <img src="images/icone_excluir.svg" alt="Excluir">
-                                    </button>
-                                <%
-                                    }
-                                %>
-                                
-                            </td>
-                        </tr>
-                    <% 
-                        }
-                    %>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Hidden input to store hierarquia value for JavaScript -->
+    <input type="hidden" id="hierarquia-value" value="<%= hierarquia %>">
+
+    <!-- Modal de Detalhes -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
+            <div id="detailsModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Alterar -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
+            <div id="editModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Criar -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('createModal')">&times;</span>
+            <div id="createModalContent"></div>
+        </div>
+    </div>
+
 </body>
 </html>

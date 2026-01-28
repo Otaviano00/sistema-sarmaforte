@@ -65,13 +65,13 @@ document.addEventListener('DOMContentLoaded', function () {
             let debounceTimer;
 
             $('#input-filter, #input-type').on('change', function() {
-                tableApi.ajax.reload();
+                tableApi.ajax.reload(null, false);
             });
 
             searchInput.off('keyup.DT').on('keyup.DT', function () {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(function() {
-                    tableApi.ajax.reload();
+                    tableApi.ajax.reload(null, false);
                 }, 500);
             });
         }
@@ -83,7 +83,7 @@ function confirmarExclusao(event, id) {
         fetch(`${basePath}?id=${id}`, { method: 'DELETE' })
             .then(response => {
                 if (response.ok) {
-                    $('#lista-clientes').DataTable().ajax.reload();
+                    $('#lista-clientes').DataTable().ajax.reload(null, false);
                 } else {
                     alert('Erro ao excluir o cliente.');
                 }
@@ -150,7 +150,7 @@ async function openModal(modalId, id, tipo) {
                     });
                     if (response.ok) {
                         closeModal('createModal');
-                        $('#lista-clientes').DataTable().ajax.reload();
+                        $('#lista-clientes').DataTable().ajax.reload(null, false);
                     } else {
                         alert('Erro ao cadastrar cliente.');
                     }
@@ -221,7 +221,7 @@ async function openModal(modalId, id, tipo) {
                             });
                             if (putResponse.ok) {
                                 closeModal('editModal');
-                                $('#lista-clientes').DataTable().ajax.reload();
+                                $('#lista-clientes').DataTable().ajax.reload(null, false);
                             } else {
                                 alert('Erro ao atualizar cliente.');
                             }

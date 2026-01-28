@@ -307,4 +307,158 @@ public class ProdutoDAO {
         }
     }
 
+    public static List<Produto> listarPaginado(int start, int length, String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM produto");
+        List<Object> params = new ArrayList<>();
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            String[] columns = {"codigo", "nome", "fornecedor", "quantidade", "preco"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+                    sql.append(" WHERE ").append(column).append(" LIKE ?");
+
+                    if ("0".equals(filterType)) { // Começa com
+                        params.add(searchValue + "%");
+                    } else { // Inclui
+                        params.add("%" + searchValue + "%");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        sql.append(" ORDER BY codigo LIMIT ? OFFSET ?");
+        params.add(length);
+        params.add(start);
+
+        List<Produto> produtos = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+                Produto produto = new Produto();
+                produto.setCodigo(rset.getInt("codigo"));
+                produto.setDescricao(rset.getString("descricao"));
+                produto.setNome(rset.getString("nome"));
+                produto.setQuantidade(rset.getInt("quantidade"));
+                produto.setQuantidadeCritica(rset.getInt("quantidadeCritica"));
+                produto.setImagem(rset.getString("imagem"));
+                produto.setFornecedor(rset.getString("fornecedor"));
+                produto.setPreco(rset.getDouble("preco"));
+                produto.setCusto(rset.getDouble("custo"));
+                produto.setStatus(rset.getBoolean("status"));
+                produtos.add(produto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return produtos;
+    }
+
+    public static int contarTodos() {
+        String sql = "SELECT COUNT(codigo) FROM produto";
+        int total = 0;
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
+    public static int contarFiltrados(String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(codigo) FROM produto");
+        List<Object> params = new ArrayList<>();
+        int total = 0;
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            String[] columns = {"codigo", "codigo", "nome", "fornecedor", "quantidade", "preco"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+                    sql.append(" WHERE ").append(column).append(" LIKE ?");
+
+                    if ("0".equals(filterType)) { // Começa com
+                        params.add(searchValue + "%");
+                    } else { // Inclui
+                        params.add("%" + searchValue + "%");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
 }
+
