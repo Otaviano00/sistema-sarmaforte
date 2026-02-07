@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dao.ClienteDAO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,12 +9,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import model.Cliente;
+import utilities.LocalDateTimeAdapter;
 
 public class GerenciarCliente extends HttpServlet {
+
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -21,7 +28,6 @@ public class GerenciarCliente extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
 
         String idParam = request.getParameter("id");
 
@@ -72,7 +78,6 @@ public class GerenciarCliente extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
 
         try {
             Cliente cliente = gson.fromJson(request.getReader(), Cliente.class);
@@ -99,7 +104,6 @@ public class GerenciarCliente extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
 
         try {
             Cliente cliente = gson.fromJson(request.getReader(), Cliente.class);
