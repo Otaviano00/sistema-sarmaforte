@@ -138,41 +138,45 @@ function confirmarExclusao(event, codigo) {
 
 async function openModal(modalId, codigo, tipo) {
     const modal = document.getElementById(modalId);
-    const contentDivId = modalId.replace('Modal', 'ModalContent');
-    const contentDiv = document.getElementById(contentDivId);
+    const contentDiv = document.getElementById(modalId.replace('Modal', 'ModalContent'));
     let html = '';
 
     switch (tipo) {
         case 'create':
             html = `
-                <div class="form">
+                <div class="modal-header">
+                    <span class="close-btn" onclick="closeModal('createModal')">&times;</span>
                     <h1 class="titulo">Novo Produto</h1>
-                    <form id="createForm">
-                        <div class="campos">
-                            <label for="codigo" class="titulo_campo">Código:</label>
-                            <input type="text" name="codigo" required>
-                        </div>
-                        <div class="campos">
-                            <label for="nome" class="titulo_campo">Nome:</label>
-                            <input type="text" name="nome" required>
-                        </div>
-                        <div class="campos">
-                            <label for="fornecedor" class="titulo_campo">Fornecedor:</label>
-                            <input type="text" name="fornecedor" required>
-                        </div>
-                        <div class="campos">
-                            <label for="quantidade" class="titulo_campo">Quantidade:</label>
-                            <input type="number" name="quantidade" required>
-                        </div>
-                        <div class="campos">
-                            <label for="preco" class="titulo_campo">Preço:</label>
-                            <input type="number" step="0.001" name="preco" required>
-                        </div>
-                        <div style="display: flex; gap: 10px; margin: 20px;">
-                            <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
-                            <button type="submit" class="botao_confirma">Cadastrar</button>
-                        </div>
-                    </form>
+                </div>
+                <div class="modal-body">
+                    <div class="form">
+                        <form id="createForm">
+                            <div class="campos">
+                                <label for="codigo" class="titulo_campo">Código:</label>
+                                <input type="text" name="codigo" required>
+                            </div>
+                            <div class="campos">
+                                <label for="nome" class="titulo_campo">Nome:</label>
+                                <input type="text" name="nome" required>
+                            </div>
+                            <div class="campos">
+                                <label for="fornecedor" class="titulo_campo">Fornecedor:</label>
+                                <input type="text" name="fornecedor" required>
+                            </div>
+                            <div class="campos">
+                                <label for="quantidade" class="titulo_campo">Quantidade:</label>
+                                <input type="number" name="quantidade" required>
+                            </div>
+                            <div class="campos">
+                                <label for="preco" class="titulo_campo">Preço:</label>
+                                <input type="number" step="0.001" name="preco" required>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
+                    <button type="submit" form="createForm" class="botao_confirma">Cadastrar</button>
                 </div>
             `;
             contentDiv.innerHTML = html;
@@ -221,40 +225,50 @@ async function openModal(modalId, codigo, tipo) {
 
                 if (tipo === 'detalhes') {
                     html = `
-                        <div class="form">
+                        <div class="modal-header">
+                            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
                             <h1 class="titulo">Detalhes Produto</h1>
-                            <div class="campos"><label class="titulo_campo">Código:</label> <input type="text" value="${produto.codigo}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" value="${produto.nome}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Fornecedor:</label> <input type="text" value="${produto.fornecedor}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Quantidade:</label> <input type="text" value="${produto.quantidade}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Preço:</label> <input type="text" value="R$ ${parseFloat(produto.preco).toFixed(3)}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Status:</label> <input type="text" value="${produto.status ? 'Ativo' : 'Desativo'}" disabled></div>
-                            <div style="display: flex; gap: 10px; margin: 20px;">
-                                <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form">
+                                <div class="campos"><label class="titulo_campo">Código:</label> <input type="text" value="${produto.codigo}" disabled></div>
+                                <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" value="${produto.nome}" disabled></div>
+                                <div class="campos"><label class="titulo_campo">Fornecedor:</label> <input type="text" value="${produto.fornecedor}" disabled></div>
+                                <div class="campos"><label class="titulo_campo">Quantidade:</label> <input type="text" value="${produto.quantidade}" disabled></div>
+                                <div class="campos"><label class="titulo_campo">Preço:</label> <input type="text" value="R$ ${parseFloat(produto.preco).toFixed(3)}" disabled></div>
+                                <div class="campos"><label class="titulo_campo">Status:</label> <input type="text" value="${produto.status ? 'Ativo' : 'Desativo'}" disabled></div>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
                         </div>
                     `;
                 } else { // 'alterar'
                     html = `
-                        <div class="form">
+                        <div class="modal-header">
+                            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
                             <h1 class="titulo">Alterar Produto</h1>
-                            <form id="editForm">
-                                <input type="hidden" name="codigo" value="${produto.codigo}">
-                                <input type="hidden" name="status" value="${produto.status}">
-                                <input type="hidden" name="descricao" value="${produto.descricao || ''}">
-                                <input type="hidden" name="quantidadeCritica" value="${produto.quantidadeCritica || 0}">
-                                <input type="hidden" name="imagem" value="${produto.imagem || ''}">
-                                <input type="hidden" name="custo" value="${produto.custo || 0}">
-                                <div class="campos"><label class="titulo_campo">Código:</label> <input type="text" value="${produto.codigo}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" name="nome" value="${produto.nome}" required></div>
-                                <div class="campos"><label class="titulo_campo">Fornecedor:</label> <input type="text" name="fornecedor" value="${produto.fornecedor}" required></div>
-                                <div class="campos"><label class="titulo_campo">Quantidade:</label> <input type="number" name="quantidade" value="${produto.quantidade}" required></div>
-                                <div class="campos"><label class="titulo_campo">Preço:</label> <input type="number" step="0.001" name="preco" value="${produto.preco}" required></div>
-                                <div style="display: flex; gap: 10px; margin: 20px;">
-                                    <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
-                                    <button type="submit" class="botao_confirma">Salvar Alterações</button>
-                                </div>
-                            </form>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form">
+                                <form id="editForm">
+                                    <input type="hidden" name="codigo" value="${produto.codigo}">
+                                    <input type="hidden" name="status" value="${produto.status}">
+                                    <input type="hidden" name="descricao" value="${produto.descricao || ''}">
+                                    <input type="hidden" name="quantidadeCritica" value="${produto.quantidadeCritica || 0}">
+                                    <input type="hidden" name="imagem" value="${produto.imagem || ''}">
+                                    <input type="hidden" name="custo" value="${produto.custo || 0}">
+                                    <div class="campos"><label class="titulo_campo">Código:</label> <input type="text" value="${produto.codigo}" disabled></div>
+                                    <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" name="nome" value="${produto.nome}" required></div>
+                                    <div class="campos"><label class="titulo_campo">Fornecedor:</label> <input type="text" name="fornecedor" value="${produto.fornecedor}" required></div>
+                                    <div class="campos"><label class="titulo_campo">Quantidade:</label> <input type="number" name="quantidade" value="${produto.quantidade}" required></div>
+                                    <div class="campos"><label class="titulo_campo">Preço:</label> <input type="number" step="0.001" name="preco" value="${produto.preco}" required></div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
+                            <button type="submit" form="editForm" class="botao_confirma">Salvar Alterações</button>
                         </div>
                     `;
                 }

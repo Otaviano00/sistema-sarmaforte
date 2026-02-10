@@ -14,16 +14,47 @@
 
 .modal-content {
     background-color: #fefefe;
-    padding: 20px;
-    padding-top: 30px;
     border: 1px solid #888;
     width: 80%;
     max-width: 800px;
+    max-height: 90vh;
     border-radius: 10px;
     position: relative;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     animation-name: animatetop;
-    animation-duration: 0.4s
+    animation-duration: 0.4s;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 20px;
+    padding-top: 30px;
+    border-bottom: 2px solid #ddd;
+    flex-shrink: 0;
+    background-color: #fefefe;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 2px solid #ddd;
+    flex-shrink: 0;
+    background-color: #fefefe;
+    border-radius: 0 0 10px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @keyframes animatetop {
@@ -33,10 +64,13 @@
 
 .close-btn {
     color: #aaa;
-    float: right;
+    position: absolute;
+    top: 10px;
+    right: 20px;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    z-index: 1;
 }
 
 .close-btn:hover,
@@ -46,3 +80,56 @@
     cursor: pointer;
 }
 
+/* Estilos para o botão expansível */
+.botao_expansivel {
+    width: 99%;
+    padding: 15px;
+    padding-left: 0;
+    padding-right: 10px;
+    font-size: 1.3em;
+    background-color: white;
+    color: #142E50;
+    border: none;
+    border-bottom: 3px solid #142E50;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-family: 'Karla', sans-serif;
+    text-align: left;
+}
+
+.botao_expansivel:hover {
+    background-color: #006eff15;
+}
+
+.botao_expansivel:active {
+    transform: scale(0.98);
+}
+
+/* Animação suave para expansão da lista */
+.itens-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+    opacity: 0;
+    margin-top: 0;
+}
+
+.itens-container.expanded {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 15px;
+}
+
+/* Animação da seta */
+.arrow-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    font-size: 0.8em;
+}
+
+.arrow-icon.rotated {
+    transform: rotate(180deg);
+}

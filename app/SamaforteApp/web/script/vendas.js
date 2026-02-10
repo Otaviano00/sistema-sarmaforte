@@ -133,8 +133,7 @@ function confirmarExclusao(event, id) {
 
 async function openModal(modalId, id, tipo) {
     const modal = document.getElementById(modalId);
-    const contentDivId = modalId.replace('Modal', 'ModalContent');
-    const contentDiv = document.getElementById(contentDivId);
+    const contentDiv = document.getElementById(modalId.replace('Modal', 'ModalContent'));
     let html = '';
 
     switch (tipo) {
@@ -149,18 +148,45 @@ async function openModal(modalId, id, tipo) {
                 const venda = await response.json();
 
                 html = `
-                    <div class="form">
+                    <div class="modal-header">
+                        <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
                         <h1 class="titulo">Detalhes Venda</h1>
-                        <div class="campos"><label class="titulo_campo">ID:</label> <input type="text" value="${venda.id}" disabled></div>
-                        <div class="campos"><label class="titulo_campo">Cliente:</label> <input type="text" value="${venda.orcamento?.cliente?.nome || '---'}" disabled></div>
-                        <div class="campos"><label class="titulo_campo">Vendedor:</label> <input type="text" value="${venda.usuario?.nome || 'EXCLUÍDO'}" disabled></div>
-                        <div class="campos"><label class="titulo_campo">Data:</label> <input type="text" value="${new Date(venda.data).toLocaleDateString('pt-BR')}" disabled></div>
-                        <div class="campos"><label class="titulo_campo">Valor:</label> <input type="text" value="R$ ${parseFloat(venda.valor).toFixed(3)}" disabled></div>
-                        <div class="campos"><label class="titulo_campo">Desconto:</label> <input type="text" value="R$ ${parseFloat(venda.desconto).toFixed(3)}" disabled></div>
-                        <div class="campos"><label class="titulo_campo">Forma de Pagamento:</label> <input type="text" value="${venda.formaPagamento}" disabled></div>
-                        <div style="display: flex; gap: 10px; margin: 20px;">
-                            <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form">
+                            <div class="campos"><label class="titulo_campo">ID:</label> <input type="text" value="${venda.id}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Cliente:</label> <input type="text" value="${venda.orcamento?.cliente?.nome || '---'}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Vendedor:</label> <input type="text" value="${venda.usuario?.nome || 'EXCLUÍDO'}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Data:</label> <input type="text" value="${new Date(venda.data).toLocaleDateString('pt-BR')}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Valor:</label> <input type="text" value="R$ ${parseFloat(venda.valor).toFixed(3)}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Desconto:</label> <input type="text" value="R$ ${parseFloat(venda.desconto).toFixed(3)}" disabled></div>
+                            <div class="campos"><label class="titulo_campo">Forma de Pagamento:</label> <input type="text" value="${venda.formaPagamento}" disabled></div>
+                            
+                            <!-- Campo Expansível para Itens -->
+                            <div class="campos">
+                                <button type="button" class="botao_expansivel" onclick="toggleItensOrcamento(${venda.id})">
+                                    <span>📦 Ver itens do orçamento</span>
+                                    <span id="arrow-${venda.id}" class="arrow-icon">▼</span>
+                                </button>
+                                <div id="itens-container-${venda.id}" class="itens-container">
+                                    <table id="itens-table-${venda.id}" class="display" style="width: 100%; font-size: 0.9em;">
+                                        <thead>
+                                            <tr>
+                                                <th>Produto</th>
+                                                <th>Quantidade</th>
+                                                <th>Preço Un.</th>
+                                                <th>Total</th>
+                                                <th>Vendido</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
                     </div>
                 `;
                 contentDiv.innerHTML = html;
@@ -175,6 +201,94 @@ async function openModal(modalId, id, tipo) {
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
+}
+
+function toggleItensOrcamento(vendaId) {
+    const container = document.getElementById(`itens-container-${vendaId}`);
+    const arrow = document.getElementById(`arrow-${vendaId}`);
+    const tableId = `itens-table-${vendaId}`;
+    const isExpanded = container.classList.contains('expanded');
+
+    if (!isExpanded) {
+        // Expandir com animação suave
+        container.classList.add('expanded');
+        arrow.classList.add('rotated');
+
+        // Inicializar DataTable se ainda não foi criado
+        if (!$.fn.DataTable.isDataTable(`#${tableId}`)) {
+            $(`#${tableId}`).DataTable({
+                ajax: {
+                    url: basePath,
+                    type: 'GET',
+                    data: {
+                        id: vendaId,
+                        itens: true
+                    },
+                    dataSrc: ''  // Dados vêm diretamente como array
+                },
+                columns: [
+                    {
+                        data: 'produto',
+                        render: function(data) {
+                            return data ? data.nome : '---';
+                        }
+                    },
+                    {
+                        data: 'quantidade',
+                        render: function(data) {
+                            return parseFloat(data).toFixed(2);
+                        }
+                    },
+                    {
+                        data: 'preco',
+                        render: function(data) {
+                            return `R$ ${parseFloat(data).toFixed(3)}`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            const total = data.quantidade * data.preco;
+                            return `R$ ${parseFloat(total).toFixed(3)}`;
+                        }
+                    },
+                    {
+                        data: 'statusVenda',
+                        render: function(data) {
+                            return data ?
+                                '<span style="color: green; font-weight: bold;">✓ Sim</span>' :
+                                '<span style="color: red; font-weight: bold;">✗ Não</span>';
+                        }
+                    }
+                ],
+                language: {
+                    lengthMenu: "Exibindo _MENU_ registros por página",
+                    zeroRecords: "Nenhum item encontrado",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "Nenhum registro disponível",
+                    infoFiltered: "(filtrado de _MAX_ registros no total)",
+                    search: "Buscar:",
+                    paginate: {
+                        first: "<<",
+                        last: ">>",
+                        next: ">",
+                        previous: "<"
+                    },
+                    loadingRecords: "Carregando...",
+                    processing: "Processando...",
+                    emptyTable: "Nenhum item no orçamento"
+                },
+                pageLength: 5,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "Todos"]],
+                order: [[0, 'asc']],
+                processing: true
+            });
+        }
+    } else {
+        // Recolher com animação suave
+        container.classList.remove('expanded');
+        arrow.classList.remove('rotated');
+    }
 }
 
 window.onclick = function(event) {

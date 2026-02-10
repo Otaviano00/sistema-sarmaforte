@@ -21,8 +21,9 @@
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
     <link rel="stylesheet" href="style/main.css">
-    <link rel="stylesheet" href="style/cadastrar_alterar.css">
+    <link rel="stylesheet" href="style/main.css">
     <link rel="stylesheet" href="style/modal.css">
+    <link rel="stylesheet" href="style/cadastrar_alterar.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
 
 </head>
@@ -115,18 +116,12 @@
 
     <!-- Modal de Detalhes -->
     <div id="detailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
-            <div id="detailsModalContent"></div>
-        </div>
+        <div class="modal-content" id="detailsModalContent"></div>
     </div>
 
     <!-- Modal de Alterar -->
     <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
-            <div id="editModalContent"></div>
-        </div>
+        <div class="modal-content" id="editModalContent"></div>
     </div>
 
 </body>

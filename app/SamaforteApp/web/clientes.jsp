@@ -111,26 +111,17 @@
 
     <!-- Modal de Detalhes -->
     <div id="detailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
-            <div id="detailsModalContent"></div>
-        </div>
+        <div class="modal-content" id="detailsModalContent"></div>
     </div>
 
     <!-- Modal de Alterar -->
     <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
-            <div id="editModalContent"></div>
-        </div>
+        <div class="modal-content" id="editModalContent"></div>
     </div>
 
     <!-- Modal de Criar -->
     <div id="createModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('createModal')">&times;</span>
-            <div id="createModalContent"></div>
-        </div>
+        <div class="modal-content" id="createModalContent"></div>
     </div>
 
 </body>
