@@ -279,6 +279,78 @@ public class VendaDAO {
         }
 
     }
+
+    public static Venda listarPorOrcamento(int idOrcamento) {
+
+        String sql = "SELECT * FROM venda WHERE id_orcamento = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        Venda venda = new Venda();
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+
+            pstm.setInt(1, idOrcamento);
+            pstm.execute();
+
+            rset = pstm.executeQuery();
+
+            if (rset.next()) {
+
+                try {
+
+                    Usuario usuario = UsuarioDAO.listarPorId(rset.getInt("id_usuario"));
+                    Orcamento orcamento = OrcamentoDAO.listarPorId(rset.getInt("id_orcamento"));
+
+                    venda.setId(rset.getInt("id"));
+                    venda.setData(rset.getTimestamp("data").toLocalDateTime());
+                    venda.setValor(rset.getDouble("valor"));
+                    venda.setDesconto(rset.getDouble("desconto"));
+                    venda.setFormaPagamento(rset.getString("forma_pagamento"));
+                    venda.setUsuario(usuario);
+                    venda.setOrcamento(orcamento);
+
+                } catch (Exception e) {
+
+                    return null;
+
+                }
+
+            } else {
+
+                return null;
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (rset != null) {
+                    rset.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+
+        return venda;
+
+    }
     
     public static List<ItemOrcamento> listarTodosItensVendidos() {
 

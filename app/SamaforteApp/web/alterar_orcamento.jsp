@@ -7,6 +7,8 @@
 <%@page import="dao.ClienteDAO"%>
 <%@page import="model.Orcamento"%>
 <%@page import="dao.OrcamentoDAO"%>
+<%@page import="model.Venda"%>
+<%@page import="dao.VendaDAO"%>
 <%@page import="model.ItemOrcamento"%>
 <%@page import="utilities.Util" %>
 
@@ -270,11 +272,17 @@
                 <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
                     Imprimir Orçamento
                 </button>  
-                <% if (!orcamento.getStatus().equals("Concluído")) {%>
+                <% if (orcamento.getStatus().equals("Pendente")) {
+                    Venda venda = VendaDAO.listarPorOrcamento(id);
+                %>
+                    <button class="botao_confirma" id="botao_venda" onclick="location.href = 'alterar_venda.jsp?id=<%= venda.getId()%>'">
+                        Realizar Venda
+                    </button>
+                <% } else if (!orcamento.getStatus().equals("Concluído")) { %>
                     <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
                         Realizar Venda
                     </button>
-                <%}%>     
+                <%}%>
             </section>
         </div>
     </body>

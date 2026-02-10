@@ -498,11 +498,11 @@ public class OrcamentoDAO {
             pstm.setInt(1, idOrcamento);
             rset = pstm.executeQuery();
 
+            Orcamento orca = OrcamentoDAO.listarPorId(idOrcamento);
+
             while (rset.next()) {
 
                 Timestamp sqlDataHora = rset.getTimestamp("dataHora");
-
-                Orcamento orca = OrcamentoDAO.listarPorId(idOrcamento);
 
                 Produto pro = ProdutoDAO.listarPorId(rset.getInt("id_produto"));
 
