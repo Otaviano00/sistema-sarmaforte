@@ -1,15 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.List"%>
-<%@page import="model.Produto"%>
-<%@page import="dao.ProdutoDAO"%>
-<%@page import="model.Cliente"%>
-<%@page import="dao.ClienteDAO"%>
-<%@page import="model.Orcamento"%>
-<%@page import="dao.OrcamentoDAO"%>
-<%@page import="model.ItemOrcamento"%>
-<%@page import="utilities.Util" %>
-
 <%@include file="sessao.jsp" %>
 
 <!DOCTYPE html>
@@ -28,8 +17,7 @@
         <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
-        <script defer src="script/orcamento.js"></script>
-        <script defer src="script/tabela.js"> </script>
+        <script defer src="script/registrar_orcamento.js"></script>
 
         <link rel="stylesheet" href="style/main.css">
         <link rel="stylesheet" href="style/cadastrar_alterar.css">
@@ -39,10 +27,6 @@
         <title>Registrar Orçamento</title>
     </head>
     <body>
-        <%
-            int id = Integer.parseInt(request.getParameter("id"));
-            Orcamento orcamento = OrcamentoDAO.listarPorId(id);
-        %>
         <header>
              <div class="logo">
                 <img id="bloco1_logo" src="images/blocos_esquerda.svg" alt="blocos">
@@ -58,23 +42,9 @@
         </nav>
         <div class="flex">
             <section id="buscar_item" class="bloco">
-                <input type="hidden" id="id_produto" name="AREIA LAVADA MEDIA SACO 20 KG" data-preco="6.9" value="2">
+                <input type="hidden" id="id_produto" name="" data-preco="" value="">
                 <select id="seletor_produto" name="seletor_produto" class="seletor">
-                    <%
-                        List<Produto> produtos = ProdutoDAO.listar();
-                        for (Produto produto : produtos) {
-                            if (produto.isStatus()) {
-                    %>
-                    <option value="<%= produto.getCodigo()%>" data-preco="<%= produto.getPreco()%>">
-                        <%
-                            String str = produto.getNome() + "     ----     R$ " + String.format("%,.3f", produto.getPreco());
-                        %>
-                        <%= str %>
-                    </option>
-                    <% 
-                            }
-                        }
-                    %>
+                    <!-- Produtos serão carregados via JavaScript -->
                 </select>
                 <button onclick="adicionarItem()">
                     ADICIONAR ITEM
@@ -83,34 +53,14 @@
             <div class="conjunto">
                 <section id="dados_orcamento" class="bloco">
                     <h2>Dados do cliente</h2>
-                    <form method="post" action="GerenciarOrcamento" id="dados_cliente" style="margin-top: -20px;">
-                        <input type="hidden" name="id_orcamento" id="id_orcamento" value="<%= id%>">
-                        <input type="hidden" id="id_cliente" value="<%= orcamento.getCliente().getId()%>">
-                        <input type="hidden" name="acao" value="4">
-
+                    <form id="dados_cliente" style="margin-top: -20px;">
+                        <input type="hidden" name="id_orcamento" id="id_orcamento" value="">
+                        <input type="hidden" id="id_cliente" value="">
 
                         <div style="display: flex; flex-direction: row; width: 100%; min-width: 100%;">
                             <div class="campos">
                                 <select id="seletor_cliente" name="seletor_cliente" class="seletor" required>
-                                    <%
-                                        List<Cliente> clientes = ClienteDAO.listar();
-                                        for (Cliente cliente : clientes) {
-                                
-                                         if (cliente.getId() == orcamento.getCliente().getId()) {
-                                    %>
-                                        <option value="<%= cliente.getId()%>" selected>
-                                            <%= cliente.getNome()%>
-                                        </option>
-                                    <%
-                                            } else {
-                                    %>
-                                        <option value="<%= cliente.getId()%>">
-                                            <%= cliente.getNome()%>
-                                        </option>
-                                    <%
-                                            }
-                                        }
-                                    %>
+                                    <!-- Clientes serão carregados via JavaScript -->
                                 </select>
                             </div>
                             
@@ -121,26 +71,26 @@
                         <br>                     
                         <div class="campo_cliente campos">
                             <label>Nome:</label>
-                            <input type="text" value="<%= orcamento.getCliente().getNome()%>" disabled readonly>
+                            <input type="text" value="" disabled readonly>
                         </div>
                         <div class="campo_cliente campos">
                             <label>Telefone:</label>
-                            <input type="text" value="<%= orcamento.getCliente().getTelefone()%>" disabled readonly>
+                            <input type="text" value="" disabled readonly>
                         </div>
                         <div class="campo_cliente campos">
                             <label>CPF:</label>
-                            <input type="text" value="<%= orcamento.getCliente().getCpf() != null? orcamento.getCliente().getCpf() : "---"%>" disabled readonly>
+                            <input type="text" value="" disabled readonly>
                         </div>
                         <div class="campo_cliente campos">
                             <label>Endereço:</label>
-                            <input type="text" value="<%= orcamento.getCliente().getEndereco() != null? orcamento.getCliente().getEndereco() : "---"%>" disabled readonly>
+                            <input type="text" value="" disabled readonly>
                         </div>
                         <br>
                         <div class="campos">
                             <label for="informacao"> Informações:</label>
-                            <textarea name="informacao" id="informacao"><%= orcamento.getInformacao() == null? "" : orcamento.getInformacao().trim()%></textarea>
+                            <textarea name="informacao" id="informacao"></textarea>
                         </div>
-                        <button style="font-size: 1.4em;">
+                        <button type="submit" style="font-size: 1.4em;">
                             Atualizar Informações
                         </button>
                     </form>
@@ -149,11 +99,11 @@
                     <h2>Itens do Orçamento</h2>
                     <dialog>
                         <div class="modal">
-                            <form action="GerenciarOrcamento" method="get">
-                                <input type="hidden" name="acao" id="acao_item" value="5">
-                            
+                            <form id="dados_item">
+                                <input type="hidden" name="acao" id="acao_item" value="">
+
                                 <input type="hidden" name="id_produto" id="produto_id">
-                                <input type="hidden" name="id_orcamento" value="<%= id%>">
+                                <input type="hidden" name="id_orcamento" id="id_orcamento_modal" value="">
                                 <input type="hidden" name="id_item" id="id_item" value="0">
                                 <div class="campos">
                                     <label for="nome_produto" class="titulo_campo">Produto: </label>
@@ -174,7 +124,7 @@
                             </button>
                         </div>
                     </dialog>
-                    <table class="table table-striped" style="background-color: white;">
+                    <table id="tabela-itens" class="table table-striped" style="background-color: white;">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -189,67 +139,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <%
-                                List<ItemOrcamento> itens = OrcamentoDAO.listarItensOrcamento(id);
-
-                                double total = 0;
-                                for (int i = 0; i < itens.size(); i++) {
-                                    double precoTotal = itens.get(i).getPreco() * itens.get(i).getQuantidade();
-
-                                    total += precoTotal;
-
-                                    String data = Util.converteData(itens.get(i).getDataHora().toLocalDate());
-                                    String hora = Util.converteHora(itens.get(i).getDataHora());
-                                    String dataHora = data + " - " + hora;
-                            %>
-                                <tr>
-                                    <td>
-                                        <%= i+1%>
-                                    </td>
-                                    <td>
-                                        <%= itens.get(i).getProduto().getCodigo()%>
-                                    </td>
-                                    <td>
-                                        <%= dataHora%>
-                                    </td>
-                                    <td>
-                                        <%= itens.get(i).getProduto().getNome()%>
-                                    </td>
-                                    <td>
-                                        <%= String.format("%,.3f", itens.get(i).getQuantidade())%>
-                                    </td>
-                                    <td>
-                                        <%= String.format("%,.3f", itens.get(i).getPreco())%>
-                                    </td>
-                                    <td>
-                                        <%= String.format("%,.3f", precoTotal)%>
-                                    </td>
-                                    <td>
-                                        <%= itens.get(i).isStatusVenda()? "VEndido" : "Não Vendido"%>
-                                    </td>
-                                    <td>
-                                        <% if (!itens.get(i).isStatusVenda()) {%>
-                                            <button onclick="alterarItem(parseInt('<%= i%>'), parseInt('<%= itens.get(i).getId()%>'))" class="botao_acao" title="Alterar <%= itens.get(i).getProduto().getNome()%>">
-                                                <img src="images/icone_alterar.svg" alt="Alterar">
-                                            </button>
-                                            <button onclick="location.href = 'GerenciarOrcamento?acao=7&idOrcamento=<%= itens.get(i).getOrcamento().getId()%>&idItem=<%= itens.get(i).getId()%>'" class="botao_acao" title="Excluir <%= itens.get(i).getProduto().getNome()%>">
-                                                <img src="images/icone_excluir.svg" alt="Excluir">
-                                            </button>
-                                        <%}%>
-                                    </td>
-                                </tr>
-                            <%
-                                }
-                            %>
+                            <!-- Itens serão carregados via JavaScript -->
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6" >
-                                    TOTAL
-                                </td>
-                                <td colspan="3">
-                                    <%= String.format("R$ %,.3f", total)%>
-                                </td>
+                                <td colspan="6">TOTAL</td>
+                                <td colspan="3">R$ 0,000</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -258,20 +153,18 @@
             </div> 
 
             <section id="finalizar" class="bloco">
-                <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=<%= id%>&acao=3')" style="position: absolute; left: 0;" >
+                <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=' + new URLSearchParams(window.location.search).get('id') + '&acao=3')" style="position: absolute; left: 0;">
                     Cancelar
                 </button>
-                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
+                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
                     Imprimir Orçamento
                 </button> 
                 <button class="botao_confirma" onclick="location.href = 'orcamentos.jsp'">
                     Guardar Orçamento
                 </button>
-                <% if (!orcamento.getStatus().equals("Concluído")) {%>
-                    <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=<%= id%>'">
-                        Realizar Venda
-                    </button>
-                <%}%>         
+                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
+                    Realizar Venda
+                </button>
             </section>
         </div>
     </body>
