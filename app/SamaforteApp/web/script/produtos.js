@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
             "data": function (d) {
                 d.filterColumn = $('#input-filter').val();
                 d.filterType = $('#input-type').val();
+                d.isPaginado = true;
             }
         },
         "columns": [

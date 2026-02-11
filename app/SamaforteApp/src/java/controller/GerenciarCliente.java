@@ -30,6 +30,7 @@ public class GerenciarCliente extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String idParam = request.getParameter("id");
+        String isPaginado = request.getParameter("isPaginado");
 
         try {
             if (idParam != null) {
@@ -42,11 +43,11 @@ public class GerenciarCliente extends HttpServlet {
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     out.print("{\"error\":\"Cliente não encontrado\"}");
                 }
-            } else {
+            } else if (Boolean.parseBoolean(isPaginado)) {
                 // Listar clientes para DataTables
                 int start = Integer.parseInt(request.getParameter("start"));
                 int length = Integer.parseInt(request.getParameter("length"));
-                String searchValue = request.getParameter("search[value]"); // Alterado de "search[value]"
+                String searchValue = request.getParameter("search[value]");
                 int draw = Integer.parseInt(request.getParameter("draw"));
                 String filterColumn = request.getParameter("filterColumn");
                 String filterType = request.getParameter("filterType");
@@ -62,6 +63,10 @@ public class GerenciarCliente extends HttpServlet {
                 jsonResponse.put("data", clientes);
 
                 out.print(gson.toJson(jsonResponse));
+            } else {
+                // Listar todos os clientes (sem paginação)
+                List<Cliente> clientes = ClienteDAO.listar();
+                out.print(gson.toJson(clientes));
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -30,6 +30,7 @@ public class GerenciarProduto extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String codigoParam = request.getParameter("codigo");
+        String isPaginado = request.getParameter("isPaginado");
 
         try {
             if (codigoParam != null) {
@@ -42,7 +43,7 @@ public class GerenciarProduto extends HttpServlet {
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     out.print("{\"error\":\"Produto não encontrado\"}");
                 }
-            } else {
+            } else if (Boolean.parseBoolean(isPaginado)) {
                 // Listar produtos para DataTables
                 int start = Integer.parseInt(request.getParameter("start"));
                 int length = Integer.parseInt(request.getParameter("length"));
@@ -62,6 +63,10 @@ public class GerenciarProduto extends HttpServlet {
                 jsonResponse.put("data", produtos);
 
                 out.print(gson.toJson(jsonResponse));
+            } else {
+                // Listar todos os produtos
+                List<Produto> produtos = ProdutoDAO.listar();
+                out.print(gson.toJson(produtos));
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
