@@ -101,39 +101,39 @@ async function openModal(modalId, id, tipo) {
     switch (tipo) {
         case 'create':
             html = `
-                <div class="modal-header">
-                    <span class="close-btn" onclick="closeModal('createModal')">&times;</span>
-                    <h1 class="titulo">Novo Cliente</h1>
-                </div>
-                <div class="modal-body">
-                    <div class="form">
+                <button class="botao_fechar_modal" onclick="closeModal('createModal')" title="Fechar">×</button>
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h2>Novo Cliente</h2>
                         <form id="createForm">
-                            <div class="campos">
-                                <label for="nome" class="titulo_campo">Nome:</label>
-                                <input type="text" name="nome" required>
+                            <div class="form-group">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" name="nome" class="form-input" required>
                             </div>
-                            <div class="campos">
-                                <label for="telefone" class="titulo_campo">Telefone:</label>
-                                <input type="text" name="telefone" required>
+                            <div class="form-group">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" name="telefone" class="form-input" required>
                             </div>
-                            <div class="campos">
-                                <label for="cpf" class="titulo_campo">CPF:</label>
-                                <input type="text" name="cpf">
+                            <div class="form-group">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input type="text" name="cpf" class="form-input">
                             </div>
-                            <div class="campos">
-                                <label for="endereco" class="titulo_campo">Endereço:</label>
-                                <input type="text" name="endereco">
+                            <div class="form-group">
+                                <label for="endereco" class="form-label">Endereço</label>
+                                <input type="text" name="endereco" class="form-input">
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
-                    <button type="submit" form="createForm" class="botao_confirma">Cadastrar</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')">Cancelar</button>
+                        <button type="submit" form="createForm" class="btn btn-primary">
+                            <span>+</span> Cadastrar
+                        </button>
+                    </div>
                 </div>
             `;
             contentDiv.innerHTML = html;
-            modal.style.display = 'flex';
+            modal.showModal();
 
             document.getElementById('createForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
@@ -173,47 +173,69 @@ async function openModal(modalId, id, tipo) {
 
                 if (tipo === 'detalhes') {
                     html = `
-                        <div class="modal-header">
-                            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
-                            <h1 class="titulo">Detalhes Cliente</h1>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form">
-                                <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" value="${cliente.nome}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Telefone:</label> <input type="text" value="${cliente.telefone}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">CPF:</label> <input type="text" value="${cliente.cpf || ''}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Endereço:</label> <input type="text" value="${cliente.endereco || ''}" disabled></div>
+                        <button class="botao_fechar_modal" onclick="closeModal('detailsModal')" title="Fechar">×</button>
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h2>Detalhes Cliente</h2>
+                                <div class="form-group">
+                                    <label class="form-label">Nome</label>
+                                    <input type="text" value="${cliente.nome}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" value="${cliente.telefone}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">CPF</label>
+                                    <input type="text" value="${cliente.cpf || ''}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Endereço</label>
+                                    <input type="text" value="${cliente.endereco || ''}" class="form-input" disabled>
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal('detailsModal')">Voltar</button>
+                            </div>
                         </div>
                     `;
                 } else { // 'alterar'
                     html = `
-                        <div class="modal-header">
-                            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
-                            <h1 class="titulo">Alterar Cliente</h1>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form">
+                        <button class="botao_fechar_modal" onclick="closeModal('editModal')" title="Fechar">×</button>
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h2>Alterar Cliente</h2>
                                 <form id="editForm">
                                     <input type="hidden" name="id" value="${cliente.id}">
-                                    <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" name="nome" value="${cliente.nome}" required></div>
-                                    <div class="campos"><label class="titulo_campo">Telefone:</label> <input type="text" name="telefone" value="${cliente.telefone}" required></div>
-                                    <div class="campos"><label class="titulo_campo">CPF:</label> <input type="text" name="cpf" value="${cliente.cpf || ''}"></div>
-                                    <div class="campos"><label class="titulo_campo">Endereço:</label> <input type="text" name="endereco" value="${cliente.endereco || ''}"></div>
+                                    <div class="form-group">
+                                        <label class="form-label">Nome</label>
+                                        <input type="text" name="nome" value="${cliente.nome}" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Telefone</label>
+                                        <input type="text" name="telefone" value="${cliente.telefone}" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">CPF</label>
+                                        <input type="text" name="cpf" value="${cliente.cpf || ''}" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Endereço</label>
+                                        <input type="text" name="endereco" value="${cliente.endereco || ''}" class="form-input">
+                                    </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
-                            <button type="submit" form="editForm" class="botao_confirma">Salvar Alterações</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancelar</button>
+                                <button type="submit" form="editForm" class="btn btn-primary">
+                                    <span>✓</span> Salvar Alterações
+                                </button>
+                            </div>
                         </div>
                     `;
                 }
                 contentDiv.innerHTML = html;
-                modal.style.display = 'flex';
+                modal.showModal();
 
                 if (tipo === 'alterar') {
                     document.getElementById('editForm').addEventListener('submit', async function (e) {
@@ -253,20 +275,5 @@ async function openModal(modalId, id, tipo) {
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
-
-window.onclick = function(event) {
-    const detailsModal = document.getElementById('detailsModal');
-    const editModal = document.getElementById('editModal');
-    const createModal = document.getElementById('createModal');
-    if (event.target == detailsModal) {
-        detailsModal.style.display = "none";
-    }
-    if (event.target == editModal) {
-        editModal.style.display = "none";
-    }
-    if (event.target == createModal) {
-        createModal.style.display = "none";
-    }
+    document.getElementById(modalId).close();
 }

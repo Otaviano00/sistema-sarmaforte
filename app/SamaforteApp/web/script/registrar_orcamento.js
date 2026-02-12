@@ -1,6 +1,10 @@
-const modal = document.querySelector('dialog');
+let modalAdicionar = null;
+let modalAlterar = null;
 let idOrcamento = null;
 let tabelaItens = null;
+
+// Timer para debounce de atualização de informações
+let informacaoTimer = null;
 
 // Função para obter ID do orçamento da URL
 function getOrcamentoId() {
@@ -18,6 +22,10 @@ $(document).ready(function() {
         return;
     }
 
+    // Inicializar referências aos modais
+    modalAdicionar = document.querySelector('#modal_adicionar');
+    modalAlterar = document.querySelector('#modal_alterar');
+
     // Inicializar Select2 para produtos
     inicializarSeletorProdutos();
 
@@ -32,6 +40,19 @@ $(document).ready(function() {
 
     // Configurar eventos de formulários
     configurarEventos();
+
+    // Configurar atualização automática das informações com delay
+    $('#informacao').on('input', function() {
+        // Limpar timer anterior se existir
+        if (informacaoTimer) {
+            clearTimeout(informacaoTimer);
+        }
+
+        // Criar novo timer de 1 segundo
+        informacaoTimer = setTimeout(function() {
+            atualizarInformacoes();
+        }, 1000);
+    });
 });
 
 // Inicializar seletor de produtos com Select2
@@ -150,6 +171,8 @@ function inicializarSeletorClientes() {
                 $(campos[1]).val(cliente.telefone || '---');
                 $(campos[2]).val(cliente.cpf || '---');
                 $(campos[3]).val(cliente.endereco || '---');
+
+                atualizarInformacoes();
             })
             .catch(error => {
                 console.error('Erro ao carregar cliente:', error);
@@ -160,7 +183,7 @@ function inicializarSeletorClientes() {
 
 // Carregar dados do orçamento
 function carregarDadosOrcamento() {
-    fetch(`GerenciarOrcamento?id=${idOrcamento}&attr=NO_ATTR`)
+    fetch(`GerenciarOrcamento?id=${idOrcamento}`)
         .then(response => response.json())
         .then(orcamento => {
             if (orcamento.error) {
@@ -200,9 +223,10 @@ function inicializarTabelaItens() {
                 d.idOrcamento = idOrcamento;
                 d.filterColumn = '';
                 d.filterType = '';
+                d.isPaginado = true;
             },
             "dataSrc": function(json) {
-                atualizarTotalGeral(json.data);
+                atualizarTotalGeral(json.totalOrcamento);
                 return json.data;
             }
         },
@@ -289,14 +313,119 @@ function inicializarTabelaItens() {
 }
 
 // Atualizar total geral
-function atualizarTotalGeral(itens) {
-    let total = 0;
-    itens.forEach(item => {
-        total += item.quantidade * item.preco;
-    });
+function atualizarTotalGeral(total) {
+    // Verifica se o total é um número válido
+    if (typeof total !== 'number' || isNaN(total)) {
+        total = 0;
+    }
 
     const totalFormatado = 'R$ ' + total.toFixed(3).replace('.', ',');
     $('tfoot td:last').text(totalFormatado);
+}
+
+// Função para atualizar o cliente no backend
+function atualizarClienteNoBackend(idCliente) {
+    const orcamento = {
+        id: parseInt(idOrcamento),
+        cliente: {
+            id: idCliente
+        }
+    };
+
+    fetch('GerenciarOrcamento', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orcamento)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.error) {
+            console.error('Erro ao atualizar cliente:', result.error);
+            alert('Erro ao atualizar cliente: ' + result.error);
+        } else {
+            console.log('Cliente atualizado com sucesso');
+            // Mostrar feedback visual discreto (opcional)
+            mostrarFeedbackSucesso('Cliente atualizado');
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao atualizar cliente:', error);
+        alert('Erro ao atualizar cliente!');
+    });
+}
+
+// Função para atualizar as informações no backend
+function atualizarInformacoes() {
+    const informacao = $('#informacao').val();
+    const idCliente = $('#seletor_cliente').val();
+
+    if (!idCliente) {
+        console.log('Cliente não selecionado, não é possível atualizar informações');
+        return;
+    }
+
+    const orcamento = {
+        id: parseInt(idOrcamento),
+        cliente: {
+            id: parseInt(idCliente)
+        },
+        informacao: informacao
+    };
+
+    fetch('GerenciarOrcamento', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orcamento)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.error) {
+            console.error('Erro ao atualizar informações:', result.error);
+            alert('Erro ao atualizar informações: ' + result.error);
+        } else {
+            console.log('Informações atualizadas com sucesso');
+            // Mostrar feedback visual discreto (opcional)
+            mostrarFeedbackSucesso('Informações salvas');
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao atualizar informações:', error);
+        alert('Erro ao atualizar informações!');
+    });
+}
+
+// Função para mostrar feedback visual discreto
+function mostrarFeedbackSucesso(mensagem) {
+    // Criar elemento de feedback se não existir
+    let feedback = document.getElementById('feedback-sucesso');
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.id = 'feedback-sucesso';
+        feedback.style.position = 'fixed';
+        feedback.style.bottom = '20px';
+        feedback.style.right = '20px';
+        feedback.style.padding = '10px 20px';
+        feedback.style.backgroundColor = '#28a745';
+        feedback.style.color = 'white';
+        feedback.style.borderRadius = '5px';
+        feedback.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        feedback.style.zIndex = '10000';
+        feedback.style.transition = 'opacity 0.3s ease';
+        document.body.appendChild(feedback);
+    }
+
+    // Mostrar mensagem
+    feedback.textContent = mensagem;
+    feedback.style.opacity = '1';
+    feedback.style.display = 'block';
+
+    // Esconder após 2 segundos
+    setTimeout(function() {
+        feedback.style.opacity = '0';
+        setTimeout(function() {
+            feedback.style.display = 'none';
+        }, 300);
+    }, 2000);
 }
 
 // Configurar eventos de formulários
@@ -313,16 +442,19 @@ function configurarEventos() {
             return;
         }
 
-        const data = {
-            idOrcamento: parseInt(idOrcamento),
-            idCliente: parseInt(idCliente),
+        // Montar objeto Orcamento completo
+        const orcamento = {
+            id: parseInt(idOrcamento),
+            cliente: {
+                id: parseInt(idCliente)
+            },
             informacao: informacao
         };
 
-        fetch('GerenciarOrcamento?action=updateInfo', {
+        fetch('GerenciarOrcamento', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(orcamento)
         })
         .then(response => response.json())
         .then(result => {
@@ -337,94 +469,38 @@ function configurarEventos() {
             alert('Erro ao atualizar informações!');
         });
     });
-
-    // Formulário de adicionar/alterar item
-    $('#dados_item').on('submit', function(e) {
-        e.preventDefault();
-
-        const acao = $('#acao_item').val();
-        const idItem = $('#id_item').val();
-        const idProduto = $('#produto_id').val();
-        let quantidade = $('#quantidade_produto').val();
-        let preco = $('#preco_produto').val();
-
-        // Converter vírgula para ponto
-        quantidade = parseFloat(quantidade.replace(',', '.'));
-        preco = parseFloat(preco.replace(',', '.'));
-
-        if (!idProduto || !quantidade || !preco) {
-            alert('Preencha todos os campos!');
-            return;
-        }
-
-        if (acao === '5') {
-            // Adicionar item
-            const data = {
-                idProduto: parseInt(idProduto),
-                idOrcamento: parseInt(idOrcamento),
-                quantidade: quantidade,
-                preco: preco
-            };
-
-            fetch('GerenciarOrcamento?action=addItem', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.error) {
-                    alert('Erro: ' + result.error);
-                } else {
-                    closeModal();
-                    tabelaItens.ajax.reload(null, false);
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao adicionar item:', error);
-                alert('Erro ao adicionar item!');
-            });
-        } else if (acao === '6') {
-            // Alterar item
-            const data = {
-                idItem: parseInt(idItem),
-                idProduto: parseInt(idProduto),
-                idOrcamento: parseInt(idOrcamento),
-                quantidade: quantidade,
-                preco: preco
-            };
-
-            fetch('GerenciarOrcamento?action=updateItem', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.error) {
-                    alert('Erro: ' + result.error);
-                } else {
-                    closeModal();
-                    tabelaItens.ajax.reload(null, false);
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao alterar item:', error);
-                alert('Erro ao alterar item!');
-            });
-        }
-    });
 }
 
-// Funções globais para manipulação de modal e itens
-function openModal() {
-    modal.showModal();
+// Funções para manipulação dos modais
+function closeModalAdicionar() {
+    if (modalAdicionar) {
+        modalAdicionar.close();
+    }
 }
 
-function closeModal() {
-    modal.close();
+function closeModalAlterar() {
+    if (modalAlterar) {
+        modalAlterar.close();
+    }
 }
 
+// Função para detectar Enter no modal de adicionar
+function handleEnterAdicionar(event) {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+        event.preventDefault();
+        confirmarAdicionar();
+    }
+}
+
+// Função para detectar Enter no modal de alterar
+function handleEnterAlterar(event) {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+        event.preventDefault();
+        confirmarAlterar();
+    }
+}
+
+// Função para adicionar item (abre modal)
 function adicionarItem() {
     const valor = $('#seletor_produto').val();
 
@@ -433,7 +509,7 @@ function adicionarItem() {
         return;
     }
 
-    // Faça um fetch para obter os detalhes do produto selecionado
+    // Fazer fetch para obter os detalhes do produto selecionado
     fetch(`GerenciarProduto?codigo=${valor}`)
         .then(response => response.json())
         .then(produto => {
@@ -442,23 +518,63 @@ function adicionarItem() {
                 return;
             }
 
-            $('#acao_item').val('5');
-            $('#id_item').val('');
-            $('#produto_id').val(produto.codigo);
-            $('#nome_produto').val(produto.nome);
-            $('#quantidade_produto').val('1,000');
-            $('#preco_produto').val(produto.preco.toFixed(3).replace('.', ','));
+            $('#add_produto_id').val(produto.codigo);
+            $('#add_nome_produto').val(produto.nome);
+            $('#add_quantidade_produto').val('1');
+            $('#add_preco_produto').val(produto.preco.toFixed(3));
 
-            modal.showModal();
+            modalAdicionar.showModal();
         })
         .catch(error => {
             console.error('Erro ao carregar produto:', error);
             alert('Erro ao carregar produto!');
         });
-
-    modal.showModal();
 }
 
+// Função para confirmar adição de item (botão do modal)
+function confirmarAdicionar() {
+    const idProduto = $('#add_produto_id').val();
+    let quantidade = $('#add_quantidade_produto').val();
+    let preco = $('#add_preco_produto').val();
+
+    // Converter vírgula para ponto se necessário
+    quantidade = parseFloat(quantidade.toString().replace(',', '.'));
+    preco = parseFloat(preco.toString().replace(',', '.'));
+
+    if (!idProduto || !quantidade || !preco || isNaN(quantidade) || isNaN(preco)) {
+        alert('Preencha todos os campos corretamente!');
+        return;
+    }
+
+    const data = {
+        idProduto: parseInt(idProduto),
+        idOrcamento: parseInt(idOrcamento),
+        quantidade: quantidade,
+        preco: preco
+    };
+
+    fetch('GerenciarItemOrcamento', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.error) {
+            alert('Erro: ' + result.error);
+        } else {
+            closeModalAdicionar();
+            // Recarregar tabela e o total será atualizado automaticamente via dataSrc
+            tabelaItens.ajax.reload(null, false);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao adicionar item:', error);
+        alert('Erro ao adicionar item!');
+    });
+}
+
+// Função para alterar item (abre modal)
 function alterarItem(index, idItem) {
     // Buscar dados do item via API
     fetch(`GerenciarItemOrcamento?id=${idItem}`)
@@ -469,14 +585,13 @@ function alterarItem(index, idItem) {
                 return;
             }
 
-            $('#acao_item').val('6');
-            $('#id_item').val(item.id);
-            $('#produto_id').val(item.produto.codigo);
-            $('#nome_produto').val(item.produto.nome);
-            $('#quantidade_produto').val(item.quantidade.toFixed(3));
-            $('#preco_produto').val(item.preco.toFixed(3));
+            $('#edit_item_id').val(item.id);
+            $('#edit_produto_id').val(item.produto.codigo);
+            $('#edit_nome_produto').val(item.produto.nome);
+            $('#edit_quantidade_produto').val(item.quantidade.toFixed(3));
+            $('#edit_preco_produto').val(item.preco.toFixed(3));
 
-            modal.showModal();
+            modalAlterar.showModal();
         })
         .catch(error => {
             console.error('Erro ao carregar item:', error);
@@ -484,16 +599,62 @@ function alterarItem(index, idItem) {
         });
 }
 
+// Função para confirmar alteração de item (botão do modal)
+function confirmarAlterar() {
+    const idItem = $('#edit_item_id').val();
+    const idProduto = $('#edit_produto_id').val();
+    let quantidade = $('#edit_quantidade_produto').val();
+    let preco = $('#edit_preco_produto').val();
+
+    // Converter vírgula para ponto se necessário
+    quantidade = parseFloat(quantidade.toString().replace(',', '.'));
+    preco = parseFloat(preco.toString().replace(',', '.'));
+
+    if (!idItem || !idProduto || !quantidade || !preco || isNaN(quantidade) || isNaN(preco)) {
+        alert('Preencha todos os campos corretamente!');
+        return;
+    }
+
+    const data = {
+        idItem: parseInt(idItem),
+        idProduto: parseInt(idProduto),
+        idOrcamento: parseInt(idOrcamento),
+        quantidade: quantidade,
+        preco: preco
+    };
+
+    fetch('GerenciarItemOrcamento', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.error) {
+            alert('Erro: ' + result.error);
+        } else {
+            closeModalAlterar();
+            // Recarregar tabela e o total será atualizado automaticamente via dataSrc
+            tabelaItens.ajax.reload(null, false);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao alterar item:', error);
+        alert('Erro ao alterar item!');
+    });
+}
+
 function excluirItem(idItem) {
     if (!confirm('Tem certeza que deseja excluir este item?')) {
         return;
     }
 
-    fetch(`GerenciarOrcamento?action=deleteItem&idItem=${idItem}`, {
+    fetch(`GerenciarItemOrcamento?idItem=${idItem}`, {
         method: 'DELETE'
     })
     .then(response => {
         if (response.ok) {
+            // Recarregar tabela e o total será atualizado automaticamente via dataSrc
             tabelaItens.ajax.reload(null, false);
         } else {
             return response.json().then(data => {

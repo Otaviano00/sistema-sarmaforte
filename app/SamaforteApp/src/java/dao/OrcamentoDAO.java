@@ -543,31 +543,52 @@ public class OrcamentoDAO {
     }
 
     public static List<Orcamento> listarPaginado(int start, int length, String searchValue, String filterColumn, String filterType) {
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT");
-        sql.append(" id,");
-        sql.append(" dataCriacao,");
-        sql.append(" dataValidade,");
-        sql.append(" status,");
-        sql.append(" informacoes,");
-        sql.append(" id_cliente");
-        sql.append(" FROM");
-        sql.append(" orcamento");
+        StringBuilder sql = new StringBuilder(
+            "SELECT o.* FROM orcamento o " +
+            "LEFT JOIN cliente c ON o.id_cliente = c.id"
+        );
 
         List<Object> params = new ArrayList<>();
 
         if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
-            String[] columns = {"id", "dataCriacao", "dataValidade", "status", "informacoes", "id_cliente"};
+            // Colunas: 0=ID, 1=Cliente, 2=Status, 3=Data de Criação, 4=Data de Validade
+            String[] columns = {"o.id", "c.nome", "o.status", "o.dataCriacao", "o.dataValidade"};
             try {
                 int columnIndex = Integer.parseInt(filterColumn);
                 if (columnIndex >= 0 && columnIndex < columns.length) {
                     String column = columns[columnIndex];
-                    sql.append(" WHERE ").append(column).append(" LIKE ?");
 
-                    if ("0".equals(filterType)) { // Começa com
-                        params.add(searchValue + "%");
-                    } else { // Inclui
-                        params.add("%" + searchValue + "%");
+                    // Para datas (colunas 3 e 4), converter para formato MySQL e usar DATE()
+                    if (columnIndex == 3 || columnIndex == 4) {
+                        // Formato esperado: dd/mm/aaaa
+                        // Converter para yyyy-mm-dd para comparação no MySQL
+                        sql.append(" WHERE DATE_FORMAT(").append(column).append(", '%d/%m/%Y')");
+
+                        if ("0".equals(filterType)) { // Começa com
+                            sql.append(" LIKE ?");
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            sql.append(" LIKE ?");
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para status, usar LOWER para busca case-insensitive
+                    else if (columnIndex == 2) {
+                        sql.append(" WHERE LOWER(").append(column).append(") LIKE LOWER(?)");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para ID e Cliente
+                    else {
+                        sql.append(" WHERE ").append(column).append(" LIKE ?");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
                     }
                 }
             } catch (NumberFormatException e) {
@@ -575,7 +596,7 @@ public class OrcamentoDAO {
             }
         }
 
-        sql.append(" ORDER BY id LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY o.id DESC LIMIT ? OFFSET ?");
         params.add(length);
         params.add(start);
 
@@ -658,22 +679,52 @@ public class OrcamentoDAO {
     }
 
     public static int contarFiltrados(String searchValue, String filterColumn, String filterType) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(id) FROM orcamento");
+        StringBuilder sql = new StringBuilder(
+            "SELECT COUNT(o.id) FROM orcamento o " +
+            "LEFT JOIN cliente c ON o.id_cliente = c.id"
+        );
         List<Object> params = new ArrayList<>();
         int total = 0;
 
         if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
-            String[] columns = {"id", "dataCriacao", "dataValidade", "status", "informacoes", "id_cliente"};
+            // Colunas: 0=ID, 1=Cliente, 2=Status, 3=Data de Criação, 4=Data de Validade
+            String[] columns = {"o.id", "c.nome", "o.status", "o.dataCriacao", "o.dataValidade"};
             try {
                 int columnIndex = Integer.parseInt(filterColumn);
                 if (columnIndex >= 0 && columnIndex < columns.length) {
                     String column = columns[columnIndex];
-                    sql.append(" WHERE ").append(column).append(" LIKE ?");
 
-                    if ("0".equals(filterType)) { // Começa com
-                        params.add(searchValue + "%");
-                    } else { // Inclui
-                        params.add("%" + searchValue + "%");
+                    // Para datas (colunas 3 e 4), converter para formato MySQL e usar DATE()
+                    if (columnIndex == 3 || columnIndex == 4) {
+                        // Formato esperado: dd/mm/aaaa
+                        // Converter para yyyy-mm-dd para comparação no MySQL
+                        sql.append(" WHERE DATE_FORMAT(").append(column).append(", '%d/%m/%Y')");
+
+                        if ("0".equals(filterType)) { // Começa com
+                            sql.append(" LIKE ?");
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            sql.append(" LIKE ?");
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para status, usar LOWER para busca case-insensitive
+                    else if (columnIndex == 2) {
+                        sql.append(" WHERE LOWER(").append(column).append(") LIKE LOWER(?)");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para ID e Cliente
+                    else {
+                        sql.append(" WHERE ").append(column).append(" LIKE ?");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
                     }
                 }
             } catch (NumberFormatException e) {

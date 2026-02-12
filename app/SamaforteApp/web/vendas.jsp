@@ -21,7 +21,6 @@
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
     <link rel="stylesheet" href="style/main.css">
-    <link rel="stylesheet" href="style/main.css">
     <link rel="stylesheet" href="style/modal.css">
     <link rel="stylesheet" href="style/cadastrar_alterar.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
@@ -115,14 +114,15 @@
     <input type="hidden" id="hierarquia-value" value="<%= hierarquia %>">
 
     <!-- Modal de Detalhes -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content" id="detailsModalContent"></div>
-    </div>
+    <!-- Modal de Detalhes -->
+    <dialog id="detailsModal">
+        <div class="modal" id="detailsModalContent"></div>
+    </dialog>
 
     <!-- Modal de Alterar -->
-    <div id="editModal" class="modal">
-        <div class="modal-content" id="editModalContent"></div>
-    </div>
+    <dialog id="editModal">
+        <div class="modal" id="editModalContent"></div>
+    </dialog>
 
 </body>
 </html>

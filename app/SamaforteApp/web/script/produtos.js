@@ -145,43 +145,41 @@ async function openModal(modalId, codigo, tipo) {
     switch (tipo) {
         case 'create':
             html = `
-                <div class="modal-header">
-                    <span class="close-btn" onclick="closeModal('createModal')">&times;</span>
-                    <h1 class="titulo">Novo Produto</h1>
-                </div>
-                <div class="modal-body">
-                    <div class="form">
+                <button class="botao_fechar_modal" onclick="closeModal('createModal')" title="Fechar">×</button>
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h2>Novo Produto</h2>
                         <form id="createForm">
-                            <div class="campos">
-                                <label for="codigo" class="titulo_campo">Código:</label>
-                                <input type="text" name="codigo" required>
+                            <div class="form-group">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" name="nome" class="form-input" required>
                             </div>
-                            <div class="campos">
-                                <label for="nome" class="titulo_campo">Nome:</label>
-                                <input type="text" name="nome" required>
+                            <div class="form-group">
+                                <label for="fornecedor" class="form-label">Fornecedor</label>
+                                <input type="text" name="fornecedor" class="form-input" required>
                             </div>
-                            <div class="campos">
-                                <label for="fornecedor" class="titulo_campo">Fornecedor:</label>
-                                <input type="text" name="fornecedor" required>
-                            </div>
-                            <div class="campos">
-                                <label for="quantidade" class="titulo_campo">Quantidade:</label>
-                                <input type="number" name="quantidade" required>
-                            </div>
-                            <div class="campos">
-                                <label for="preco" class="titulo_campo">Preço:</label>
-                                <input type="number" step="0.001" name="preco" required>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="quantidade" class="form-label">Quantidade</label>
+                                    <input type="number" name="quantidade" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="preco" class="form-label">Preço</label>
+                                    <input type="number" step="0.001" name="preco" class="form-input" required>
+                                </div>
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="botao_cancela" onclick="closeModal('createModal')">Cancelar</button>
-                    <button type="submit" form="createForm" class="botao_confirma">Cadastrar</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')">Cancelar</button>
+                        <button type="submit" form="createForm" class="btn btn-primary">
+                            <span>+</span> Cadastrar
+                        </button>
+                    </div>
                 </div>
             `;
             contentDiv.innerHTML = html;
-            modal.style.display = 'flex';
+            modal.showModal();
 
             document.getElementById('createForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
@@ -226,32 +224,48 @@ async function openModal(modalId, codigo, tipo) {
 
                 if (tipo === 'detalhes') {
                     html = `
-                        <div class="modal-header">
-                            <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
-                            <h1 class="titulo">Detalhes Produto</h1>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form">
-                                <div class="campos"><label class="titulo_campo">Código:</label> <input type="text" value="${produto.codigo}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" value="${produto.nome}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Fornecedor:</label> <input type="text" value="${produto.fornecedor}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Quantidade:</label> <input type="text" value="${produto.quantidade}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Preço:</label> <input type="text" value="R$ ${parseFloat(produto.preco).toFixed(3)}" disabled></div>
-                                <div class="campos"><label class="titulo_campo">Status:</label> <input type="text" value="${produto.status ? 'Ativo' : 'Desativo'}" disabled></div>
+                        <button class="botao_fechar_modal" onclick="closeModal('detailsModal')" title="Fechar">×</button>
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h2>Detalhes Produto</h2>
+                                <div class="form-group">
+                                    <label class="form-label">Código</label>
+                                    <input type="text" value="${produto.codigo}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Nome</label>
+                                    <input type="text" value="${produto.nome}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Fornecedor</label>
+                                    <input type="text" value="${produto.fornecedor}" class="form-input" disabled>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Quantidade</label>
+                                        <input type="text" value="${produto.quantidade}" class="form-input" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Preço</label>
+                                        <input type="text" value="R$ ${parseFloat(produto.preco).toFixed(3)}" class="form-input" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <input type="text" value="${produto.status ? 'Ativo' : 'Desativo'}" class="form-input" disabled>
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal('detailsModal')">Voltar</button>
+                            </div>
                         </div>
                     `;
                 } else { // 'alterar'
                     html = `
-                        <div class="modal-header">
-                            <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
-                            <h1 class="titulo">Alterar Produto</h1>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form">
+                        <button class="botao_fechar_modal" onclick="closeModal('editModal')" title="Fechar">×</button>
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h2>Alterar Produto</h2>
                                 <form id="editForm">
                                     <input type="hidden" name="codigo" value="${produto.codigo}">
                                     <input type="hidden" name="status" value="${produto.status}">
@@ -259,22 +273,41 @@ async function openModal(modalId, codigo, tipo) {
                                     <input type="hidden" name="quantidadeCritica" value="${produto.quantidadeCritica || 0}">
                                     <input type="hidden" name="imagem" value="${produto.imagem || ''}">
                                     <input type="hidden" name="custo" value="${produto.custo || 0}">
-                                    <div class="campos"><label class="titulo_campo">Código:</label> <input type="text" value="${produto.codigo}" disabled></div>
-                                    <div class="campos"><label class="titulo_campo">Nome:</label> <input type="text" name="nome" value="${produto.nome}" required></div>
-                                    <div class="campos"><label class="titulo_campo">Fornecedor:</label> <input type="text" name="fornecedor" value="${produto.fornecedor}" required></div>
-                                    <div class="campos"><label class="titulo_campo">Quantidade:</label> <input type="number" name="quantidade" value="${produto.quantidade}" required></div>
-                                    <div class="campos"><label class="titulo_campo">Preço:</label> <input type="number" step="0.001" name="preco" value="${produto.preco}" required></div>
+                                    <div class="form-group">
+                                        <label class="form-label">Código</label>
+                                        <input type="text" value="${produto.codigo}" class="form-input" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Nome</label>
+                                        <input type="text" name="nome" value="${produto.nome}" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Fornecedor</label>
+                                        <input type="text" name="fornecedor" value="${produto.fornecedor}" class="form-input" required>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Quantidade</label>
+                                            <input type="number" name="quantidade" value="${produto.quantidade}" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Preço</label>
+                                            <input type="number" step="0.001" name="preco" value="${produto.preco}" class="form-input" required>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="botao_cancela" onclick="closeModal('editModal')">Cancelar</button>
-                            <button type="submit" form="editForm" class="botao_confirma">Salvar Alterações</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancelar</button>
+                                <button type="submit" form="editForm" class="btn btn-primary">
+                                    <span>✓</span> Salvar Alterações
+                                </button>
+                            </div>
                         </div>
                     `;
                 }
                 contentDiv.innerHTML = html;
-                modal.style.display = 'flex';
+                modal.showModal();
 
                 if (tipo === 'alterar') {
                     document.getElementById('editForm').addEventListener('submit', async function (e) {
@@ -317,21 +350,6 @@ async function openModal(modalId, codigo, tipo) {
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
-
-window.onclick = function(event) {
-    const detailsModal = document.getElementById('detailsModal');
-    const editModal = document.getElementById('editModal');
-    const createModal = document.getElementById('createModal');
-    if (event.target == detailsModal) {
-        detailsModal.style.display = "none";
-    }
-    if (event.target == editModal) {
-        editModal.style.display = "none";
-    }
-    if (event.target == createModal) {
-        createModal.style.display = "none";
-    }
+    document.getElementById(modalId).close();
 }
 

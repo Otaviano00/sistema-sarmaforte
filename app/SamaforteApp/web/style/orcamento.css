@@ -36,41 +36,186 @@ dialog::backdrop {
 dialog {
     margin: auto;
     min-width: fit-content;
-    width: 30%;
-    min-height: 50%;
-    height: fit-content;
-    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 15px;
+    border: none;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos dos modais */
+#modal_adicionar dialog,
+#modal_alterar dialog {
+    background: white;
 }
 
 .modal {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 90%;
-    padding-top: 7%;    
-    margin: auto;
-}
-
-#fechar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: #a20404;
-    border: 1px black solid;
-    font-weight: bolder;
-    font-size: 1.5em;
-    padding: 5px 10px;
-    cursor: pointer;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
     margin: 0;
-    border-radius: 5px;
-    border: none;
-    color: white;
-    text-align: center; 
+    position: relative;
 }
 
-#fechar:hover {
-    background-color: #cd0101 ;
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+}
+
+.modal-body {
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px 15px 0 0;
+    padding-top: 50px; /* Espaço para o botão fechar */
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #142E50;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #366cb4;
+    box-shadow: 0 0 0 3px rgba(54, 108, 180, 0.1);
+}
+
+.form-input:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 30px;
+    background: white;
+    border-radius: 0 0 15px 15px;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #142E50 0%, #366cb4 100%);
+    color: #FFB729;
+    box-shadow: 0 4px 12px rgba(20, 46, 80, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #366cb4 0%, #4a8ed9 100%);
+    box-shadow: 0 6px 16px rgba(20, 46, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(20, 46, 80, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    box-shadow: 0 6px 16px rgba(108, 117, 125, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+}
+
+.botao_fechar_modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(162, 4, 4, 0.9);
+    border: none;
+    font-weight: bold;
+    font-size: 2em;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    padding: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.botao_fechar_modal:hover {
+    background-color: #cd0101;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 12px rgba(205, 1, 1, 0.4);
+}
+
+.botao_fechar_modal:active {
+    transform: rotate(90deg) scale(0.95);
 }
 
 .seletor {

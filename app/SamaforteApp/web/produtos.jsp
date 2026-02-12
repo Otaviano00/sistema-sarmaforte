@@ -122,19 +122,20 @@
     <input type="hidden" id="hierarquia-value" value="<%= hierarquia %>">
 
     <!-- Modal de Detalhes -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content" id="detailsModalContent"></div>
-    </div>
+    <!-- Modal de Detalhes -->
+    <dialog id="detailsModal">
+        <div class="modal" id="detailsModalContent"></div>
+    </dialog>
 
     <!-- Modal de Alterar -->
-    <div id="editModal" class="modal">
-        <div class="modal-content" id="editModalContent"></div>
-    </div>
+    <dialog id="editModal">
+        <div class="modal" id="editModalContent"></div>
+    </dialog>
 
     <!-- Modal de Criar -->
-    <div id="createModal" class="modal">
-        <div class="modal-content" id="createModalContent"></div>
-    </div>
+    <dialog id="createModal">
+        <div class="modal" id="createModalContent"></div>
+    </dialog>
 
 </body>
 </html>

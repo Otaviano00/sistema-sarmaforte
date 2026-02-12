@@ -1,96 +1,263 @@
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
+/* ========================================
+   ESTILOS PARA DIALOG (HTML5 MODALS)
+   ======================================== */
+
+dialog::backdrop {
+    background-color: rgb(0 0 0 /.5);
 }
 
-.modal-content {
-    background-color: #fefefe;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 800px;
-    max-height: 90vh;
-    border-radius: 10px;
-    position: relative;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    animation-name: animatetop;
-    animation-duration: 0.4s;
+dialog {
+    margin: auto;
+    min-width: fit-content;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh; /* Altura máxima de 90% da viewport */
+    border-radius: 15px;
+    border: none;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Esconde overflow do dialog */
+}
+
+/* Container principal do modal */
+.modal {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
 }
 
-.modal-header {
-    padding: 20px;
-    padding-top: 30px;
-    border-bottom: 2px solid #ddd;
-    flex-shrink: 0;
-    background-color: #fefefe;
-    border-radius: 10px 10px 0 0;
+/* Conteúdo do modal */
+.modal-content {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    max-height: 90vh; /* Limita altura total do conteúdo */
 }
 
+/* Corpo do modal */
 .modal-body {
-    padding: 20px;
-    overflow-y: auto;
-    flex-grow: 1;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px 15px 0 0;
+    padding-top: 20px; /* Reduzido para acomodar título */
+    overflow-y: auto; /* Scroll vertical quando necessário */
+    overflow-x: hidden; /* Sem scroll horizontal */
+    flex: 1; /* Permite que o body cresça */
+    min-height: 0; /* Necessário para que o flex funcione corretamente */
 }
+
+/* Estilizar scrollbar do modal-body */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #e9ecef;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #366cb4;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #142E50;
+}
+
+/* Título do modal */
+.modal-body h2 {
+    margin: 0 0 20px 0;
+    padding: 0;
+    color: #142E50;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* ========================================
+   FORMULÁRIOS DENTRO DOS MODAIS
+   ======================================== */
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Garantir que ocupe toda a largura */
+}
+
+.form-label {
+    font-weight: 600;
+    color: #142E50;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #366cb4;
+    box-shadow: 0 0 0 3px rgba(54, 108, 180, 0.1);
+}
+
+.form-input:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-row .form-group {
+    flex: 1;
+    min-width: 0; /* Permite que os itens flex encolham corretamente */
+}
+
+/* ========================================
+   RODAPÉ DO MODAL
+   ======================================== */
 
 .modal-footer {
-    padding: 20px;
-    border-top: 2px solid #ddd;
-    flex-shrink: 0;
-    background-color: #fefefe;
-    border-radius: 0 0 10px 10px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 30px;
+    background: white;
+    border-radius: 0 0 15px 15px;
+    border-top: 1px solid #e9ecef;
+    flex-shrink: 0; /* Impede que o footer encolha */
+    position: relative; /* Garante que fique no fluxo */
 }
 
-@keyframes animatetop {
-  from {top: -300px; opacity: 0}
-  to {top: 0; opacity: 1}
-}
+/* ========================================
+   BOTÕES DO MODAL
+   ======================================== */
 
-.close-btn {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Estilos para o botão expansível */
-.botao_expansivel {
-    width: 99%;
-    padding: 15px;
-    padding-left: 0;
-    padding-right: 10px;
-    font-size: 1.3em;
-    background-color: white;
-    color: #142E50;
+.btn {
+    padding: 12px 24px;
     border: none;
-    border-bottom: 3px solid #142E50;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Botão primário (ações principais) */
+.btn-primary {
+    background: linear-gradient(135deg, #142E50 0%, #366cb4 100%);
+    color: #FFB729;
+    box-shadow: 0 4px 12px rgba(20, 46, 80, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #366cb4 0%, #4a8ed9 100%);
+    box-shadow: 0 6px 16px rgba(20, 46, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(20, 46, 80, 0.3);
+}
+
+/* Botão secundário (ações de cancelar) */
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    box-shadow: 0 6px 16px rgba(108, 117, 125, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+}
+
+/* ========================================
+   BOTÃO FECHAR (X) DO MODAL
+   ======================================== */
+
+.botao_fechar_modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(162, 4, 4, 0.9);
+    border: none;
+    font-weight: bold;
+    font-size: 2em;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    padding: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.botao_fechar_modal:hover {
+    background-color: #cd0101;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 12px rgba(205, 1, 1, 0.4);
+}
+
+.botao_fechar_modal:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* ========================================
+   BOTÃO EXPANSÍVEL PARA ITENS
+   ======================================== */
+
+.botao_expansivel {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1em;
+    font-weight: 600;
+    background: linear-gradient(135deg, #142E50 0%, #366cb4 100%);
+    color: #FFB729;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -98,14 +265,18 @@
     transition: all 0.3s ease;
     font-family: 'Karla', sans-serif;
     text-align: left;
+    box-shadow: 0 4px 12px rgba(20, 46, 80, 0.3);
 }
 
 .botao_expansivel:hover {
-    background-color: #006eff15;
+    background: linear-gradient(135deg, #366cb4 0%, #4a8ed9 100%);
+    box-shadow: 0 6px 16px rgba(20, 46, 80, 0.4);
+    transform: translateY(-2px);
 }
 
 .botao_expansivel:active {
-    transform: scale(0.98);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(20, 46, 80, 0.3);
 }
 
 /* Animação suave para expansão da lista */
@@ -118,18 +289,41 @@
 }
 
 .itens-container.expanded {
-    max-height: 600px;
+    max-height: 400px; /* Altura máxima fixa para evitar modais muito grandes */
+    overflow-y: auto; /* Scroll vertical quando necessário */
+    overflow-x: hidden; /* Sem scroll horizontal */
     opacity: 1;
     margin-top: 15px;
+}
+
+/* Estilizar scrollbar do container de itens */
+.itens-container.expanded::-webkit-scrollbar {
+    width: 8px;
+}
+
+.itens-container.expanded::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.itens-container.expanded::-webkit-scrollbar-thumb {
+    background: #366cb4;
+    border-radius: 4px;
+}
+
+.itens-container.expanded::-webkit-scrollbar-thumb:hover {
+    background: #142E50;
 }
 
 /* Animação da seta */
 .arrow-icon {
     transition: transform 0.3s ease;
     display: inline-block;
-    font-size: 0.8em;
+    font-size: 1.2em;
+    color: #FFB729;
 }
 
 .arrow-icon.rotated {
     transform: rotate(180deg);
 }
+

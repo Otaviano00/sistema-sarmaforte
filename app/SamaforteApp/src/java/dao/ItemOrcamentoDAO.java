@@ -321,4 +321,36 @@ public class ItemOrcamentoDAO {
         }
     }
 
+    public static double calcularTotalOrcamento(int idOrcamento) {
+        String sql = "SELECT SUM(quantidade * preco) as total FROM item_orcamento WHERE id_orcamento = ?";
+        double total = 0.0;
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            pstm.setInt(1, idOrcamento);
+            rset = pstm.executeQuery();
+
+            if (rset.next()) {
+                total = rset.getDouble("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
 }
+
+

@@ -148,22 +148,45 @@ async function openModal(modalId, id, tipo) {
                 const venda = await response.json();
 
                 html = `
-                    <div class="modal-header">
-                        <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
-                        <h1 class="titulo">Detalhes Venda</h1>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form">
-                            <div class="campos"><label class="titulo_campo">ID:</label> <input type="text" value="${venda.id}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Cliente:</label> <input type="text" value="${venda.orcamento?.cliente?.nome || '---'}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Vendedor:</label> <input type="text" value="${venda.usuario?.nome || 'EXCLUÍDO'}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Data:</label> <input type="text" value="${new Date(venda.data).toLocaleDateString('pt-BR')}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Valor:</label> <input type="text" value="R$ ${parseFloat(venda.valor).toFixed(3)}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Desconto:</label> <input type="text" value="R$ ${parseFloat(venda.desconto).toFixed(3)}" disabled></div>
-                            <div class="campos"><label class="titulo_campo">Forma de Pagamento:</label> <input type="text" value="${venda.formaPagamento}" disabled></div>
+                    <button class="botao_fechar_modal" onclick="closeModal('detailsModal')" title="Fechar">×</button>
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h2>Detalhes Venda</h2>
+                            <div class="form-group">
+                                <label class="form-label">ID</label>
+                                <input type="text" value="${venda.id}" class="form-input" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Cliente</label>
+                                <input type="text" value="${venda.orcamento?.cliente?.nome || '---'}" class="form-input" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Vendedor</label>
+                                <input type="text" value="${venda.usuario?.nome || 'EXCLUÍDO'}" class="form-input" disabled>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Data</label>
+                                    <input type="text" value="${new Date(venda.data).toLocaleDateString('pt-BR')}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Forma de Pagamento</label>
+                                    <input type="text" value="${venda.formaPagamento}" class="form-input" disabled>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Valor</label>
+                                    <input type="text" value="R$ ${parseFloat(venda.valor).toFixed(3)}" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Desconto</label>
+                                    <input type="text" value="R$ ${parseFloat(venda.desconto).toFixed(3)}" class="form-input" disabled>
+                                </div>
+                            </div>
                             
                             <!-- Campo Expansível para Itens -->
-                            <div class="campos">
+                            <div class="form-group" style="margin-top: 10px;">
                                 <button type="button" class="botao_expansivel" onclick="toggleItensOrcamento(${venda.id})">
                                     <span>📦 Ver itens do orçamento</span>
                                     <span id="arrow-${venda.id}" class="arrow-icon">▼</span>
@@ -184,13 +207,13 @@ async function openModal(modalId, id, tipo) {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="botao_cancela" onclick="closeModal('detailsModal')">Voltar</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('detailsModal')">Voltar</button>
+                        </div>
                     </div>
                 `;
                 contentDiv.innerHTML = html;
-                modal.style.display = 'flex';
+                modal.showModal();
             } catch (error) {
                 console.error('Erro ao carregar dados da venda:', error);
                 alert('Erro ao carregar detalhes da venda.');
@@ -200,7 +223,7 @@ async function openModal(modalId, id, tipo) {
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+    document.getElementById(modalId).close();
 }
 
 function toggleItensOrcamento(vendaId) {
@@ -291,14 +314,4 @@ function toggleItensOrcamento(vendaId) {
     }
 }
 
-window.onclick = function(event) {
-    const detailsModal = document.getElementById('detailsModal');
-    const editModal = document.getElementById('editModal');
-    if (event.target == detailsModal) {
-        detailsModal.style.display = "none";
-    }
-    if (event.target == editModal) {
-        editModal.style.display = "none";
-    }
-}
 

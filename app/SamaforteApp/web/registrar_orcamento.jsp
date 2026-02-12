@@ -1,3 +1,4 @@
+<%@ page import="model.Venda" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="sessao.jsp" %>
 
@@ -97,31 +98,77 @@
                 </section>
                 <section id="listar_itens" class="tabela bloco">
                     <h2>Itens do Orçamento</h2>
-                    <dialog>
-                        <div class="modal">
-                            <form id="dados_item">
-                                <input type="hidden" name="acao" id="acao_item" value="">
 
-                                <input type="hidden" name="id_produto" id="produto_id">
-                                <input type="hidden" name="id_orcamento" id="id_orcamento_modal" value="">
-                                <input type="hidden" name="id_item" id="id_item" value="0">
-                                <div class="campos">
-                                    <label for="nome_produto" class="titulo_campo">Produto: </label>
-                                    <input type="text" name="nome_produto" id="nome_produto" readonly disabled>
+                    <!-- Modal para ADICIONAR item -->
+                    <dialog id="modal_adicionar">
+                        <div class="modal">
+                            <button class="botao_fechar_modal" onclick="closeModalAdicionar()" title="Fechar">×</button>
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <input type="hidden" id="add_produto_id">
+
+                                    <div class="form-group">
+                                        <label for="add_nome_produto" class="form-label">Produto</label>
+                                        <input type="text" id="add_nome_produto" class="form-input" readonly disabled>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="add_preco_produto" class="form-label">Preço Unitário (R$)</label>
+                                            <input type="number" id="add_preco_produto" class="form-input" step="0.001" min="0" onkeypress="handleEnterAdicionar(event)">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="add_quantidade_produto" class="form-label">Quantidade</label>
+                                            <input type="number" id="add_quantidade_produto" class="form-input" step="0.001" min="0.001" onkeypress="handleEnterAdicionar(event)">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="campos">
-                                    <label for="preco_produto" class="titulo_campo">Preço (R$): </label>      
-                                    <input type="number" name="preco_produto" step="0.001" id="preco_produto" required>       
+
+                                <div class="modal-footer">
+                                    <button onclick="closeModalAdicionar()" class="btn btn-secondary">Cancelar</button>
+                                    <button onclick="confirmarAdicionar()" class="btn btn-primary">
+                                        <span>+</span> Adicionar Item
+                                    </button>
                                 </div>
-                                <div class="campos">
-                                    <label for="quantidade_produto" class="titulo_campo">Quantidade:</label>
-                                    <input type="number" name="quantidade_produto" id="quantidade_produto" step="0.001" required>
+                            </div>
+                        </div>
+                    </dialog>
+
+                    <!-- Modal para ALTERAR item -->
+                    <dialog id="modal_alterar">
+                        <div class="modal">
+                            <button class="botao_fechar_modal" onclick="closeModalAlterar()" title="Fechar">×</button>
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <input type="hidden" id="edit_item_id">
+                                    <input type="hidden" id="edit_produto_id">
+
+                                    <div class="form-group">
+                                        <label for="edit_nome_produto" class="form-label">Produto</label>
+                                        <input type="text" id="edit_nome_produto" class="form-input" readonly disabled>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="edit_preco_produto" class="form-label">Preço Unitário (R$)</label>
+                                            <input type="number" id="edit_preco_produto" class="form-input" step="0.001" min="0" onkeypress="handleEnterAlterar(event)">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="edit_quantidade_produto" class="form-label">Quantidade</label>
+                                            <input type="number" id="edit_quantidade_produto" class="form-input" step="0.001" min="0.001" onkeypress="handleEnterAlterar(event)">
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="submit" value="Confirmar" class="botao_confirma">
-                            </form>
-                            <button id="fechar" onclick="closeModal()" class="botao_fechar">           
-                                X
-                            </button>
+
+                                <div class="modal-footer">
+                                    <button onclick="closeModalAlterar()" class="btn btn-secondary">Cancelar</button>
+                                    <button onclick="confirmarAlterar()" class="btn btn-primary">
+                                        <span>✓</span> Salvar Alterações
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </dialog>
                     <table id="tabela-itens" class="table table-striped" style="background-color: white;">
