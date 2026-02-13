@@ -65,7 +65,7 @@
                                 </select>
                             </div>
                             
-                            <button type="button" onclick="location.href='cadastrar_cliente.jsp'" title="Cadastrar Novo Cliente" style="font-size: 1.5em;">
+                            <button type="button" onclick="abrirModalCriarCliente()" title="Cadastrar Novo Cliente" style="font-size: 1.5em;">
                                 Novo
                             </button>
                         </div>
@@ -91,9 +91,6 @@
                             <label for="informacao"> Informações:</label>
                             <textarea name="informacao" id="informacao"></textarea>
                         </div>
-                        <button type="submit" style="font-size: 1.4em;">
-                            Atualizar Informações
-                        </button>
                     </form>
                 </section>
                 <section id="listar_itens" class="tabela bloco">
@@ -105,6 +102,7 @@
                             <button class="botao_fechar_modal" onclick="closeModalAdicionar()" title="Fechar">×</button>
                             <div class="modal-content">
                                 <div class="modal-body">
+                                    <h2>Adicionar item</h2>
                                     <input type="hidden" id="add_produto_id">
 
                                     <div class="form-group">
@@ -141,6 +139,8 @@
                             <button class="botao_fechar_modal" onclick="closeModalAlterar()" title="Fechar">×</button>
                             <div class="modal-content">
                                 <div class="modal-body">
+                                    <h2>Alterar item</h2>
+
                                     <input type="hidden" id="edit_item_id">
                                     <input type="hidden" id="edit_produto_id">
 
@@ -171,6 +171,43 @@
                             </div>
                         </div>
                     </dialog>
+
+                    <!-- Modal para CRIAR CLIENTE -->
+                    <dialog id="modal_criar_cliente">
+                        <div class="modal">
+                            <button class="botao_fechar_modal" onclick="closeModalCriarCliente()" title="Fechar">×</button>
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h2>Novo Cliente</h2>
+                                    <form id="createClienteForm">
+                                        <div class="form-group">
+                                            <label for="cliente_nome" class="form-label">Nome</label>
+                                            <input type="text" name="nome" id="cliente_nome" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cliente_telefone" class="form-label">Telefone</label>
+                                            <input type="text" name="telefone" id="cliente_telefone" class="form-input" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cliente_cpf" class="form-label">CPF</label>
+                                            <input type="text" name="cpf" id="cliente_cpf" class="form-input">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cliente_endereco" class="form-label">Endereço</label>
+                                            <input type="text" name="endereco" id="cliente_endereco" class="form-input">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" onclick="closeModalCriarCliente()">Cancelar</button>
+                                    <button type="submit" form="createClienteForm" class="btn btn-primary">
+                                        <span>+</span> Cadastrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </dialog>
+
                     <table id="tabela-itens" class="table table-striped" style="background-color: white;">
                         <thead>
                             <tr>

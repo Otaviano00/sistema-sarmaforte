@@ -15,10 +15,11 @@ public class ClienteDAO {
 
         Connection conn = null;
         PreparedStatement pstm = null;
+        ResultSet rs = null;
 
         try {
             conn = Conexao.criarConexaoMySQL();
-            pstm = conn.prepareStatement(sql);
+            pstm = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             pstm.setString(1, cliente.getNome());
             pstm.setString(2, cliente.getTelefone());
@@ -34,6 +35,13 @@ public class ClienteDAO {
             }
 
             pstm.execute();
+
+            // Recuperar o ID gerado
+            rs = pstm.getGeneratedKeys();
+            if (rs.next()) {
+                cliente.setId(rs.getInt(1));
+            }
+
             return true;
 
         } catch (Exception e) {
@@ -42,6 +50,9 @@ public class ClienteDAO {
 
         } finally {
             try {
+                if (rs != null) {
+                    rs.close();
+                }
                 if (pstm != null) {
                     pstm.close();
                 }

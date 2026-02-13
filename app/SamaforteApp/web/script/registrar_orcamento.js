@@ -1,5 +1,6 @@
 let modalAdicionar = null;
 let modalAlterar = null;
+let modalCriarCliente = null;
 let idOrcamento = null;
 let tabelaItens = null;
 
@@ -25,6 +26,7 @@ $(document).ready(function() {
     // Inicializar referências aos modais
     modalAdicionar = document.querySelector('#modal_adicionar');
     modalAlterar = document.querySelector('#modal_alterar');
+    modalCriarCliente = document.querySelector('#modal_criar_cliente');
 
     // Inicializar Select2 para produtos
     inicializarSeletorProdutos();
@@ -360,7 +362,6 @@ function atualizarInformacoes() {
     const idCliente = $('#seletor_cliente').val();
 
     if (!idCliente) {
-        console.log('Cliente não selecionado, não é possível atualizar informações');
         return;
     }
 
@@ -383,8 +384,6 @@ function atualizarInformacoes() {
             console.error('Erro ao atualizar informações:', result.error);
             alert('Erro ao atualizar informações: ' + result.error);
         } else {
-            console.log('Informações atualizadas com sucesso');
-            // Mostrar feedback visual discreto (opcional)
             mostrarFeedbackSucesso('Informações salvas');
         }
     })
@@ -671,6 +670,127 @@ function excluirItem(idItem) {
 function confirmarExclusao(event, url) {
     if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
 
+    }
+}
+
+// ==========================================
+// FUNÇÕES DO MODAL DE CRIAR CLIENTE
+// ==========================================
+
+// Abrir modal de criar cliente
+function abrirModalCriarCliente() {
+    // Limpar formulário
+    document.getElementById('createClienteForm').reset();
+
+    // Abrir modal
+    modalCriarCliente.showModal();
+
+    // Configurar evento de submit do formulário
+    const form = document.getElementById('createClienteForm');
+
+    // Remover listeners anteriores para evitar duplicação
+    const newForm = form.cloneNode(true);
+    form.parentNode.replaceChild(newForm, form);
+
+    // Adicionar listener ao novo formulário
+    newForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        await criarNovoCliente();
+    });
+}
+
+// Fechar modal de criar cliente
+function closeModalCriarCliente() {
+    modalCriarCliente.close();
+}
+
+// Criar novo cliente
+async function criarNovoCliente() {
+    const formData = new FormData(document.getElementById('createClienteForm'));
+    const cliente = Object.fromEntries(formData.entries());
+
+    // Validar campos obrigatórios
+    if (!cliente.nome || !cliente.telefone) {
+        alert('Nome e Telefone são obrigatórios!');
+        return;
+    }
+
+    // Limpar campos vazios
+    if (cliente.cpf && cliente.cpf.trim() === '') {
+        cliente.cpf = null;
+    }
+    if (cliente.endereco && cliente.endereco.trim() === '') {
+        cliente.endereco = null;
+    }
+
+    try {
+        // Fazer requisição POST para criar cliente
+        const response = await fetch('GerenciarCliente', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(cliente)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Fechar modal
+            closeModalCriarCliente();
+
+            // Recarregar lista de clientes no Select2
+            await recarregarListaClientes(result.id);
+
+            // Mostrar feedback de sucesso
+            mostrarFeedbackSucesso('Cliente cadastrado com sucesso!');
+        } else {
+            alert('Erro ao cadastrar cliente: ' + (result.error || 'Erro desconhecido'));
+        }
+    } catch (error) {
+        console.error('Erro ao criar cliente:', error);
+        alert('Erro ao cadastrar cliente!');
+    }
+}
+
+// Recarregar lista de clientes e selecionar o novo
+async function recarregarListaClientes(idNovoCliente) {
+    try {
+        // Buscar todos os clientes
+        const response = await fetch('GerenciarCliente?isPaginado=false');
+        const clientes = await response.json();
+
+        if (!Array.isArray(clientes)) {
+            console.error('Resposta inválida do servidor:', clientes);
+            return;
+        }
+
+        // Limpar e repopular o Select2
+        const $seletor = $('#seletor_cliente');
+        $seletor.empty();
+
+        // Adicionar opção padrão
+        $seletor.append(new Option('Selecione um cliente', '', false, false));
+
+        // Adicionar todos os clientes
+        clientes.forEach(cliente => {
+            const option = new Option(
+                cliente.nome,
+                cliente.id,
+                false,
+                cliente.id === idNovoCliente
+            );
+            $seletor.append(option);
+        });
+
+        // Atualizar Select2
+        $seletor.trigger('change');
+
+        // Se foi criado um novo cliente, selecioná-lo e atualizar backend
+        if (idNovoCliente) {
+            $seletor.val(idNovoCliente).trigger('change');
+        }
+    } catch (error) {
+        console.error('Erro ao recarregar lista de clientes:', error);
+        alert('Erro ao atualizar lista de clientes!');
     }
 }
 
