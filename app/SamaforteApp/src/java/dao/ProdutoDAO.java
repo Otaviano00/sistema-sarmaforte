@@ -412,7 +412,7 @@ public class ProdutoDAO {
         int total = 0;
 
         if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
-            String[] columns = {"codigo", "codigo", "nome", "fornecedor", "quantidade", "preco"};
+            String[] columns = {"codigo", "nome", "fornecedor", "quantidade", "preco"};
             try {
                 int columnIndex = Integer.parseInt(filterColumn);
                 if (columnIndex >= 0 && columnIndex < columns.length) {

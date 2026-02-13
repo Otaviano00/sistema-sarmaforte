@@ -281,6 +281,11 @@ function inicializarTabelaItens() {
                 "orderable": false,
                 "searchable": false,
                 "render": function (data, type, row, meta) {
+                    // Se o item já foi vendido, não mostra os botões de ação
+                    if (row.statusVenda) {
+                        return '<span style="color: #6c757d; font-style: italic;">-</span>';
+                    }
+
                     return `
                         <button onclick="alterarItem(${meta.row}, ${row.id})" class="botao_acao" title="Alterar item">
                             <img src="images/icone_alterar.svg" alt="Alterar">

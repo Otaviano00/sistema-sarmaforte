@@ -58,19 +58,16 @@
             <div class="item-filtro">
                 <p>Coluna de pesquisa</p>
                 <select id="input-filter">
-                        <option value="0"> 
-                            #
-                        </option>
-                        <option  value="1" selected>
+                        <option  value="0" selected>
                             Nome
                         </option>
-                        <option  value="2">
+                        <option  value="1">
                             Telefone
                         </option>
-                        <option  value="3"> 
+                        <option  value="2">
                             Endereço
                         </option>
-                        <option  value="4"> 
+                        <option  value="3">
                             CPF
                         </option>
                 </select>

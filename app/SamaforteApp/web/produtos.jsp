@@ -64,21 +64,18 @@
                 <p>Coluna de pesquisa</p>
                 <select id="input-filter">
                         <option value="0"> 
-                            #
-                        </option>
-                        <option  value="1"> 
                             Código
                         </option>
-                        <option  value="2" selected> 
+                        <option value="1" selected>
                             Nome
                         </option>
-                        <option  value="3"> 
+                        <option value="2">
                             Fornecedor
                         </option>
-                        <option  value="4"> 
+                        <option value="3">
                             Quantidade
                         </option>
-                        <option  value="5"> 
+                        <option value="4">
                             Preço
                         </option>
                 </select>
