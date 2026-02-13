@@ -45,11 +45,12 @@ dialog {
     padding: 30px;
     background: #f9f9f9;
     border-radius: 15px 15px 0 0;
-    padding-top: 20px; /* Reduzido para acomodar título */
+    padding-top: 60px; /* Espaço para o título e botão X */
     overflow-y: auto; /* Scroll vertical quando necessário */
     overflow-x: hidden; /* Sem scroll horizontal */
     flex: 1; /* Permite que o body cresça */
     min-height: 0; /* Necessário para que o flex funcione corretamente */
+    position: relative; /* Para posicionamento do h2 */
 }
 
 /* Estilizar scrollbar do modal-body */
@@ -71,13 +72,22 @@ dialog {
     background: #142E50;
 }
 
-/* Título do modal */
+/* Título do modal - alinhado com botão X */
+.modal .modal-content .modal-body h2,
 .modal-body h2 {
-    margin: 0 0 20px 0;
-    padding: 0;
-    color: #142E50;
-    font-size: 1.5em;
-    font-weight: bold;
+    position: absolute !important;
+    top: 15px !important;
+    left: 30px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #142E50 !important;
+    font-size: 1.5em !important;
+    font-weight: bold !important;
+    background: none !important;
+    border-radius: 0 !important;
+    line-height: 40px !important; /* Mesma altura do botão X para alinhamento vertical */
+    max-width: calc(100% - 100px) !important; /* Deixa espaço para o botão X */
+    transform: none !important;
 }
 
 /* ========================================

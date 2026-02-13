@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="style/main.css">
         <link rel="stylesheet" href="style/cadastrar_alterar.css">
         <link rel="stylesheet" href="style/orcamento.css">
+        <link rel="stylesheet" href="style/modal.css">
         <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
 
         <title>Registrar Orçamento</title>
@@ -44,32 +45,35 @@
         <div class="flex">
             <section id="buscar_item" class="bloco">
                 <input type="hidden" id="id_produto" name="" data-preco="" value="">
-                <select id="seletor_produto" name="seletor_produto" class="seletor">
-                    <!-- Produtos serão carregados via JavaScript -->
-                </select>
-                <button onclick="adicionarItem()">
+                <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                    <label for="seletor_produto" style="font-weight: 600; color: #142E50; font-size: 1.1em;">Selecione o Produto:</label>
+                    <select id="seletor_produto" name="seletor_produto" class="seletor">
+                        <!-- Produtos serão carregados via JavaScript -->
+                    </select>
+                </div>
+                <button onclick="adicionarItem()" style="align-self: flex-end;">
                     ADICIONAR ITEM
                 </button>
             </section>
             <div class="conjunto">
                 <section id="dados_orcamento" class="bloco">
                     <h2>Dados do cliente</h2>
-                    <form id="dados_cliente" style="margin-top: -20px;">
+                    <form id="dados_cliente">
                         <input type="hidden" name="id_orcamento" id="id_orcamento" value="">
                         <input type="hidden" id="id_cliente" value="">
 
-                        <div style="display: flex; flex-direction: row; width: 100%; min-width: 100%;">
-                            <div class="campos">
+                        <div style="display: flex; gap: 10px; align-items: flex-end; width: 100%;">
+                            <div class="campos" style="flex: 1; margin: 0;">
+                                <label for="seletor_cliente">Cliente:</label>
                                 <select id="seletor_cliente" name="seletor_cliente" class="seletor" required>
                                     <!-- Clientes serão carregados via JavaScript -->
                                 </select>
                             </div>
                             
-                            <button type="button" onclick="abrirModalCriarCliente()" title="Cadastrar Novo Cliente" style="font-size: 1.5em;">
-                                Novo
+                            <button type="button" onclick="abrirModalCriarCliente()" title="Cadastrar Novo Cliente" style="height: 50px; margin-bottom: 0;">
+                                + Novo
                             </button>
                         </div>
-                        <br>                     
                         <div class="campo_cliente campos">
                             <label>Nome:</label>
                             <input type="text" value="" disabled readonly>
@@ -86,9 +90,9 @@
                             <label>Endereço:</label>
                             <input type="text" value="" disabled readonly>
                         </div>
-                        <br>
+
                         <div class="campos">
-                            <label for="informacao"> Informações:</label>
+                            <label for="informacao">Informações:</label>
                             <textarea name="informacao" id="informacao"></textarea>
                         </div>
                     </form>
@@ -237,18 +241,20 @@
             </div> 
 
             <section id="finalizar" class="bloco">
-                <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=' + new URLSearchParams(window.location.search).get('id') + '&acao=3')" style="position: absolute; left: 0;">
-                    Cancelar
+                <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=' + new URLSearchParams(window.location.search).get('id') + '&acao=3')">
+                    Cancelar Orçamento
                 </button>
-                <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
-                    Imprimir Orçamento
-                </button> 
-                <button class="botao_confirma" onclick="location.href = 'orcamentos.jsp'">
-                    Guardar Orçamento
-                </button>
-                <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
-                    Realizar Venda
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
+                        Imprimir Orçamento
+                    </button>
+                    <button class="botao_confirma" onclick="location.href = 'orcamentos.jsp'">
+                        Guardar Orçamento
+                    </button>
+                    <button class="botao_confirma" id="botao_venda" onclick="location.href = 'registrar_venda.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
+                        Realizar Venda
+                    </button>
+                </div>
             </section>
         </div>
     </body>
