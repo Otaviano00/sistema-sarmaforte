@@ -179,6 +179,7 @@ public class GerenciarOrcamento extends HttpServlet {
             if (idOrcamento == null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.print("{\"error\":\"Parâmetro 'id' é obrigatório\"}");
+                return;
             }
 
             int id = Integer.parseInt(idOrcamento);

@@ -667,9 +667,25 @@ function excluirItem(idItem) {
     });
 }
 
-function confirmarExclusao(event, url) {
-    if (confirm('Tem certeza que deseja cancelar este orçamento?')) {
-
+function confirmarExclusao() {
+    const confirmar = confirm("Você tem certeza que deseja excluir esse orçamento?");
+    if (confirmar) {
+        fetch(`GerenciarOrcamento?id=${idOrcamento}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok || response.status === 204) {
+                window.location.href = 'orcamentos.jsp';
+            } else {
+                return response.json().then(data => {
+                    alert('Erro ao excluir orçamento: ' + (data.error || 'Erro desconhecido'));
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao excluir orçamento:', error);
+            alert('Erro ao excluir orçamento!');
+        });
     }
 }
 

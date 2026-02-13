@@ -241,7 +241,7 @@
             </div> 
 
             <section id="finalizar" class="bloco">
-                <button class="botao_cancela" onclick="confirmarExclusao(event, 'GerenciarOrcamento?id=' + new URLSearchParams(window.location.search).get('id') + '&acao=3')">
+                <button class="botao_cancela" onclick="confirmarExclusao()">
                     Cancelar Orçamento
                 </button>
                 <div style="display: flex; gap: 10px;">
