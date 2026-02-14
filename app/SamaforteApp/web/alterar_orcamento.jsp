@@ -266,7 +266,7 @@
                     </button>
                 </div>
                 <div style="display: flex; gap: 10px;">
-                    <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>">
+                    <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=<%= id%>'">
                         Imprimir Orçamento
                     </button>
                     <% if (orcamento.getStatus().equals("Pendente")) {

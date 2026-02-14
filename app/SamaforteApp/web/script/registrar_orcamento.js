@@ -215,6 +215,77 @@ function inicializarTabelaItens() {
         $('#tabela-itens').DataTable().destroy();
     }
 
+    // Definir colunas base
+    const colunas = [
+        {
+            "data": null,
+            "orderable": false,
+            "searchable": false,
+            "render": function (data, type, row, meta) {
+                return meta.row + 1;
+            }
+        },
+        { "data": "produto.codigo" },
+        {
+            "data": "dataHora",
+            "render": function(data) {
+                if (!data) return '---';
+                const date = new Date(data);
+                return date.toLocaleDateString('pt-BR');
+            }
+        },
+        { "data": "produto.nome" },
+        {
+            "data": "quantidade",
+            "render": function(data) {
+                return parseFloat(data).toFixed(3).replace('.', ',');
+            }
+        },
+        {
+            "data": "preco",
+            "render": function(data) {
+                return 'R$ ' + parseFloat(data).toFixed(3).replace('.', ',');
+            }
+        },
+        {
+            "data": null,
+            "render": function(data, type, row) {
+                const valor = row.quantidade * row.preco;
+                return 'R$ ' + valor.toFixed(3).replace('.', ',');
+            }
+        },
+        {
+            "data": "statusVenda",
+            "render": function(data) {
+                return data ? 'Vendido' : 'Aberto';
+            }
+        }
+    ];
+
+    // Adicionar coluna de Opções apenas se NÃO for página de detalhes
+    if (!window.isDetalhesPage) {
+        colunas.push({
+            "data": null,
+            "orderable": false,
+            "searchable": false,
+            "render": function (data, type, row, meta) {
+                // Se o item já foi vendido, não mostra os botões de ação
+                if (row.statusVenda) {
+                    return '<span style="color: #6c757d; font-style: italic;">-</span>';
+                }
+
+                return `
+                    <button onclick="alterarItem(${meta.row}, ${row.id})" class="botao_acao" title="Alterar item">
+                        <img src="images/icone_alterar.svg" alt="Alterar">
+                    </button>
+                    <button onclick="excluirItem(${row.id})" class="botao_acao" title="Excluir item">
+                        <img src="images/icone_excluir.svg" alt="Excluir">
+                    </button>
+                `;
+            }
+        });
+    }
+
     tabelaItens = $('#tabela-itens').DataTable({
         "processing": true,
         "serverSide": true,
@@ -232,71 +303,7 @@ function inicializarTabelaItens() {
                 return json.data;
             }
         },
-        "columns": [
-            {
-                "data": null,
-                "orderable": false,
-                "searchable": false,
-                "render": function (data, type, row, meta) {
-                    return meta.row + 1;
-                }
-            },
-            { "data": "produto.codigo" },
-            {
-                "data": "dataHora",
-                "render": function(data) {
-                    if (!data) return '---';
-                    const date = new Date(data);
-                    return date.toLocaleDateString('pt-BR');
-                }
-            },
-            { "data": "produto.nome" },
-            {
-                "data": "quantidade",
-                "render": function(data) {
-                    return parseFloat(data).toFixed(3).replace('.', ',');
-                }
-            },
-            {
-                "data": "preco",
-                "render": function(data) {
-                    return 'R$ ' + parseFloat(data).toFixed(3).replace('.', ',');
-                }
-            },
-            {
-                "data": null,
-                "render": function(data, type, row) {
-                    const valor = row.quantidade * row.preco;
-                    return 'R$ ' + valor.toFixed(3).replace('.', ',');
-                }
-            },
-            {
-                "data": "statusVenda",
-                "render": function(data) {
-                    return data ? 'Vendido' : 'Aberto';
-                }
-            },
-            {
-                "data": null,
-                "orderable": false,
-                "searchable": false,
-                "render": function (data, type, row, meta) {
-                    // Se o item já foi vendido, não mostra os botões de ação
-                    if (row.statusVenda) {
-                        return '<span style="color: #6c757d; font-style: italic;">-</span>';
-                    }
-
-                    return `
-                        <button onclick="alterarItem(${meta.row}, ${row.id})" class="botao_acao" title="Alterar item">
-                            <img src="images/icone_alterar.svg" alt="Alterar">
-                        </button>
-                        <button onclick="excluirItem(${row.id})" class="botao_acao" title="Excluir item">
-                            <img src="images/icone_excluir.svg" alt="Excluir">
-                        </button>
-                    `;
-                }
-            }
-        ],
+        "columns": colunas,
         "language": {
             "lengthMenu": "Exibindo _MENU_ registros por página",
             "zeroRecords": "Nenhum item no orçamento",
