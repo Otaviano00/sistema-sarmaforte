@@ -55,6 +55,9 @@ $(document).ready(function() {
             atualizarInformacoes();
         }, 1000);
     });
+
+    // Configurar atalhos de teclado
+    configurarAtalhosTeclado();
 });
 
 // Inicializar seletor de produtos com Select2
@@ -63,18 +66,61 @@ function inicializarSeletorProdutos() {
         placeholder: 'Selecione um produto',
         allowClear: true,
         matcher: function(params, data) {
+            // Se não há termo de busca, retornar tudo
             if ($.trim(params.term) === '') {
                 return data;
+            }
+
+            // Se é uma opção de grupo, processar recursivamente
+            if (data.children) {
+                const filteredChildren = $.map(data.children, function(child) {
+                    return this.matcher(params, child);
+                }.bind(this));
+
+                if (filteredChildren.length) {
+                    const modifiedData = $.extend({}, data, true);
+                    modifiedData.children = filteredChildren;
+                    return modifiedData;
+                }
+                return null;
             }
 
             const term = params.term.toLowerCase().trim();
             const text = data.text.toLowerCase().trim();
 
-            if (text.startsWith(term)) {
+            // Aceitar se começar OU contiver o termo
+            if (text.startsWith(term) || text.includes(term)) {
                 return data;
             }
 
             return null;
+        },
+        sorter: function(data) {
+            // Se não há termo de busca, manter ordem original
+            const searchTerm = $('.select2-search__field').val();
+            if (!searchTerm || searchTerm.trim() === '') {
+                return data;
+            }
+
+            const term = searchTerm.toLowerCase().trim();
+
+            // Separar em dois grupos: começa com e contém
+            const startsWith = [];
+            const contains = [];
+
+            data.forEach(function(item) {
+                if (item.text) {
+                    const text = item.text.toLowerCase();
+                    if (text.startsWith(term)) {
+                        startsWith.push(item);
+                    } else if (text.includes(term)) {
+                        contains.push(item);
+                    }
+                }
+            });
+
+            // Concatenar: primeiro os que começam, depois os que contêm
+            return startsWith.concat(contains);
         }
     });
 
@@ -110,18 +156,61 @@ function inicializarSeletorClientes() {
         placeholder: 'Selecione um cliente',
         allowClear: true,
         matcher: function(params, data) {
+            // Se não há termo de busca, retornar tudo
             if ($.trim(params.term) === '') {
                 return data;
+            }
+
+            // Se é uma opção de grupo, processar recursivamente
+            if (data.children) {
+                const filteredChildren = $.map(data.children, function(child) {
+                    return this.matcher(params, child);
+                }.bind(this));
+
+                if (filteredChildren.length) {
+                    const modifiedData = $.extend({}, data, true);
+                    modifiedData.children = filteredChildren;
+                    return modifiedData;
+                }
+                return null;
             }
 
             const term = params.term.toLowerCase().trim();
             const text = data.text.toLowerCase().trim();
 
-            if (text.startsWith(term)) {
+            // Aceitar se começar OU contiver o termo
+            if (text.startsWith(term) || text.includes(term)) {
                 return data;
             }
 
             return null;
+        },
+        sorter: function(data) {
+            // Se não há termo de busca, manter ordem original
+            const searchTerm = $('.select2-search__field').val();
+            if (!searchTerm || searchTerm.trim() === '') {
+                return data;
+            }
+
+            const term = searchTerm.toLowerCase().trim();
+
+            // Separar em dois grupos: começa com e contém
+            const startsWith = [];
+            const contains = [];
+
+            data.forEach(function(item) {
+                if (item.text) {
+                    const text = item.text.toLowerCase();
+                    if (text.startsWith(term)) {
+                        startsWith.push(item);
+                    } else if (text.includes(term)) {
+                        contains.push(item);
+                    }
+                }
+            });
+
+            // Concatenar: primeiro os que começam, depois os que contêm
+            return startsWith.concat(contains);
         }
     });
 
@@ -820,6 +909,75 @@ async function recarregarListaClientes(idNovoCliente) {
         console.error('Erro ao recarregar lista de clientes:', error);
         alert('Erro ao atualizar lista de clientes!');
     }
+}
+
+// Configurar atalhos de teclado para facilitar o uso
+function configurarAtalhosTeclado() {
+    // Não configurar atalhos na página de detalhes (somente leitura)
+    if (window.isDetalhesPage) {
+        return;
+    }
+
+    let produtoSelecionadoPeloTeclado = false;
+
+    // Atalho global: ESPAÇO para focar no select de produtos
+    document.addEventListener('keydown', function(event) {
+        // Verificar se o alvo não é um input, textarea ou select
+        const targetTag = event.target.tagName.toLowerCase();
+        const isInputField = ['input', 'textarea', 'select'].includes(targetTag);
+
+        // Se estiver em um campo de input, não ativar o atalho
+        if (isInputField) {
+            return;
+        }
+
+        // ESPAÇO - Abrir select de produtos
+        if (event.code === 'Space' || event.keyCode === 32) {
+            event.preventDefault();
+            $('#seletor_produto').select2('open');
+            produtoSelecionadoPeloTeclado = false;
+        }
+    });
+
+    // Listener para quando um produto é selecionado no select
+    $('#seletor_produto').on('select2:select', function(e) {
+        produtoSelecionadoPeloTeclado = true;
+
+        // Focar no container do Select2 para capturar o ENTER
+        setTimeout(() => {
+            const select2Container = $('.select2-container--open');
+            if (select2Container.length) {
+                select2Container.focus();
+            }
+        }, 100);
+    });
+
+    // Listener para ENTER após selecionar produto
+    $('#seletor_produto').on('select2:close', function(e) {
+        if (produtoSelecionadoPeloTeclado) {
+            // Pequeno delay para garantir que o valor foi atualizado
+            setTimeout(() => {
+                const valor = $('#seletor_produto').val();
+                if (valor) {
+                    adicionarItem();
+                    produtoSelecionadoPeloTeclado = false;
+                }
+            }, 100);
+        }
+    });
+
+    // Alternativa: Capturar ENTER enquanto o select está aberto
+    $(document).on('keydown', function(event) {
+        // Se o Select2 está aberto e pressionou ENTER
+        if ($('.select2-container--open').length > 0 && (event.code === 'Enter' || event.keyCode === 13)) {
+            const valor = $('#seletor_produto').val();
+            if (valor && produtoSelecionadoPeloTeclado) {
+                event.preventDefault();
+                $('#seletor_produto').select2('close');
+                // O evento select2:close vai disparar adicionarItem()
+            }
+        }
+    });
 }
 
 
