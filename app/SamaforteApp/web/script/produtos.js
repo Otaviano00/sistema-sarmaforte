@@ -158,20 +158,20 @@ async function openModal(modalId, codigo, tipo) {
                         <h2>Novo Produto</h2>
                         <form id="createForm">
                             <div class="form-group">
-                                <label for="nome" class="form-label">Nome</label>
+                                <label for="nome" class="form-label">Nome <span style="color: red;">*</span></label>
                                 <input type="text" name="nome" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <label for="fornecedor" class="form-label">Fornecedor</label>
+                                <label for="fornecedor" class="form-label">Fornecedor <span style="color: red;">*</span></label>
                                 <input type="text" name="fornecedor" class="form-input" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="quantidade" class="form-label">Quantidade</label>
+                                    <label for="quantidade" class="form-label">Quantidade <span style="color: red;">*</span></label>
                                     <input type="number" name="quantidade" class="form-input" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="preco" class="form-label">Preço</label>
+                                    <label for="preco" class="form-label">Preço <span style="color: red;">*</span></label>
                                     <input type="number" step="0.001" name="preco" class="form-input" required>
                                 </div>
                             </div>
@@ -285,20 +285,20 @@ async function openModal(modalId, codigo, tipo) {
                                         <input type="text" value="${produto.codigo}" class="form-input" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Nome</label>
+                                        <label class="form-label">Nome <span style="color: red;">*</span></label>
                                         <input type="text" name="nome" value="${produto.nome}" class="form-input" required>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Fornecedor</label>
+                                        <label class="form-label">Fornecedor <span style="color: red;">*</span></label>
                                         <input type="text" name="fornecedor" value="${produto.fornecedor}" class="form-input" required>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label class="form-label">Quantidade</label>
+                                            <label class="form-label">Quantidade <span style="color: red;">*</span></label>
                                             <input type="number" name="quantidade" value="${produto.quantidade}" class="form-input" required>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">Preço</label>
+                                            <label class="form-label">Preço <span style="color: red;">*</span></label>
                                             <input type="number" step="0.001" name="preco" value="${produto.preco}" class="form-input" required>
                                         </div>
                                     </div>

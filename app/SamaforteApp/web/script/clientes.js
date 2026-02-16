@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         "columns": [
-            { "data": "id" },
-            { "data": "nome" },
-            { "data": "telefone" },
+            { "data": "id", "defaultContent": "---" },
+            { "data": "nome", "defaultContent": "---" },
+            { "data": "telefone", "defaultContent": "---" },
             { "data": "endereco", "defaultContent": "---" },
             { "data": "cpf", "defaultContent": "---" },
             {
@@ -107,12 +107,12 @@ async function openModal(modalId, id, tipo) {
                         <h2>Novo Cliente</h2>
                         <form id="createForm">
                             <div class="form-group">
-                                <label for="nome" class="form-label">Nome</label>
+                                <label for="nome" class="form-label">Nome <span style="color: red;">*</span></label>
                                 <input type="text" name="nome" class="form-input" required>
                             </div>
                             <div class="form-group">
                                 <label for="telefone" class="form-label">Telefone</label>
-                                <input type="text" name="telefone" class="form-input" required>
+                                <input type="text" name="telefone" class="form-input">
                             </div>
                             <div class="form-group">
                                 <label for="cpf" class="form-label">CPF</label>
@@ -140,6 +140,9 @@ async function openModal(modalId, id, tipo) {
                 const formData = new FormData(this);
                 const cliente = Object.fromEntries(formData.entries());
 
+                if (cliente.telefone && cliente.telefone.trim() === '') {
+                    cliente.telefone = null;
+                }
                 if (cliente.cpf && cliente.cpf.trim() === '') {
                     cliente.cpf = null;
                 }
@@ -208,12 +211,12 @@ async function openModal(modalId, id, tipo) {
                                 <form id="editForm">
                                     <input type="hidden" name="id" value="${cliente.id}">
                                     <div class="form-group">
-                                        <label class="form-label">Nome</label>
+                                        <label class="form-label">Nome <span style="color: red;">*</span></label>
                                         <input type="text" name="nome" value="${cliente.nome}" class="form-input" required>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Telefone</label>
-                                        <input type="text" name="telefone" value="${cliente.telefone}" class="form-input" required>
+                                        <input type="text" name="telefone" value="${cliente.telefone || ''}" class="form-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">CPF</label>
@@ -243,6 +246,9 @@ async function openModal(modalId, id, tipo) {
                         const formData = new FormData(this);
                         const clienteData = Object.fromEntries(formData.entries());
 
+                        if (clienteData.telefone && clienteData.telefone.trim() === '') {
+                            clienteData.telefone = null;
+                        }
                         if (clienteData.cpf && clienteData.cpf.trim() === '') {
                             clienteData.cpf = null;
                         }

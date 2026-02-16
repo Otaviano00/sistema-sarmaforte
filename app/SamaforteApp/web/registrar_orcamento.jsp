@@ -116,12 +116,12 @@
 
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="add_preco_produto" class="form-label">Preço Unitário (R$)</label>
+                                            <label for="add_preco_produto" class="form-label">Preço Unitário (R$) <span style="color: red;">*</span></label>
                                             <input type="number" id="add_preco_produto" class="form-input" step="0.001" min="0" onkeypress="handleEnterAdicionar(event)">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="add_quantidade_produto" class="form-label">Quantidade</label>
+                                            <label for="add_quantidade_produto" class="form-label">Quantidade <span style="color: red;">*</span></label>
                                             <input type="number" id="add_quantidade_produto" class="form-input" step="0.001" min="0.001" onkeypress="handleEnterAdicionar(event)">
                                         </div>
                                     </div>
@@ -155,12 +155,12 @@
 
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="edit_preco_produto" class="form-label">Preço Unitário (R$)</label>
+                                            <label for="edit_preco_produto" class="form-label">Preço Unitário (R$) <span style="color: red;">*</span></label>
                                             <input type="number" id="edit_preco_produto" class="form-input" step="0.001" min="0" onkeypress="handleEnterAlterar(event)">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="edit_quantidade_produto" class="form-label">Quantidade</label>
+                                            <label for="edit_quantidade_produto" class="form-label">Quantidade <span style="color: red;">*</span></label>
                                             <input type="number" id="edit_quantidade_produto" class="form-input" step="0.001" min="0.001" onkeypress="handleEnterAlterar(event)">
                                         </div>
                                     </div>
@@ -185,12 +185,12 @@
                                     <h2>Novo Cliente</h2>
                                     <form id="createClienteForm">
                                         <div class="form-group">
-                                            <label for="cliente_nome" class="form-label">Nome</label>
+                                            <label for="cliente_nome" class="form-label">Nome <span style="color: red;">*</span></label>
                                             <input type="text" name="nome" id="cliente_nome" class="form-input" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="cliente_telefone" class="form-label">Telefone</label>
-                                            <input type="text" name="telefone" id="cliente_telefone" class="form-input" required>
+                                            <input type="text" name="telefone" id="cliente_telefone" class="form-input">
                                         </div>
                                         <div class="form-group">
                                             <label for="cliente_cpf" class="form-label">CPF</label>

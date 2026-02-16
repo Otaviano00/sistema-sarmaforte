@@ -827,12 +827,15 @@ async function criarNovoCliente() {
     const cliente = Object.fromEntries(formData.entries());
 
     // Validar campos obrigatórios
-    if (!cliente.nome || !cliente.telefone) {
-        alert('Nome e Telefone são obrigatórios!');
+    if (!cliente.nome) {
+        alert('Nome é obrigatório!');
         return;
     }
 
     // Limpar campos vazios
+    if (cliente.telefone && cliente.telefone.trim() === '') {
+        cliente.telefone = null;
+    }
     if (cliente.cpf && cliente.cpf.trim() === '') {
         cliente.cpf = null;
     }
