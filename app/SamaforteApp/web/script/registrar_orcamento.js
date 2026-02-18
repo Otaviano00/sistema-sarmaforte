@@ -28,6 +28,29 @@ $(document).ready(function() {
     modalAlterar = document.querySelector('#modal_alterar');
     modalCriarCliente = document.querySelector('#modal_criar_cliente');
 
+    // Adicionar listeners de Enter nos campos dos modais
+    if (modalAdicionar) {
+        $('#add_preco_produto, #add_quantidade_produto').on('keydown', function(event) {
+            if (event.key === 'Enter' || event.keyCode === 13 || event.which === 13) {
+                event.preventDefault();
+                event.stopPropagation();
+                confirmarAdicionar();
+                return false;
+            }
+        });
+    }
+
+    if (modalAlterar) {
+        $('#edit_preco_produto, #edit_quantidade_produto').on('keydown', function(event) {
+            if (event.key === 'Enter' || event.keyCode === 13 || event.which === 13) {
+                event.preventDefault();
+                event.stopPropagation();
+                confirmarAlterar();
+                return false;
+            }
+        });
+    }
+
     // Inicializar Select2 para produtos
     inicializarSeletorProdutos();
 
@@ -586,17 +609,21 @@ function closeModalAlterar() {
 
 // Função para detectar Enter no modal de adicionar
 function handleEnterAdicionar(event) {
-    if (event.key === 'Enter' || event.keyCode === 13) {
+    if (event.key === 'Enter' || event.keyCode === 13 || event.which === 13) {
         event.preventDefault();
+        event.stopPropagation();
         confirmarAdicionar();
+        return false;
     }
 }
 
 // Função para detectar Enter no modal de alterar
 function handleEnterAlterar(event) {
-    if (event.key === 'Enter' || event.keyCode === 13) {
+    if (event.key === 'Enter' || event.keyCode === 13 || event.which === 13) {
         event.preventDefault();
+        event.stopPropagation();
         confirmarAlterar();
+        return false;
     }
 }
 
@@ -624,6 +651,11 @@ function adicionarItem() {
             $('#add_preco_produto').val(produto.preco.toFixed(3));
 
             modalAdicionar.showModal();
+
+            // Focar no campo de preço após abrir o modal
+            setTimeout(() => {
+                $('#add_preco_produto').focus().select();
+            }, 100);
         })
         .catch(error => {
             console.error('Erro ao carregar produto:', error);
@@ -692,6 +724,11 @@ function alterarItem(index, idItem) {
             $('#edit_preco_produto').val(item.preco.toFixed(3));
 
             modalAlterar.showModal();
+
+            // Focar no campo de preço após abrir o modal
+            setTimeout(() => {
+                $('#edit_preco_produto').focus().select();
+            }, 100);
         })
         .catch(error => {
             console.error('Erro ao carregar item:', error);
@@ -978,6 +1015,45 @@ function configurarAtalhosTeclado() {
                 event.preventDefault();
                 $('#seletor_produto').select2('close');
                 // O evento select2:close vai disparar adicionarItem()
+            }
+        }
+    });
+
+    // Listener para Enter quando o select de produtos está FOCADO (mas não aberto)
+    // e já tem um valor selecionado
+    $(document).on('keydown', '.select2-container', function(event) {
+        // Verificar se é o select de produtos
+        const $select2 = $(this);
+        const selectId = $select2.attr('aria-controls');
+
+        // Se for o seletor de produtos e pressionar Enter
+        if (selectId && selectId.includes('seletor_produto') &&
+            (event.code === 'Enter' || event.keyCode === 13)) {
+
+            // Verificar se o select NÃO está aberto
+            if (!$select2.hasClass('select2-container--open')) {
+                const valor = $('#seletor_produto').val();
+
+                // Se tem um valor selecionado, adicionar o item
+                if (valor) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    adicionarItem();
+                }
+            }
+        }
+    });
+
+    // Listener adicional no elemento select original
+    $('#seletor_produto').on('keydown', function(event) {
+        if (event.code === 'Enter' || event.keyCode === 13) {
+            const valor = $(this).val();
+
+            // Se tem um valor selecionado e o select2 não está aberto
+            if (valor && !$('.select2-container--open').length) {
+                event.preventDefault();
+                event.stopPropagation();
+                adicionarItem();
             }
         }
     });

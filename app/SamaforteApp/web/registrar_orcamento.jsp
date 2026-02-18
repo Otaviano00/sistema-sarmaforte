@@ -245,7 +245,7 @@
                     Cancelar Orçamento
                 </button>
                 <div style="display: flex; gap: 10px;">
-                    <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=' + new URLSearchParams(window.location.search).get('id')'">
+                    <button class="botao_confirma" id="botao_imprime" onclick="location.href = 'imprimir_orcamento.jsp?id=' + new URLSearchParams(window.location.search).get('id')">
                         Imprimir Orçamento
                     </button>
                     <button class="botao_confirma" onclick="location.href = 'orcamentos.jsp'">

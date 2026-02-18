@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Conexao {
 
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
     private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/db_samaforte";
 
     public static Connection criarConexaoMySQL() throws SQLException, ClassNotFoundException {
