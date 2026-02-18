@@ -27,7 +27,6 @@
         <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
-        <script defer src="script/orcamento.js"></script>
         <script defer src="script/tabela.js"> </script>
         <script defer src="script/venda.js"></script>
 
@@ -40,9 +39,40 @@
     </head>
     <body>
         <%
-            Integer id = Integer.parseInt(request.getParameter("id"));
-            Venda venda = VendaDAO.listarPorId(id);
-            Orcamento orcamento = OrcamentoDAO.listarPorId(venda.getOrcamento().getId());
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.trim().isEmpty()) {
+                response.sendRedirect("vendas.jsp");
+                return;
+            }
+
+            Integer id = null;
+            Venda venda = null;
+            Orcamento orcamento = null;
+
+            try {
+                id = Integer.parseInt(idParam);
+                venda = VendaDAO.listarPorId(id);
+
+                if (venda == null) {
+                    response.sendRedirect("vendas.jsp");
+                    return;
+                }
+
+                if (venda.getOrcamento() == null) {
+                    response.sendRedirect("vendas.jsp");
+                    return;
+                }
+
+                orcamento = OrcamentoDAO.listarPorId(venda.getOrcamento().getId());
+
+                if (orcamento == null) {
+                    response.sendRedirect("vendas.jsp");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect("vendas.jsp");
+                return;
+            }
         %>
         <header>
              <div class="logo">
@@ -59,16 +89,15 @@
         </nav>
         <div class="flex">
             <form action="GerenciarVenda" method="post">
-                <br>
                 <input type="hidden" name="id_venda" id="id_venda" value="<%= id%>">
                 <input type="hidden" name="id_orcamento" id="id_orcamento" value="<%= orcamento.getId()%>">
                 <input type="hidden" name="id_usuario" id="id_usuario" value="<%= idU%>">
                 <input type="hidden" name="acao" value="2">
-                <section id="dados_orcamento" class="bloco" style="min-width: 97.5%;">
-                    <h2>Dados da Venda</h2>
-                    <div id="dados_cliente" class="form">
-                        <br>
-                        <div style="display: flex; flex-direction: row; justify-content: space-around; min-width: 100%">
+
+                <div class="conjunto">
+                    <section id="dados_orcamento" class="bloco">
+                        <h2>Dados da Venda</h2>
+                        <div id="dados_cliente">
                             <div class="campo_cliente campos">
                                 <label>Cliente:</label>
                                 <input type="text" value="<%= orcamento.getCliente().getNome()%>" disabled readonly>
@@ -85,29 +114,24 @@
                                 <label>Endereço:</label>
                                 <input type="text" value="<%= orcamento.getCliente().getEndereco() != null? orcamento.getCliente().getEndereco() : "---"%>" disabled readonly>
                             </div>
-                            <br>
-                        </div>
-                        <div style="display: flex; flex-direction: row; justify-content: space-around; min-width: 100%">
                             <div class="campo_cliente campos">
-                                <label> Vendedor: </label>
+                                <label>Vendedor:</label>
                                 <input type="text" value="<%= venda.getUsuario() == null? "EXCLUÍDO" : venda.getUsuario().getNome() %>" disabled readonly>
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Cargo:  </label>
+                                <label>Cargo:</label>
                                 <input type="text" value="<%= venda.getUsuario() == null? "EXCLUÍDO" : venda.getUsuario().getPerfil().getNome()%>" disabled readonly>
                             </div>
-                        </div>
-                        <div style="display: flex; flex-direction: row; justify-content: space-around; min-width: 100%">
                             <div class="campo_cliente campos">
-                                <label> Data da Venda: </label>
+                                <label>Data da Venda:</label>
                                 <input type="text" value="<%= Util.converteData(venda.getData().toLocalDate())%>" disabled readonly>
                             </div>
                             <div class="campo_cliente campos">
-                                <label> Desconto (R$):</label>
+                                <label>Desconto (R$):</label>
                                 <input type="number" step="0.001" name="desconto" id="desconto" value="<%= venda.getDesconto()%>" onchange="atualizarDesconto()">
                             </div>
                             <div class="campo_cliente campos">
-                                <label for="forma_pagamento"> Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr> </label>
+                                <label for="forma_pagamento">Forma de Pagamento: <abbr title="Campo obrigatório" style="color: red; font-weight: bolder; text-decoration: none;">*</abbr></label>
                                 <select name="forma_pagamento" class="seletor" required>
                                     <option value="Débito" <%= venda.getFormaPagamento().equals("Débito")? "selected" : " " %>>Débito</option>
                                     <option value="Crédito" <%= venda.getFormaPagamento().equals("Crédito")? "selected" : " " %>>Crédito</option>
@@ -115,21 +139,16 @@
                                     <option value="Pix" <%= venda.getFormaPagamento().equals("Pix")? "selected" : " " %>>Pix</option>
                                 </select>
                             </div>
+                            <div class="campos">
+                                <label for="informacao">Informações:</label>
+                                <textarea name="informacao" id="informacao" style="min-height: 80px; max-height: 120px;" readonly disabled><%= orcamento.getInformacao() == null? "" : orcamento.getInformacao().trim()%></textarea>
+                            </div>
                         </div>
-                        <div class="campos">
-                            <label for="informacao"> Informações:</label>
-                            <textarea name="informacao" id="informacao" style="min-height: fit-content; max-height: 50px;" readonly disabled><%= orcamento.getInformacao() == null? "" : orcamento.getInformacao().trim()%></textarea>
-                        </div>
-                    </div>
-                </section>
-                <br>
-                <section id="listar_itens" class="bloco">
-                    <h2>Itens do Orçamento</h2>
-                    <div class="tabela" style="width: 98.5%; justify-content: center;">
+                    </section>
+                    <section id="listar_itens" class="tabela bloco">
+                        <h2>Itens do Orçamento</h2>
                         <table class="table table-striped" style="background-color: white;">
                             <thead>
-                                <p></p>
-                                <br>
                                 <tr>
                                     <th>#</th>
                                     <th>Código</th>
@@ -151,30 +170,15 @@
                                         String data = Util.converteData(itens.get(i).getDataHora().toLocalDate());
                                         String hora = Util.converteHora(itens.get(i).getDataHora());
                                         String dataHora = data + " - " + hora;
-
                                 %>
                                     <tr>
-                                        <td>
-                                            <%= i+1%>
-                                        </td>
-                                        <td>
-                                            <%= itens.get(i).getProduto().getCodigo()%>
-                                        </td>
-                                        <td>
-                                            <%= dataHora%>
-                                        </td>
-                                        <td>
-                                            <%= itens.get(i).getProduto().getNome()%>
-                                        </td>
-                                        <td>
-                                            <%= itens.get(i).getQuantidade()%>
-                                        </td>
-                                        <td>
-                                            <%= String.format("%,.3f", itens.get(i).getPreco())%>
-                                        </td>
-                                        <td>
-                                            <%= String.format("%,.3f", precoTotal)%>
-                                        </td>
+                                        <td><%= i+1%></td>
+                                        <td><%= itens.get(i).getProduto().getCodigo()%></td>
+                                        <td><%= dataHora%></td>
+                                        <td><%= itens.get(i).getProduto().getNome()%></td>
+                                        <td><%= itens.get(i).getQuantidade()%></td>
+                                        <td><%= String.format("%,.3f", itens.get(i).getPreco())%></td>
+                                        <td><%= String.format("%,.3f", precoTotal)%></td>
                                         <td>
                                             <label for="produto-checkbox<%= itens.get(i).getId()%>" class="botao_radio" style="max-width: fit-content; cursor: pointer;">
                                                 <input type="checkbox" name="produto-checkbox" style="width: 20px; height: 20px; cursor: pointer;" value="<%= itens.get(i).getId()%>" id="produto-checkbox<%= itens.get(i).getId()%>" class="produto-checkbox" data-preco="<%= precoTotal%>" onchange="atualizarTotal()" <%= itens.get(i).isStatusVenda()? "checked disabled readonly" : "" %>>
@@ -188,31 +192,29 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="6" >
-                                        TOTAL
-                                    </td>
-                                    <td colspan="2" id="valorTotal">
-                                        <%= String.format("R$ %,.3f", 0f) %>
-                                    </td>
+                                    <td colspan="6">TOTAL</td>
+                                    <td colspan="2" id="valorTotal"><%= String.format("R$ %,.3f", 0f) %></td>
                                 </tr>
                             </tfoot>
                         </table>
                         <input type="hidden" name="valor" id="valor" value="0">
-                    </div>
-                
-                </section>
-                <section id="finalizar" class="bloco" >
-                    <div style="position: absolute; left: 0;">
-                        <button type="button" class="botao_cancela" onclick="location.href = document.referrer;" >
+                    </section>
+                </div>
+
+                <section id="finalizar" class="bloco">
+                    <div>
+                        <button type="button" class="botao_cancela" onclick="location.href = document.referrer;">
                             Voltar
                         </button>
-                        <button type="button" class="botao_cancela" onclick="location.href = 'alterar_orcamento.jsp?id=<%= venda.getOrcamento().getId()%>'" >
+                        <button type="button" class="botao_cancela" onclick="location.href = 'alterar_orcamento.jsp?id=<%= venda.getOrcamento().getId()%>'">
                             Alterar Orçamento
                         </button>
                     </div>
-                    <button class="botao_confirma" id="botao_venda" onclick="confirmarVenda(event)">
-                        Realizar Venda
-                    </button>
+                    <div>
+                        <button class="botao_confirma" id="botao_venda" onclick="confirmarVenda(event)">
+                            Realizar Venda
+                        </button>
+                    </div>
                 </section>
             </form>
         </div>

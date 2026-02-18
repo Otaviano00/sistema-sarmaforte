@@ -58,6 +58,10 @@
         <servlet-name>GerenciarVenda</servlet-name>
         <servlet-class>controller.GerenciarVenda</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GerenciarItemOrcamento</servlet-name>
+        <servlet-class>controller.GerenciarItemOrcamento</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProcessarLogin</servlet-name>
         <url-pattern>/ProcessarLogin</url-pattern>
@@ -89,6 +93,10 @@
     <servlet-mapping>
         <servlet-name>GerenciarVenda</servlet-name>
         <url-pattern>/GerenciarVenda</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GerenciarItemOrcamento</servlet-name>
+        <url-pattern>/GerenciarItemOrcamento</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

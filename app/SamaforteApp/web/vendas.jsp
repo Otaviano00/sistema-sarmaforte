@@ -1,8 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.Venda"%>
-<%@page import="dao.VendaDAO"%>
-<%@page import="java.util.List"%>
-<%@page import="utilities.Util"%>
 
 <%@include file="sessao.jsp" %>
 
@@ -18,17 +14,17 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
-    
+
+    <script defer src="script/vendas.js"></script>
     <script defer src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
-    <script defer src="script/tabela.js"> </script>
-
     <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/modal.css">
+    <link rel="stylesheet" href="style/cadastrar_alterar.css">
     <link rel="shortcut icon" href="images/favicon/favicon(1).ico" type="image/x-icon">
-    <title>Venda</title>
-    
+
 </head>
 <body>
     <header>
@@ -54,8 +50,48 @@
                 Novo Venda
             </div>
         </button>
+
+        <div class="filtro">
+            <div class="item-filtro">
+                <p>Coluna de pesquisa</p>
+                <select id="input-filter">
+                    <option value="0">
+                        #
+                    </option>
+                    <option value="1">
+                        Cliente
+                    </option>
+                    <option value="2" selected>
+                        Vendedor
+                    </option>
+                    <option value="3">
+                        Data
+                    </option>
+                    <option value="4">
+                        Valor
+                    </option>
+                    <option value="5">
+                        Forma Pagamento
+                    </option>
+                </select>
+            </div>
+            <div class="item-filtro">
+                <p>
+                    Tipo de pesquisa
+                </p>
+                <select id="input-type">
+                    <option value="0" selected>
+                        Começa com
+                    </option>
+                    <option value="1">
+                        Inclui
+                    </option>
+                </select>
+            </div>
+        </div>
+
         <div class="tabela">
-            <table class="table table-striped" style="background-color: white;">
+            <table id="lista-vendas" class="table table-striped" style="background-color: white;">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -68,37 +104,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        List<Venda> vendas = VendaDAO.listar();
-                        for (int i = vendas.size() - 1; i >= 0; i--) {%>
-                        <tr>
-                            <td><%= vendas.size() - i%></td>
-                            <td><%= vendas.get(i).getOrcamento().getCliente().getNome()%></td>
-                            <td><%= vendas.get(i).getUsuario() == null? "EXCLUÍDO" : vendas.get(i).getUsuario().getNome()%></td> 
-                            <td><%= Util.converteData(vendas.get(i).getData().toLocalDate())%></td>       
-                            <td><%= String.format("R$ %,.3f", vendas.get(i).getValor())%></td> 
-                            <td><%= vendas.get(i).getFormaPagamento()%></td>  
-                            <td>
-                                <% if (hierarquia < 2 && !vendas.get(i).getOrcamento().getStatus().equals("Concluído")) {%>
-                                    <button onclick="location.href = 'alterar_venda.jsp?id=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Alterar dessa venda <%= i+1%>">
-                                        <img src="images/icone_alterar.svg" alt="Alterar">
-                                    </button>
-                                <% }%>
-                                <button onclick="location.href = 'detalhes_venda.jsp?id=<%= vendas.get(i).getId()%>'" class="botao_acao" title="Detalhes da venda <%= i+1%>">
-                                    <img src="images/icone_detalhes.svg" alt="Detalhes">
-                                </button>
-                                <% if (hierarquia == 0) {%>
-                                    <button onclick="confirmarExclusao(event, 'GerenciarVenda?id=<%= vendas.get(i).getId()%>&acao=3')" class="botao_acao" title="Excluir venda <%= i+1%>">
-                                        <img src="images/icone_excluir.svg" alt="Excluir">
-                                    </button>
-                                <% }%>
 
-                            </td>
-                        </tr>
-                    <% }%>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Hidden input to store hierarquia valuez for JavaScript -->
+    <input type="hidden" id="hierarquia-value" value="<%= hierarquia %>">
+
+    <!-- Modal de Detalhes -->
+    <!-- Modal de Detalhes -->
+    <dialog id="detailsModal">
+        <div class="modal" id="detailsModalContent"></div>
+    </dialog>
+
+    <!-- Modal de Alterar -->
+    <dialog id="editModal">
+        <div class="modal" id="editModalContent"></div>
+    </dialog>
+
 </body>
 </html>

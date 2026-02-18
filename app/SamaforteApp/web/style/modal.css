@@ -1,0 +1,339 @@
+/* ========================================
+   ESTILOS PARA DIALOG (HTML5 MODALS)
+   ======================================== */
+
+dialog::backdrop {
+    background-color: rgb(0 0 0 /.5);
+}
+
+dialog {
+    margin: auto;
+    min-width: fit-content;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh; /* Altura máxima de 90% da viewport */
+    border-radius: 15px;
+    border: none;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Esconde overflow do dialog */
+}
+
+/* Container principal do modal */
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+/* Conteúdo do modal */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    max-height: 90vh; /* Limita altura total do conteúdo */
+}
+
+/* Corpo do modal */
+.modal-body {
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 15px 15px 0 0;
+    padding-top: 60px; /* Espaço para o título e botão X */
+    overflow-y: auto; /* Scroll vertical quando necessário */
+    overflow-x: hidden; /* Sem scroll horizontal */
+    flex: 1; /* Permite que o body cresça */
+    min-height: 0; /* Necessário para que o flex funcione corretamente */
+    position: relative; /* Para posicionamento do h2 */
+}
+
+/* Estilizar scrollbar do modal-body */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #e9ecef;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #366cb4;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #142E50;
+}
+
+/* Título do modal - alinhado com botão X */
+.modal .modal-content .modal-body h2,
+.modal-body h2 {
+    position: absolute !important;
+    top: 15px !important;
+    left: 30px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #142E50 !important;
+    font-size: 1.5em !important;
+    font-weight: bold !important;
+    background: none !important;
+    border-radius: 0 !important;
+    line-height: 40px !important; /* Mesma altura do botão X para alinhamento vertical */
+    max-width: calc(100% - 100px) !important; /* Deixa espaço para o botão X */
+    transform: none !important;
+}
+
+/* ========================================
+   FORMULÁRIOS DENTRO DOS MODAIS
+   ======================================== */
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Garantir que ocupe toda a largura */
+}
+
+.form-label {
+    font-weight: 600;
+    color: #142E50;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #366cb4;
+    box-shadow: 0 0 0 3px rgba(54, 108, 180, 0.1);
+}
+
+.form-input:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-row .form-group {
+    flex: 1;
+    min-width: 0; /* Permite que os itens flex encolham corretamente */
+}
+
+/* ========================================
+   RODAPÉ DO MODAL
+   ======================================== */
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 30px;
+    background: white;
+    border-radius: 0 0 15px 15px;
+    border-top: 1px solid #e9ecef;
+    flex-shrink: 0; /* Impede que o footer encolha */
+    position: relative; /* Garante que fique no fluxo */
+}
+
+/* ========================================
+   BOTÕES DO MODAL
+   ======================================== */
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Botão primário (ações principais) */
+.btn-primary {
+    background: linear-gradient(135deg, #142E50 0%, #366cb4 100%);
+    color: #FFB729;
+    box-shadow: 0 4px 12px rgba(20, 46, 80, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #366cb4 0%, #4a8ed9 100%);
+    box-shadow: 0 6px 16px rgba(20, 46, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(20, 46, 80, 0.3);
+}
+
+/* Botão secundário (ações de cancelar) */
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    box-shadow: 0 6px 16px rgba(108, 117, 125, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+}
+
+/* ========================================
+   BOTÃO FECHAR (X) DO MODAL
+   ======================================== */
+
+.botao_fechar_modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(162, 4, 4, 0.9);
+    border: none;
+    font-weight: bold;
+    font-size: 2em;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    padding: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.botao_fechar_modal:hover {
+    background-color: #cd0101;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 12px rgba(205, 1, 1, 0.4);
+}
+
+.botao_fechar_modal:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* ========================================
+   BOTÃO EXPANSÍVEL PARA ITENS
+   ======================================== */
+
+.botao_expansivel {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1em;
+    font-weight: 600;
+    background: linear-gradient(135deg, #142E50 0%, #366cb4 100%);
+    color: #FFB729;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-family: 'Karla', sans-serif;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(20, 46, 80, 0.3);
+}
+
+.botao_expansivel:hover {
+    background: linear-gradient(135deg, #366cb4 0%, #4a8ed9 100%);
+    box-shadow: 0 6px 16px rgba(20, 46, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+.botao_expansivel:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(20, 46, 80, 0.3);
+}
+
+/* Animação suave para expansão da lista */
+.itens-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+    opacity: 0;
+    margin-top: 0;
+}
+
+.itens-container.expanded {
+    max-height: 400px; /* Altura máxima fixa para evitar modais muito grandes */
+    overflow-y: auto; /* Scroll vertical quando necessário */
+    overflow-x: hidden; /* Sem scroll horizontal */
+    opacity: 1;
+    margin-top: 15px;
+}
+
+/* Estilizar scrollbar do container de itens */
+.itens-container.expanded::-webkit-scrollbar {
+    width: 8px;
+}
+
+.itens-container.expanded::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.itens-container.expanded::-webkit-scrollbar-thumb {
+    background: #366cb4;
+    border-radius: 4px;
+}
+
+.itens-container.expanded::-webkit-scrollbar-thumb:hover {
+    background: #142E50;
+}
+
+/* Animação da seta */
+.arrow-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    font-size: 1.2em;
+    color: #FFB729;
+}
+
+.arrow-icon.rotated {
+    transform: rotate(180deg);
+}
+

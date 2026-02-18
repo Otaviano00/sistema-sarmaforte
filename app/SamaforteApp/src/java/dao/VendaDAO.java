@@ -279,6 +279,78 @@ public class VendaDAO {
         }
 
     }
+
+    public static Venda listarPorOrcamento(int idOrcamento) {
+
+        String sql = "SELECT * FROM venda WHERE id_orcamento = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        Venda venda = new Venda();
+
+        try {
+
+            conn = Conexao.criarConexaoMySQL();
+            pstm = (PreparedStatement) conn.prepareStatement(sql);
+
+            pstm.setInt(1, idOrcamento);
+            pstm.execute();
+
+            rset = pstm.executeQuery();
+
+            if (rset.next()) {
+
+                try {
+
+                    Usuario usuario = UsuarioDAO.listarPorId(rset.getInt("id_usuario"));
+                    Orcamento orcamento = OrcamentoDAO.listarPorId(rset.getInt("id_orcamento"));
+
+                    venda.setId(rset.getInt("id"));
+                    venda.setData(rset.getTimestamp("data").toLocalDateTime());
+                    venda.setValor(rset.getDouble("valor"));
+                    venda.setDesconto(rset.getDouble("desconto"));
+                    venda.setFormaPagamento(rset.getString("forma_pagamento"));
+                    venda.setUsuario(usuario);
+                    venda.setOrcamento(orcamento);
+
+                } catch (Exception e) {
+
+                    return null;
+
+                }
+
+            } else {
+
+                return null;
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (rset != null) {
+                    rset.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
+
+        return venda;
+
+    }
     
     public static List<ItemOrcamento> listarTodosItensVendidos() {
 
@@ -336,6 +408,176 @@ public class VendaDAO {
 
         return itens;
 
+    }
+
+    public static List<Venda> listarPaginado(int start, int length, String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT v.* FROM venda v " +
+            "LEFT JOIN usuario u ON v.id_usuario = u.id " +
+            "LEFT JOIN orcamento o ON v.id_orcamento = o.id " +
+            "LEFT JOIN cliente c ON o.id_cliente = c.id"
+        );
+        List<Object> params = new ArrayList<>();
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            // Colunas: 0=#(id), 1=Cliente, 2=Vendedor, 3=Data, 4=Valor, 5=Forma Pagamento
+            String[] columns = {"v.id", "c.nome", "u.nome", "v.data", "v.valor", "v.forma_pagamento"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+                    sql.append(" WHERE ").append(column).append(" LIKE ?");
+
+                    if ("0".equals(filterType)) { // Começa com
+                        params.add(searchValue + "%");
+                    } else { // Inclui
+                        params.add("%" + searchValue + "%");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        sql.append(" ORDER BY v.id DESC LIMIT ? OFFSET ?");
+        params.add(length);
+        params.add(start);
+
+        List<Venda> vendas = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+                try {
+                    Usuario usuario = UsuarioDAO.listarPorId(rset.getInt("id_usuario"));
+                    Orcamento orcamento = OrcamentoDAO.listarPorId(rset.getInt("id_orcamento"));
+
+                    Venda venda = new Venda();
+                    venda.setId(rset.getInt("id"));
+                    venda.setData(rset.getTimestamp("data").toLocalDateTime());
+                    venda.setValor(rset.getDouble("valor"));
+                    venda.setDesconto(rset.getDouble("desconto"));
+                    venda.setFormaPagamento(rset.getString("forma_pagamento"));
+                    venda.setUsuario(usuario);
+                    venda.setOrcamento(orcamento);
+
+                    vendas.add(venda);
+                } catch (Exception e) {
+                    // Ignorar vendas com dados inválidos
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return vendas;
+    }
+
+    public static int contarTodos() {
+        String sql = "SELECT COUNT(id) FROM venda";
+        int total = 0;
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
+    public static int contarFiltrados(String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT COUNT(v.id) FROM venda v " +
+            "LEFT JOIN usuario u ON v.id_usuario = u.id " +
+            "LEFT JOIN orcamento o ON v.id_orcamento = o.id " +
+            "LEFT JOIN cliente c ON o.id_cliente = c.id"
+        );
+        List<Object> params = new ArrayList<>();
+        int total = 0;
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            // Colunas: 0=#(id), 1=Cliente, 2=Vendedor, 3=Data, 4=Valor, 5=Forma Pagamento
+            String[] columns = {"v.id", "c.nome", "u.nome", "v.data", "v.valor", "v.forma_pagamento"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+                    sql.append(" WHERE ").append(column).append(" LIKE ?");
+
+                    if ("0".equals(filterType)) { // Começa com
+                        params.add(searchValue + "%");
+                    } else { // Inclui
+                        params.add("%" + searchValue + "%");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
     }
 
 }

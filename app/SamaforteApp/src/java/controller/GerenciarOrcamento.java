@@ -1,9 +1,9 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dao.ClienteDAO;
-import dao.ItemOrcamentoDAO;
 import dao.OrcamentoDAO;
-import dao.ProdutoDAO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,216 +12,191 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.List;
-import model.ItemOrcamento;
+import java.util.Map;
+import java.util.HashMap;
 import model.Orcamento;
-import model.Produto;
+import utilities.LocalDateTimeAdapter;
 
 public class GerenciarOrcamento extends HttpServlet {
+
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        gerenciarOrcamento(request, response);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String idParam = request.getParameter("id");
+        String isPaginado = request.getParameter("isPaginado");
+
+        try {
+            if (idParam == null) {
+                if (!Boolean.parseBoolean(isPaginado)) {
+                    List<Orcamento> orcamentos = OrcamentoDAO.listar();
+                    out.print(gson.toJson(orcamentos));
+                }
+
+                // Requisição do DataTables serverSide
+                int start = Integer.parseInt(request.getParameter("start"));
+                int length = Integer.parseInt(request.getParameter("length"));
+                String searchValue = request.getParameter("search[value]");
+                int draw = Integer.parseInt(request.getParameter("draw"));
+                String filterColumn = request.getParameter("filterColumn");
+                String filterType = request.getParameter("filterType");
+
+                List<Orcamento> orcamentos = OrcamentoDAO.listarPaginado(start, length, searchValue, filterColumn, filterType);
+
+                int totalRecords = OrcamentoDAO.contarTodos();
+                int filteredRecords = OrcamentoDAO.contarFiltrados(searchValue, filterColumn, filterType);
+
+                Map<String, Object> jsonResponse = new HashMap<>();
+                jsonResponse.put("draw", draw);
+                jsonResponse.put("recordsTotal", totalRecords);
+                jsonResponse.put("recordsFiltered", filteredRecords);
+                jsonResponse.put("data", orcamentos);
+
+                out.print(gson.toJson(jsonResponse));
+
+                return;
+            }
+
+            Integer idOrcamento = Integer.parseInt(idParam);
+            Orcamento orcamento = OrcamentoDAO.listarPorId(idOrcamento);
+
+            if (orcamento == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\":\"Orçamento não encontrado com o id: " + idOrcamento + "\"}");
+                return;
+            }
+
+            out.print(gson.toJson(orcamento));
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        gerenciarOrcamento(request, response);
-    }
 
-    private static void exibirMensagem(PrintWriter out, String mensagem, String url) throws IOException {
-        out.print("<script>");
-        out.print("alert('" + mensagem + "');");
-        out.print("location.href = '" + url + "';");
-        out.print("</script>");
-        out.close();
-    }
-
-    public static void gerenciarOrcamento(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        int acao;
         try {
-            acao = Integer.parseInt(request.getParameter("acao"));
-        } catch (NumberFormatException e) {
-            exibirMensagem(out, "Ação inválida!", "orcamentos.jsp");
-            return;
+            // Criar novo orçamento
+            Orcamento orcamento = new Orcamento();
+            orcamento.setDataCriacao(LocalDateTime.now());
+            orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
+            orcamento.setStatus("Aberto");
+            orcamento.setCliente(ClienteDAO.listarPorId(1));
+
+            if (OrcamentoDAO.registrar(orcamento)) {
+                List<Orcamento> orcamentos = OrcamentoDAO.listar();
+                Orcamento novoOrcamento = orcamentos.get(orcamentos.size() - 1);
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                out.print(gson.toJson(novoOrcamento));
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.print("{\"error\":\"Erro ao criar orçamento\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
         }
+    }
 
-        Orcamento orcamento = new Orcamento();
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
 
-        switch (acao) {
-            case 1: // Registrar
-                try {
-                    orcamento.setDataCriacao(LocalDateTime.now());
-                    orcamento.setDataValidade(LocalDateTime.now().plusDays(15));
-                    orcamento.setStatus("Aberto");
-                    orcamento.setCliente(ClienteDAO.listarPorId(1));
+        try {
+            // Receber o orçamento do JSON
+            Orcamento orcamentoRecebido = gson.fromJson(request.getReader(), Orcamento.class);
 
-                    // Registrar no banco
-                    if (OrcamentoDAO.registrar(orcamento)) {
-                        List<Orcamento> orcamentos = OrcamentoDAO.listar();
-                        int idOrcamento = orcamentos.get(orcamentos.size() - 1).getId();
-                        response.sendRedirect("registrar_orcamento.jsp?id=" + idOrcamento);
-                    } else {
-                        exibirMensagem(out, "Erro ao registrar orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
+            if (orcamentoRecebido == null || orcamentoRecebido.getId() == 0) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.print("{\"error\":\"Orçamento inválido ou sem ID\"}");
+                return;
+            }
 
-            case 2: // Alterar
-                try {
-                    int idOrcamento = Integer.parseInt(request.getParameter("id"));
-                    orcamento = OrcamentoDAO.listarPorId(idOrcamento);
+            // Buscar o orçamento existente no banco
+            Orcamento orcamentoExistente = OrcamentoDAO.listarPorId(orcamentoRecebido.getId());
 
-                    // Verificação de orçamento
-                    if (orcamento == null) {
-                        exibirMensagem(out, "Orçamento não encontrado!", "orcamentos.jsp");
-                        return;
-                    }
+            if (orcamentoExistente == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                out.print("{\"error\":\"Orçamento não encontrado com o id: " + orcamentoRecebido.getId() + "\"}");
+                return;
+            }
 
-                    // Alterar no banco
-                    if (OrcamentoDAO.alterar(orcamento)) {
-                        response.sendRedirect("alterar_orcamento.jsp?id=" + idOrcamento);
-                    } else {
-                        exibirMensagem(out, "Erro ao alterar orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
+            orcamentoExistente.setInformacao(orcamentoRecebido.getInformacao() != null ? orcamentoRecebido.getInformacao() : orcamentoExistente.getInformacao());
+            orcamentoExistente.setCliente(orcamentoRecebido.getCliente() != null && orcamentoRecebido.getCliente().getId() != 0 ?
+                    ClienteDAO.listarPorId(orcamentoRecebido.getCliente().getId()) : orcamentoExistente.getCliente());
 
-            case 3: // Excluir
-                try {
-                    int idOrcamento = Integer.parseInt(request.getParameter("id"));
+            orcamentoExistente.setDataValidade(orcamentoRecebido.getDataValidade() != null ? orcamentoRecebido.getDataValidade() : orcamentoExistente.getDataValidade());
+            orcamentoExistente.setDataCriacao(orcamentoRecebido.getDataCriacao() != null ? orcamentoRecebido.getDataCriacao() : orcamentoExistente.getDataCriacao());
+            orcamentoExistente.setStatus(orcamentoRecebido.getStatus() != null ? orcamentoRecebido.getStatus() : orcamentoExistente.getStatus());
 
-                    // Excluir no banco
-                    if (OrcamentoDAO.excluir(idOrcamento)) {
-                        exibirMensagem(out, "Orçamento excluído com sucesso!", "orcamentos.jsp");
-                    } else {
-                        exibirMensagem(out, "Erro ao excluir orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
+            if (OrcamentoDAO.alterar(orcamentoExistente)) {
+                out.print(gson.toJson(orcamentoExistente));
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.print("{\"error\":\"Erro ao atualizar orçamento\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
 
-            case 4: // Atualizar Informação
-                try {
-                    int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
-                    int idCliente = Integer.parseInt(request.getParameter("seletor_cliente"));
-                    String informacao = request.getParameter("informacao");
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
 
-                    orcamento = OrcamentoDAO.listarPorId(idOrcamento);
+        try {
+            String idOrcamento = request.getParameter("id");
 
-                    if (orcamento == null) {
-                        exibirMensagem(out, "Orçamento não encontrado!", "orcamentos.jsp");
-                        return;
-                    }
+            if (idOrcamento == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                out.print("{\"error\":\"Parâmetro 'id' é obrigatório\"}");
+                return;
+            }
 
-                    orcamento.setInformacao(informacao);
-                    orcamento.setCliente(ClienteDAO.listarPorId(idCliente));
+            int id = Integer.parseInt(idOrcamento);
 
-                    // Alterar no banco
-                    if (OrcamentoDAO.alterar(orcamento)) {
-                        out.print("<script>");
-                        out.print("location.href = document.referrer;");
-                        out.print("</script>");
-                        out.close();
-                    } else {
-                        exibirMensagem(out, "Erro ao atualizar informações do orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
+            if (OrcamentoDAO.excluir(id)) {
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.print("{\"error\":\"Erro ao excluir orçamento\"}");
+            }
 
-            case 5: // Adicionar Item
-                try {
-                    int idProduto = Integer.parseInt(request.getParameter("id_produto"));
-                    int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
-                    double quantidade = Double.parseDouble(request.getParameter("quantidade_produto"));
-                    double preco = Double.parseDouble(request.getParameter("preco_produto"));
-
-                    ItemOrcamento item = new ItemOrcamento();
-                    item.setProduto(ProdutoDAO.listarPorId(idProduto));
-                    item.setOrcamento(OrcamentoDAO.listarPorId(idOrcamento));
-                    item.setQuantidade(quantidade);
-                    item.setPreco(preco);
-                    item.setStatusVenda(false);
-                    item.setDataHora(LocalDateTime.now());
-
-                    // Adicionar item no orçamento
-                    if (OrcamentoDAO.adicionarItem(item)) {
-                        out.print("<script>");
-                        out.print("location.href = document.referrer;");
-                        out.print("</script>");
-                        out.close();
-                    } else {
-                        exibirMensagem(out, "Erro ao adicionar item no orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
-
-            case 6: // Alterar Item
-                try {
-                    int idItem = Integer.parseInt(request.getParameter("id_item"));
-                    int idProduto = Integer.parseInt(request.getParameter("id_produto"));
-                    double quantidade = Double.parseDouble(request.getParameter("quantidade_produto"));
-                    int idOrcamento = Integer.parseInt(request.getParameter("id_orcamento"));
-                    double preco = Double.parseDouble(request.getParameter("preco_produto"));
-
-                    ItemOrcamento item = new ItemOrcamento();
-                    item.setId(idItem);
-                    item.setProduto(ProdutoDAO.listarPorId(idProduto));
-                    item.setOrcamento(OrcamentoDAO.listarPorId(idOrcamento));
-                    item.setQuantidade(quantidade);
-                    item.setPreco(preco);
-                    item.setStatusVenda(false);
-                    item.setDataHora(LocalDateTime.now());
-
-                    // Alterar item no orçamento
-                    if (ItemOrcamentoDAO.alterar(item)) {
-                        out.print("<script>");
-                        out.print("location.href = document.referrer;");
-                        out.print("</script>");
-                        out.close();
-                    } else {
-                        exibirMensagem(out, "Erro ao alterar item do orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
-
-            case 7: // Excluir Item
-                try {
-                    int idItem = Integer.parseInt(request.getParameter("idItem"));
-
-                    // Excluir item do orçamento
-                    if (OrcamentoDAO.excluirItem(idItem)) {
-                        out.print("<script>");
-                        out.print("location.href = document.referrer;");
-                        out.print("</script>");
-                        out.close();
-                    } else {
-                        exibirMensagem(out, "Erro ao excluir item do orçamento!", "orcamentos.jsp");
-                    }
-                } catch (Exception e) {
-                    exibirMensagem(out, "Erro interno! Contate o administrador do sistema.", "orcamentos.jsp");
-                }
-                break;
-
-            default:
-                exibirMensagem(out, "Ação inválida!", "orcamentos.jsp");
-                break;
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("{\"error\":\"Erro no servidor: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
         }
     }
 }

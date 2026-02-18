@@ -498,11 +498,11 @@ public class OrcamentoDAO {
             pstm.setInt(1, idOrcamento);
             rset = pstm.executeQuery();
 
+            Orcamento orca = OrcamentoDAO.listarPorId(idOrcamento);
+
             while (rset.next()) {
 
                 Timestamp sqlDataHora = rset.getTimestamp("dataHora");
-
-                Orcamento orca = OrcamentoDAO.listarPorId(idOrcamento);
 
                 Produto pro = ProdutoDAO.listarPorId(rset.getInt("id_produto"));
 
@@ -540,6 +540,226 @@ public class OrcamentoDAO {
 
         return itens;
 
+    }
+
+    public static List<Orcamento> listarPaginado(int start, int length, String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT o.* FROM orcamento o " +
+            "LEFT JOIN cliente c ON o.id_cliente = c.id"
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            // Colunas: 0=ID, 1=Cliente, 2=Status, 3=Data de Criação, 4=Data de Validade
+            String[] columns = {"o.id", "c.nome", "o.status", "o.dataCriacao", "o.dataValidade"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+
+                    // Para datas (colunas 3 e 4), converter para formato MySQL e usar DATE()
+                    if (columnIndex == 3 || columnIndex == 4) {
+                        // Formato esperado: dd/mm/aaaa
+                        // Converter para yyyy-mm-dd para comparação no MySQL
+                        sql.append(" WHERE DATE_FORMAT(").append(column).append(", '%d/%m/%Y')");
+
+                        if ("0".equals(filterType)) { // Começa com
+                            sql.append(" LIKE ?");
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            sql.append(" LIKE ?");
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para status, usar LOWER para busca case-insensitive
+                    else if (columnIndex == 2) {
+                        sql.append(" WHERE LOWER(").append(column).append(") LIKE LOWER(?)");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para ID e Cliente
+                    else {
+                        sql.append(" WHERE ").append(column).append(" LIKE ?");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        sql.append(" ORDER BY o.id DESC LIMIT ? OFFSET ?");
+        params.add(length);
+        params.add(start);
+
+        List<Orcamento> orcamentos = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
+            rset = pstm.executeQuery();
+
+            while (rset.next()) {
+                try {
+                    Timestamp sqlCriacao = rset.getTimestamp("dataCriacao");
+                    Timestamp sqlValidade = rset.getTimestamp("dataValidade");
+
+                    Cliente cliente = ClienteDAO.listarPorId(rset.getInt("id_cliente"));
+                    Orcamento orcamento = new Orcamento();
+
+                    orcamento.setId(rset.getInt("id"));
+                    orcamento.setDataCriacao(sqlCriacao.toLocalDateTime());
+                    orcamento.setDataValidade(sqlValidade.toLocalDateTime());
+                    orcamento.setStatus(rset.getString("status"));
+                    orcamento.setInformacao(rset.getString("informacoes"));
+                    orcamento.setCliente(cliente);
+
+                    orcamentos.add(orcamento);
+                } catch (Exception e) {
+                    // Ignorar registros com erro
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orcamentos;
+    }
+
+    public static int contarTodos() {
+        String sql = "SELECT COUNT(id) FROM orcamento";
+        int total = 0;
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql);
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
+    public static int contarFiltrados(String searchValue, String filterColumn, String filterType) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT COUNT(o.id) FROM orcamento o " +
+            "LEFT JOIN cliente c ON o.id_cliente = c.id"
+        );
+        List<Object> params = new ArrayList<>();
+        int total = 0;
+
+        if (searchValue != null && !searchValue.isEmpty() && filterColumn != null && !filterColumn.isEmpty()) {
+            // Colunas: 0=ID, 1=Cliente, 2=Status, 3=Data de Criação, 4=Data de Validade
+            String[] columns = {"o.id", "c.nome", "o.status", "o.dataCriacao", "o.dataValidade"};
+            try {
+                int columnIndex = Integer.parseInt(filterColumn);
+                if (columnIndex >= 0 && columnIndex < columns.length) {
+                    String column = columns[columnIndex];
+
+                    // Para datas (colunas 3 e 4), converter para formato MySQL e usar DATE()
+                    if (columnIndex == 3 || columnIndex == 4) {
+                        // Formato esperado: dd/mm/aaaa
+                        // Converter para yyyy-mm-dd para comparação no MySQL
+                        sql.append(" WHERE DATE_FORMAT(").append(column).append(", '%d/%m/%Y')");
+
+                        if ("0".equals(filterType)) { // Começa com
+                            sql.append(" LIKE ?");
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            sql.append(" LIKE ?");
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para status, usar LOWER para busca case-insensitive
+                    else if (columnIndex == 2) {
+                        sql.append(" WHERE LOWER(").append(column).append(") LIKE LOWER(?)");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                    // Para ID e Cliente
+                    else {
+                        sql.append(" WHERE ").append(column).append(" LIKE ?");
+                        if ("0".equals(filterType)) { // Começa com
+                            params.add(searchValue + "%");
+                        } else { // Inclui
+                            params.add("%" + searchValue + "%");
+                        }
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Tratar erro se filterColumn não for um número válido
+            }
+        }
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+
+        try {
+            conn = Conexao.criarConexaoMySQL();
+            pstm = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                total = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rset != null) rset.close();
+                if (pstm != null) pstm.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
     }
 
 }

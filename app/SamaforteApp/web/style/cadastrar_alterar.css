@@ -3,14 +3,13 @@
 }
 
 form {
-    width: 70%;
+    width: 100%;
     min-width: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 50px;
-    margin-top: 20px;
+    margin: 0;
 }
 
 .form {
