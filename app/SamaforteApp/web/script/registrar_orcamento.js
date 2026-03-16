@@ -252,8 +252,6 @@ function inicializarSeletorClientes() {
                 const option = new Option(cliente.nome, cliente.id, false, false);
                 select.append(option);
             });
-
-            select.trigger('change');
         })
         .catch(error => {
             console.error('Erro ao carregar clientes:', error);
@@ -263,10 +261,6 @@ function inicializarSeletorClientes() {
     // Evento de mudança no seletor de clientes
     $('#seletor_cliente').on('change', function() {
         var idCliente = $(this).val();
-
-        if (!idCliente) {
-            idCliente = 5;
-        }
 
         // Fazer fetch para buscar dados completos do cliente
         fetch(`GerenciarCliente?id=${idCliente}`)
