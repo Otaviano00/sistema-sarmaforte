@@ -85,6 +85,47 @@ $(document).ready(function() {
 
 // Inicializar seletor de produtos com Select2
 function inicializarSeletorProdutos() {
+    let produtosCarregados = false;
+    let tentativa = 0;
+    const maxTentativas = 5;
+
+    const carregarProdutos = () => {
+        fetch('GerenciarProduto')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao requisitar produtos');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const produtos = Array.isArray(data) ? data : (data.data || []);
+                const select = $('#seletor_produto');
+
+                select.empty();
+                select.append('<option value="">Selecione um produto</option>');
+
+                produtos.forEach(produto => {
+                    const preco = produto.preco.toFixed(3).replace('.', ',');
+                    const texto = `${produto.nome} --- R$ ${preco}`;
+                    const option = new Option(texto, produto.codigo, false, false);
+                    select.append(option);
+                });
+
+                produtosCarregados = true;
+                select.select2('close');
+                setTimeout(() => select.select2('open'), 50);
+            })
+            .catch(error => {
+                console.error('Erro ao carregar produtos:', error);
+                if (tentativa < maxTentativas) {
+                    tentativa++;
+                    setTimeout(carregarProdutos, 5000); // Tenta novamente após 5 segundos
+                } else {
+                    alert('Não foi possível carregar os produtos. Tente recarregar a página.');
+                }
+            });
+    };
+
     $('#seletor_produto').select2({
         placeholder: 'Selecione um produto',
         allowClear: true,
@@ -145,36 +186,58 @@ function inicializarSeletorProdutos() {
             // Concatenar: primeiro os que começam, depois os que contêm
             return startsWith.concat(contains);
         }
+    }).on('select2:opening', () => {
+        if (!produtosCarregados) {
+            carregarProdutos();
+        }
     });
-
-    // Carregar produtos via API
-    fetch('GerenciarProduto')
-        .then(response => response.json())
-        .then(data => {
-            // GerenciarProduto retorna array direto, não objeto com data
-            const produtos = Array.isArray(data) ? data : (data.data || []);
-            const select = $('#seletor_produto');
-
-            select.empty();
-            select.append('<option value="">Selecione um produto</option>');
-
-            produtos.forEach(produto => {
-                const preco = produto.preco.toFixed(3).replace('.', ',');
-                const texto = `${produto.nome} --- R$ ${preco}`;
-                const option = new Option(texto, produto.codigo, false, false);
-                select.append(option);
-            });
-
-            select.trigger('change');
-        })
-        .catch(error => {
-            console.error('Erro ao carregar produtos:', error);
-            alert('Erro ao carregar produtos!');
-        });
 }
 
 // Inicializar seletor de clientes com Select2
 function inicializarSeletorClientes() {
+    let clientesCarregados = false;
+    let tentativa = 0;
+    const maxTentativas = 5;
+
+    const carregarClientes = () => {
+        return fetch('GerenciarCliente')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao requisitar clientes');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const clientes = Array.isArray(data) ? data : (data.data || []);
+                const select = $('#seletor_cliente');
+
+                const currentValor = select.val();
+
+                select.empty();
+                select.append('<option value="">Selecione um cliente</option>');
+
+                clientes.forEach(cliente => {
+                    const option = new Option(cliente.nome, cliente.id, false, cliente.id == currentValor);
+                    select.append(option);
+                });
+
+                clientesCarregados = true;
+
+                // Refresh the select2 instance to show new items
+                select.select2('close');
+                setTimeout(() => select.select2('open'), 50);
+            })
+            .catch(error => {
+                console.error('Erro ao carregar clientes:', error);
+                if (tentativa < maxTentativas) {
+                    tentativa++;
+                    setTimeout(carregarClientes, 5000);
+                } else {
+                    alert('Não foi possível carregar os clientes. Tente recarregar a página.');
+                }
+            });
+    };
+
     $('#seletor_cliente').select2({
         placeholder: 'Selecione um cliente',
         allowClear: true,
@@ -235,37 +298,26 @@ function inicializarSeletorClientes() {
             // Concatenar: primeiro os que começam, depois os que contêm
             return startsWith.concat(contains);
         }
+    }).on('select2:opening', () => {
+        if (!clientesCarregados) {
+            carregarClientes();
+        }
     });
-
-    // Carregar clientes via API
-    fetch('GerenciarCliente')
-        .then(response => response.json())
-        .then(data => {
-            // GerenciarCliente retorna array direto, não objeto com data
-            const clientes = Array.isArray(data) ? data : (data.data || []);
-            const select = $('#seletor_cliente');
-
-            select.empty();
-            select.append('<option value="">Selecione um cliente</option>');
-
-            clientes.forEach(cliente => {
-                const option = new Option(cliente.nome, cliente.id, false, false);
-                select.append(option);
-            });
-        })
-        .catch(error => {
-            console.error('Erro ao carregar clientes:', error);
-            alert('Erro ao carregar clientes!');
-        });
 
     // Evento de mudança no seletor de clientes
     $('#seletor_cliente').on('change', function() {
         var idCliente = $(this).val();
 
+        if (!idCliente) {
+           return; // Não faz nada se nenhum cliente estiver selecionado
+        }
+
         // Fazer fetch para buscar dados completos do cliente
         fetch(`GerenciarCliente?id=${idCliente}`)
             .then(response => response.json())
-            .then(cliente => {
+            .then(clienteData => {
+                const cliente = clienteData.data ? clienteData.data.find(c => c.id == idCliente) || clienteData : (Array.isArray(clienteData) ? clienteData.find(c => c.id == idCliente) || clienteData[0] : clienteData);
+
                 if (cliente.error) {
                     alert('Erro ao carregar dados do cliente: ' + cliente.error);
                     return;
@@ -273,18 +325,21 @@ function inicializarSeletorClientes() {
 
                 $('#id_cliente').val(cliente.id);
 
-                // Preencher campos readonly com os dados do servidor
-                const campos = $('.campo_cliente input');
-                $(campos[0]).val(cliente.nome || '---');
-                $(campos[1]).val(cliente.telefone || '---');
-                $(campos[2]).val(cliente.cpf || '---');
-                $(campos[3]).val(cliente.endereco || '---');
+                // Preencher campos com os dados do servidor
+                const campos = $('.campo_cliente input, .campo_cliente textarea'); // support textarea just in case
+                if(campos.length >= 4) {
+                    $(campos[0]).val(cliente.nome || '---');
+                    $(campos[1]).val(cliente.telefone || '---');
+                    $(campos[2]).val(cliente.cpf || '---');
+                    $(campos[3]).val(cliente.endereco || '---');
+                }
 
-                atualizarInformacoes();
+                if (clientesCarregados) {
+                   atualizarInformacoes();
+                }
             })
             .catch(error => {
                 console.error('Erro ao carregar cliente:', error);
-                alert('Erro ao carregar dados do cliente!');
             });
     });
 }
@@ -293,9 +348,11 @@ function inicializarSeletorClientes() {
 function carregarDadosOrcamento() {
     fetch(`GerenciarOrcamento?id=${idOrcamento}`)
         .then(response => response.json())
-        .then(orcamento => {
-            if (orcamento.error) {
-                alert('Erro ao carregar orçamento: ' + orcamento.error);
+        .then(data => {
+            const orcamento = data.data ? data.data.find(o => o.id == idOrcamento) || data : data;
+
+            if (orcamento.error || !orcamento) {
+                alert('Erro ao carregar orçamento: ' + (orcamento.error || 'Não encontrado'));
                 window.location.href = 'orcamentos.jsp';
                 return;
             }
@@ -305,7 +362,13 @@ function carregarDadosOrcamento() {
 
             // Selecionar cliente
             if (orcamento.cliente && orcamento.cliente.id) {
-                $('#seletor_cliente').val(orcamento.cliente.id).trigger('change');
+                const select = $('#seletor_cliente');
+                if (select.find("option[value='" + orcamento.cliente.id + "']").length == 0) {
+                    const option = new Option(orcamento.cliente.nome, orcamento.cliente.id, true, true);
+                    select.append(option);
+                }
+
+                select.val(orcamento.cliente.id).trigger('change');
             }
         })
         .catch(error => {
@@ -932,13 +995,12 @@ async function recarregarListaClientes(idNovoCliente) {
             $seletor.append(option);
         });
 
-        // Atualizar Select2
-        $seletor.trigger('change');
-
-        // Se foi criado um novo cliente, selecioná-lo e atualizar backend
         if (idNovoCliente) {
-            $seletor.val(idNovoCliente).trigger('change');
+            $seletor.val(idNovoCliente);
         }
+
+        $seletor.trigger('change');
+        atualizarInformacoes();
     } catch (error) {
         console.error('Erro ao recarregar lista de clientes:', error);
         alert('Erro ao atualizar lista de clientes!');
@@ -1052,6 +1114,3 @@ function configurarAtalhosTeclado() {
         }
     });
 }
-
-
-
